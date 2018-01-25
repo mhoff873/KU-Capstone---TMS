@@ -1,4 +1,4 @@
-[!](static/img/TMS_Color_Bar.png)
+![](static/img/TMS_Color_Bar.png)
 
 # Task Management System (TMS)
 
