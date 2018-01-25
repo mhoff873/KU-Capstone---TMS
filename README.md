@@ -1,3 +1,5 @@
+<img src="https://cdn.rawgit.com/davidschaeffer2/tms/master/static/img/TMS_Logo.svg" width="350" />
+
 # Task Management System (TMS)
 
 TMS is an online system for the management of lifestyle tasks expected to be
