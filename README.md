@@ -1,5 +1,5 @@
 <img src="https://cdn.rawgit.com/davidschaeffer2/tms/master/static/img/TMS_Logo.svg" 
-    viewbox="250 250 50 50"/>
+    viewbox="250 250 125 150"/>
 
 # Task Management System (TMS)
 
