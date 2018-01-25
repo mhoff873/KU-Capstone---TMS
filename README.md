@@ -1,4 +1,5 @@
-<img src="https://cdn.rawgit.com/davidschaeffer2/tms/master/static/img/TMS_Logo.svg" width="350" />
+<img src="https://cdn.rawgit.com/davidschaeffer2/tms/master/static/img/TMS_Logo.svg" 
+    viewbox="0 0 100 100"/>
 
 # Task Management System (TMS)
 
