@@ -5,5 +5,3 @@
 TMS is an online system for the management of lifestyle tasks expected to be
 used by elderly users. The system should be expected to be simple to understand
 and use while being robust enough to be used on a variety of devices.
-
-This is an edit to the README.md that I will not be merging into master.
