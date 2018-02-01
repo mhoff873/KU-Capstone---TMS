@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Task Creation Test Page</h1>
+
+    <form action="{{ url_for('create_task') }}" method="POST">
+        {{ form.task_name.label }}
+        {{ form.task_name }}
+    </form>
+{% endblock content %}

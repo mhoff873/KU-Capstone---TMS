@@ -1,6 +1,9 @@
 # Flask and many of it's plugins require a number of system variables to be set
 # This file is used to define those variables and are loaded in app.py.
 
+# App Config
+SECRET_KEY = 'wefb292h3d9be#@@YEBBCE2NION32UDFEBUE2U202hfeu2onwdsjdf'
+
 # Database Configs
 # See: http://flask-mysqldb.readthedocs.io/en/latest/
 MYSQL_HOST = ''
