@@ -6,15 +6,6 @@ Created on Fri Feb  2 20:38:08 2018
 @author: nyost
 """
 
-"""INSERT INTO supervisors
-        (email, password, fname, mname,
-         lname, isLoggedIn, dateCreated, gender,
-         active, birthday, ethnicity, picture, affiliation, phone)
-        VALUES
-        ('%s', '%s', '%s', '%s', '%s', %s, '%s', '%s', %s, '%s', '%s', '%s',
-        '%s', %s)
-        """
-
 import UserMgmt
 import mysql.connector
 DB_HOST, DB_NAME, DB_PORT = ["localhost", "tmst_db", "3306"]
@@ -38,18 +29,15 @@ def connect():
         return None
 db = connect()
 if db:
-    user = [1, "testemail@gmail.com", "password", 444444444, "first", "middle", "last", "N/A", "NULL", "Kutztown", "white", 1, 0, "NULL", "NULL", "NULL"]
-    supervisor = ["testemail@gmail.com", "password", "first", "middle", "last", 0, "NULL", "male", 1, "NULL", "white", "NULL", "Kutztown", 4444444444]
-    UserMgmt.create_test(db, user, UserMgmt.USER)
-    if UserMgmt.user_exists(db, user[1], UserMgmt.USER):
-        print("Created successfully!")
-    else:
-        print("Could not find user!")
-        
-    UserMgmt.create_test(db, supervisor, UserMgmt.SUPERVISOR)
-    if UserMgmt.user_exists(db, supervisor[0], UserMgmt.SUPERVISOR):
-        print("Created successfully!")
-    else:
-        print("Could not find user!")
+    email = "testemail@gmail.com"
+    user = list(UserMgmt.get_user(db, email, UserMgmt.USER))
+    supervisor = list(UserMgmt.get_user(db, email,
+                                        UserMgmt.SUPERVISOR))
+
+    supervisor[3] = "Donald"
+    supervisor[4] = "John"
+    supervisor[5] = "Trump"
+    UserMgmt.edit_user(db, email, supervisor, UserMgmt.SUPERVISOR)
+    db.close()
 else:
     print("Error: could not connect to database!")
