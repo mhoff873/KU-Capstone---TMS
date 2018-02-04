@@ -76,7 +76,18 @@ def edit_user(db, email, user, account_type):
 
 
 def assign_user(db, assignee, assigned):
-    """Fulfill requirement(s) 31"""
+    """
+    Fulfill requirement(s) 31
+    Assigns the supervisor id to the assignee, given emails of user, and
+    supervisor.
+    :param db: db object that should already be connected to the database.
+    :param assignee: Email of user to be assigned a supervisor.
+    :param assigned: Email of the supervisor.
+    """
+    user = get_user(db, assignee, USER)
+    supervisor = get_user(db, assigned, SUPERVISOR)
+    user[1] = supervisor[0]
+    edit_user(db, assignee, user, USER)
     pass
 
 

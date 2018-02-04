@@ -29,15 +29,8 @@ def connect():
         return None
 db = connect()
 if db:
-    email = "testemail@gmail.com"
-    user = list(UserMgmt.get_user(db, email, UserMgmt.USER))
-    supervisor = list(UserMgmt.get_user(db, email,
-                                        UserMgmt.SUPERVISOR))
-
-    supervisor[3] = "Donald"
-    supervisor[4] = "John"
-    supervisor[5] = "Trump"
-    UserMgmt.edit_user(db, email, supervisor, UserMgmt.SUPERVISOR)
+    user, supervisor = "testemail@gmail.com", "pearl464@live.kutztown.edu"
+    UserMgmt.assign_user(db, user, supervisor)
     db.close()
 else:
     print("Error: could not connect to database!")
