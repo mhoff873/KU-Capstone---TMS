@@ -10,9 +10,14 @@ from flask_wtf.file import FileField
 class CreateTaskForm(FlaskForm):
     task_name = StringField('Task Name')
 
-    #Main Steps
+    # Main Steps
     main_step_image = FileField('Upload Image for Main Step')
     main_step_name = StringField('Title of Main Step')
     main_step_text = StringField('Main Step Description')
     main_step_items = StringField('Required Items')
     main_step_media = FileField('Upload Audio/Video')
+
+    # Detailed Steps
+    detailed_step_name = StringField('Title of Detailed Step')
+    detailed_step_text = StringField('Detailed Step Description')
+    detailed_step_image = FileField('Upload Image for Detailed Step')

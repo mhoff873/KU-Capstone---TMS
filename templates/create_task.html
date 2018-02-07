@@ -10,20 +10,24 @@
 
         <h2>Main Step 1</h2>
         <!--Code for Main Steps-->
-        {{ form.main_step_image.label }}
-        {{ form.main_step_image }}
+        {{ form.main_step_image.label }}: {{ form.main_step_image }}
         <br><br>
-        {{ form.main_step_name.label }}
-        {{ form.main_step_name }}
+        {{ form.main_step_name.label }}: {{ form.main_step_name }}
         <br><br>
-        {{ form.main_step_text.label }}
-        {{ form.main_step_text }}
+        {{ form.main_step_text.label }}: {{ form.main_step_text }}
         <br><br>
-        {{ form.main_step_items.label }}
-        {{ form.main_step_items }}
+        {{ form.main_step_items.label }}: {{ form.main_step_items }}
         <br><br>
-        {{ form.main_step_media.label }}
-        {{ form.main_step_media }}
+        {{ form.main_step_media.label }}: {{ form.main_step_media }}
+        <br><br>
+
+        <!--Code for Detailed Step-->
+        <h3>Detailed Step 1</h3>
+        {{ form.detailed_step_name.label }}: {{ form.detailed_step_name }}
+        <br><br>
+        {{ form.detailed_step_text.label }}: {{ form.detailed_step_text }}
+        <br><br>
+        {{ form.detailed_step_image.label }}: {{ form.detailed_step_image }}
         <br><br>
 
     </form>
