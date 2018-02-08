@@ -1,6 +1,6 @@
 import unittest
 import sys
-
+sys.path.append('../')
 from flask_mysqldb import MySQL
 
 from project import app
@@ -25,5 +25,4 @@ class FormTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    sys.path.append('../')
     unittest.main()
