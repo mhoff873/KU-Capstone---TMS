@@ -1,7 +1,7 @@
 from flask import render_template
 
-from app import app
-from forms import CreateTaskForm
+from project import app
+from project.forms import CreateTaskForm
 
 
 @app.route('/', methods=['GET'])

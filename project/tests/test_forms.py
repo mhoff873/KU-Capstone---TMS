@@ -2,7 +2,7 @@ import unittest
 
 from flask_mysqldb import MySQL
 
-from app import app
+from project import app
 
 
 class FormTests(unittest.TestCase):
