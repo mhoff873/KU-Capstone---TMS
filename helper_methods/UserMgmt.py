@@ -1,3 +1,9 @@
+# Author:           Nathaniel Yost
+# Creation Date:    January 31, 2018
+# Professor:        Dr. Tan
+# Class:            CSC 355
+# Purpose:          Functions to deal with managing a user (Supervisor, or
+#                   User).
 USER, SUPERVISOR, ADMIN = range(3)
 
 
@@ -86,9 +92,9 @@ def assign_user(db, assignee, assigned):
     :param assignee: Email of user to be assigned a supervisor.
     :param assigned: Email of the supervisor.
     """
-    user = get_user(db, assignee, USER)    
+    user = get_user(db, assignee, USER)
     supervisor = get_user(db, assigned, SUPERVISOR)
-    if user == False or supervisor == False:
+    if user is False or supervisor is False:
         return False
     user[1] = supervisor[0]
     edit_user(db, assignee, user, USER)
@@ -150,3 +156,18 @@ def get_user(db, email, account_type):
         return user
     else:
         return False
+
+
+def get_assigned_users(db, email):
+    """
+    Gets all assigned users under a supervisor.
+    :param db: db object that should already be connected to the database.
+    :param email: email address of the supervisor to search users for.
+    :return: List of users (List[User1, User2, ...]), User# is a list of
+            columns.
+    """
+    supervisor = get_user(db, email, SUPERVISOR)
+    query = "SELECT *  FROM users WHERE supervisorID=%s"
+    cursor = db.cursor()
+    cursor.execute(query % (supervisor[0]))
+    return cursor.fetchall()

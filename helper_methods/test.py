@@ -5,26 +5,20 @@ Created on Fri Feb  2 20:38:08 2018
 
 @author: nyost
 """
-
-import MySQLdb
+import DB_Functions
+import UserMgmt
 DB_HOST, DB_NAME, DB_PORT = ["localhost", "tmst_db", "3306"]
 TIME_OUT = 5
 
-def connect():
-    """
-    Connects to database, and returns a db object.
-    :return: db object that is used to access the database, or None if
-                connection fails.
-    """
-    DB_USER = input("Username: ")
-    DB_PASS = input("Pass: ")
-    try:
-        return MySQLdb.connect(host=DB_HOST, user=DB_USER, passwd=DB_PASS, db=DB_NAME, port=DB_PORT)
-    except Exception:
-        return None
-db = connect()
+
+db = DB_Functions.connect()
 if db:
-    print("Connected! blah blah blah")
+    print("Connected!")
+    email = "pearl464@live.kutztown.edu"
+    users = UserMgmt.get_assigned_users(db, email)
+    for user in users:
+        print(user[2])
     db.close()
+    print("Closing DB")
 else:
     print("Error: could not connect to database!")
