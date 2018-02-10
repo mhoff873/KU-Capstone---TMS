@@ -37,6 +37,7 @@ def create_user(db, user, account_type):
     cursor = db.cursor()
     cursor.execute(query % tuple(user))
     db.commit()
+    return True
 
 
 def edit_user(db, email, user, account_type):
@@ -68,11 +69,12 @@ def edit_user(db, email, user, account_type):
         """
     else:
         print("Invalid account_type = %d" % account_type)
-        return
+        return False
     user.append(email)
     cursor = db.cursor()
     cursor.execute(query % (tuple(user[1:])))
     db.commit()
+    return True
 
 
 def assign_user(db, assignee, assigned):
@@ -84,11 +86,13 @@ def assign_user(db, assignee, assigned):
     :param assignee: Email of user to be assigned a supervisor.
     :param assigned: Email of the supervisor.
     """
-    user = get_user(db, assignee, USER)
+    user = get_user(db, assignee, USER)    
     supervisor = get_user(db, assigned, SUPERVISOR)
+    if user == False or supervisor == False:
+        return False
     user[1] = supervisor[0]
     edit_user(db, assignee, user, USER)
-    pass
+    return True
 
 
 def user_exists(db, email, account_type):
@@ -105,7 +109,7 @@ def user_exists(db, email, account_type):
         table = "supervisors"
     else:
         print("Invalid account_type = %d" % account_type)
-        return
+        return False
 
     query = "SELECT * FROM %s WHERE email='%s'"
     cursor = db.cursor()
@@ -132,7 +136,7 @@ def get_user(db, email, account_type):
         table = "supervisors"
     else:
         print("Invalid account_type = %d" % account_type)
-        return
+        return False
     query = "SELECT * FROM %s WHERE email='%s'"
     cursor = db.cursor()
     cursor.execute(query % (table, email))
@@ -143,4 +147,6 @@ def get_user(db, email, account_type):
         for i in range(len(user)):
             if user[i] is None:
                 user[i] = "NULL"
-    return user
+        return user
+    else:
+        return False
