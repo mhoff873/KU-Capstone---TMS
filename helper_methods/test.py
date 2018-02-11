@@ -15,7 +15,7 @@ db = DB_Functions.connect()
 if db:
     print("Connected!")
     email = "pearl464@live.kutztown.edu"
-    users = UserMgmt.get_assigned_users(db, email)
+    users = UserMgmt.get_unassigned_users(db)    
     for user in users:
         print(user[2])
     db.close()

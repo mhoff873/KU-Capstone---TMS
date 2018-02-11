@@ -85,7 +85,7 @@ def edit_user(db, email, user, account_type):
 
 def assign_user(db, assignee, assigned):
     """
-    Fulfill requirement(s) 31
+    Fulfill requirement(s) 31, 33
     Assigns the supervisor id to the assignee, given emails of user, and
     supervisor.
     :param db: db object that should already be connected to the database.
@@ -101,6 +101,34 @@ def assign_user(db, assignee, assigned):
     return True
 
 
+def get_assigned_users(db, email):
+    """
+    Fulfill requirement(s) 32
+    Gets all assigned users under a supervisor.
+    :param db: db object that should already be connected to the database.
+    :param email: email address of the supervisor to search users for.
+    :return: List of users (List[User1, User2, ...]), User# is a list of
+            columns.
+    """
+    supervisor = get_user(db, email, SUPERVISOR)
+    query = "SELECT *  FROM users WHERE supervisorID=%s"
+    cursor = db.cursor()
+    cursor.execute(query % (supervisor[0]))
+    return cursor.fetchall()
+
+
+def get_unassigned_users(db):
+    """
+    Fulfill requirement(s) 34
+    Gets all unassigned users who don't have a supervisor.
+    :param db: db object that should already be connected to the database.
+    """
+    query = "SELECT * FROM users WHERE supervisorID IS NULL"
+    cursor = db.cursor()
+    cursor.execute(query)
+    return cursor.fetchall()
+    
+  
 def user_exists(db, email, account_type):
     """
     Checks whether a user is in the database, given an email.
@@ -156,18 +184,3 @@ def get_user(db, email, account_type):
         return user
     else:
         return False
-
-
-def get_assigned_users(db, email):
-    """
-    Gets all assigned users under a supervisor.
-    :param db: db object that should already be connected to the database.
-    :param email: email address of the supervisor to search users for.
-    :return: List of users (List[User1, User2, ...]), User# is a list of
-            columns.
-    """
-    supervisor = get_user(db, email, SUPERVISOR)
-    query = "SELECT *  FROM users WHERE supervisorID=%s"
-    cursor = db.cursor()
-    cursor.execute(query % (supervisor[0]))
-    return cursor.fetchall()
