@@ -4,13 +4,13 @@
 # App Config
 # Secret Key is required for the CSRF tokens generated in our forms. It's a
 # security feature for the forms.
-SECRET_KEY = 'wefb292h3d9be#@@YEBBCE2NION32UDFEBUE2U202hfeu2onwdsjdf'
+SECRET_KEY = ''
 
 # Database Configs
 # See: http://flask-mysqldb.readthedocs.io/en/latest/
-MYSQL_HOST = 'localhost'
-MYSQL_USER = 'tms_db'
-MYSQL_PASSWORD = 'humedavid'
-MYSQL_DB = 'tms_db'
+MYSQL_HOST = ''
+MYSQL_USER = ''
+MYSQL_PASSWORD = ''
+MYSQL_DB = ''
 MYSQL_PORT = 
 MYSQL_CONNECT_TIMEOUT = 20
