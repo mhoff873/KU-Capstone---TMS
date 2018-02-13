@@ -1,7 +1,7 @@
 from flask import render_template
 
-from project import app
-from project.forms import CreateTaskForm
+from forms import CreateTaskForm
+from app import app
 
 
 @app.route('/', methods=['GET'])
@@ -20,7 +20,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/create_task/', methods=['GET'])
+@app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
     form = CreateTaskForm()
     return render_template('create_task.html', form=form)

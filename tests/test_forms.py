@@ -1,5 +1,6 @@
-import unittest
 import sys
+import unittest
+
 sys.path.append('../')
 from flask_mysqldb import MySQL
 

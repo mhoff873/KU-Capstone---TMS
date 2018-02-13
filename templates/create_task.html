@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Task Creation Test Page</h1>
+
+    <form action="{{ url_for('create_task') }}" method="POST">
+        <div style="display: inline-block; min-width: 13em">
+            {{ form.task_name.label }}
+        </div>
+        {{ form.task_name }}
+
+        <br>
+
+        <div style="display: inline-block; min-width: 13em">
+            {{ form.required_items.label }}
+        </div>
+        {{ form.required_items }}
+
+        <br>
+
+        <div style="display: inline-block; min-width: 13em">
+            {{ form.main_step_title.label }}
+        </div>
+        {{ form.main_step_title }}
+
+        <br>
+
+        <div style="display: inline-block; min-width: 13em">
+        {{ form.main_step_description.label }}
+        </div>
+        {{ form.main_step_description }}<br>
+
+        <!-- Main step sub-items -->
+        <!-- So this chunk of code would be duplicated with a button press
+            by the user to create more main steps.-->
+        <div style="margin-left: 3em">
+            <!-- Detailed step sub-items -->
+            <!-- So this chunk of code would be duplicated with a button press
+                by the user to create more detailed steps.-->
+            {{ form.main_step_image.label }}{{ form.main_step_image }}<br>
+            {{ form.main_step_media.label }}{{ form.main_step_media }}<br>
+
+            <div style="display: inline-block; min-width: 12em">
+                {{ form.detailed_step_title.label }}
+            </div>
+            {{ form.detailed_step_title }}
+
+            <br>
+
+            <div style="display: inline-block; min-width: 12em">
+                {{ form.detailed_step_description.label }}
+            </div>
+            {{ form.detailed_step_description }}
+
+            <br>
+            TODO: Add button to add more detailed steps here.
+        </div>
+        TODO: Add button to add more main steps here.
+        <br>
+        <button type="submit" name="submit" value="save_as_draft">Save as Draft</button>
+        <button type="submit" name="submit" value="publish">Publish</button>
+    </form>
+{% endblock content %}

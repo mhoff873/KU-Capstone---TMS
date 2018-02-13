@@ -1,4 +1,4 @@
-from project.views import *  # Views imports app already, so no need to import here
+from views import *
 
 
 if __name__ == "__main__":
