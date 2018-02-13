@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request
 
 from forms import CreateTaskForm
 from app import app
@@ -22,5 +22,12 @@ def index():
 
 @app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
-    form = CreateTaskForm()
-    return render_template('create_task.html', form=form)
+    if request.method == 'GET':
+        form = CreateTaskForm()
+        return render_template('create_task.html', form=form)
+    elif request.form['submit'] == 'save_as_draft':
+        # User clicked save as draft button
+        pass
+    elif request.form['submit'] == 'publish':
+        # User clicked publish button
+        pass
