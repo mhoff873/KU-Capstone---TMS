@@ -28,8 +28,10 @@ def user_login():
     '''
     user = request.form['username']
     password = request.form['password']
+    print(password)
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM users WHERE email=%s AND password=%s', (user, password))
+    # Since we are going to be using encryption, its better this way - Patrick
+    cur.execute('SELECT * FROM users WHERE email=%s', (user,))
     results = cur.fetchone()    
     print(results)
     if results is None:
@@ -56,18 +58,15 @@ def getbyuser(uname):
     cur.execute('SELECT userID FROM users WHERE email=%s', [uname])
 	# pull the userId from the cursor
     result = cur.fetchone() # returns as ((#,),)
-    
+    print(result)
     # Invalid user
     if result is None:
         return jsonify([])
     
     userID = result['userID'] # stores the first element which is the userid
-    print("USERID: ", userID)
     # get the tasks assigned to the user
     cur.execute('SELECT task.taskID, task.title FROM task, users, request WHERE users.userID=%s AND users.userID=request.userID AND request.taskID=task.taskID', (userID, ))
     record = cur.fetchall()
-    print("QUERY RESULTS:")
-    print(record)
 
     
     # formatting of the api, has fixed values for the category name and id
@@ -76,20 +75,22 @@ def getbyuser(uname):
     lst = [] # list to append each task into
     count = 2 # for the id of each element, as per the api
     # build up the list
+
     for index in record:
-        # create dictionary of the id, taskid and taskname
-        dict = {"$id": str(count), "taskId": index[0], "taskName": index[1]}
+        # Don't assign a keyword..
+        tsks = {}
+        if app.config['MYSQL_CURSORCLASS'] == 'DictCursor'
+            # create dictionary of the id, taskid and taskname
+            tsks = {"$id": str(count), "taskId": index['taskID'], "taskName": index['title']}
+        else:
+            tsks = {"id": str(count), "taskId": index[0], "taskName": index[1]}
         # append the dictionary to the list
-        lst.append(dict)
+        lst.append(tsks)
         count += 1
     # add the list to the dictionary with the key being tasks
     result["tasks"] = lst 
     result = jsonify([result])
     
-    # result = jsonify({'some': 'data'})
-    # result.headers.add('Access-Control-Allow-Origin', '*')
-    # result.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    # result.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return result
 
 # For sprint 2
