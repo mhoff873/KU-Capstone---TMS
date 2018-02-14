@@ -1,8 +1,7 @@
 from flask import render_template, jsonify, request
 from app import app
-from flask_cors import CORS # Needed for API requests
 from flask_mysqldb import MySQL
-import database as db
+from database import *
 
 @app.route('/', methods=['GET'])
 def index():
@@ -29,8 +28,9 @@ def user_login():
     '''
     user = request.form['username']
     password = request.form['password']
-    print("User: " + user + " | Password: " + password)
-    results = db.get_user(mysql, user, 0)
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM users WHERE email=%s AND password=%s', (user, password))
+    results = cur.fetchone()    
     print(results)
     if results is None:
         return jsonify({'d': 'sign in failure'})
@@ -49,20 +49,26 @@ def getbyuser(uname):
         Return:         json - A json object containing the tasks for the user
         Author:         Tyler Lance
     '''
-    print("USERNAME LOGGED IN:" + uname)
+    #print("USERNAME LOGGED IN:" + uname)
 	# cursor documentation: http://initd.org/psycopg/docs/cursor.html
-    cur = sql.connection.cursor()
+    cur = mysql.connection.cursor()
 	# get the accounts userID
     cur.execute('SELECT userID FROM users WHERE email=%s', [uname])
 	# pull the userId from the cursor
     result = cur.fetchone() # returns as ((#,),)
-    userID = result[0] # stores the first element which is the userid
+    
+    # Invalid user
+    if result is None:
+        return jsonify([])
+    
+    userID = result['userID'] # stores the first element which is the userid
     print("USERID: ", userID)
     # get the tasks assigned to the user
     cur.execute('SELECT task.taskID, task.title FROM task, users, request WHERE users.userID=%s AND users.userID=request.userID AND request.taskID=task.taskID', (userID, ))
     record = cur.fetchall()
     print("QUERY RESULTS:")
     print(record)
+
     
     # formatting of the api, has fixed values for the category name and id
     # because they dont exist in the TMS database

@@ -1,2 +1,6 @@
+# Directories
 .vscode/
+__pycache__/
+
+# Files
 config.py
