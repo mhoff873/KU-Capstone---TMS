@@ -40,19 +40,26 @@
             {{ form.main_step_image.label }}{{ form.main_step_image }}<br>
             {{ form.main_step_media.label }}{{ form.main_step_media }}<br>
 
-            <div style="display: inline-block; min-width: 12em">
-                {{ form.detailed_step_title.label }}
-            </div>
-            {{ form.detailed_step_title }}
+            <!--Loop for Detailed Steps-->
+            {% for x in range(1, num_detailed) %}
 
+                <div style="display: inline-block; min-width: 12em">
+                    {{ form.detailed_step_title.label }}
+                </div>
+                {{ form.detailed_step_title }}
+
+                <br>
+
+                <div style="display: inline-block; min-width: 12em">
+                    {{ form.detailed_step_description.label }}
+                </div>
+                {{ form.detailed_step_description }}
+
+                <br>
+
+            {% endfor %}
             <br>
-
-            <div style="display: inline-block; min-width: 12em">
-                {{ form.detailed_step_description.label }}
-            </div>
-            {{ form.detailed_step_description }}
-
-            <br>
+            <button type="submit" name="submit" value="add_detailed_step">+Detailed Step</button>
             TODO: Add button to add more detailed steps here.
         </div>
         TODO: Add button to add more main steps here.
