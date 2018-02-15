@@ -79,7 +79,7 @@ def getbyuser(uname):
     for index in record:
         # Don't assign a keyword..
         tsks = {}
-        if app.config['MYSQL_CURSORCLASS'] == 'DictCursor'
+        if app.config['MYSQL_CURSORCLASS'] == 'DictCursor':
             # create dictionary of the id, taskid and taskname
             tsks = {"$id": str(count), "taskId": index['taskID'], "taskName": index['title']}
         else:
