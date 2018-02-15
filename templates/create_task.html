@@ -4,6 +4,9 @@
     <h1>Task Creation Test Page</h1>
 
     <form action="{{ url_for('create_task') }}" method="POST">
+
+        <!--Main Steps-->
+        {% for n in range(0, num_steps[1]) %}
         <div style="display: inline-block; min-width: 13em">
             {{ form.task_name.label }}
         </div>
@@ -41,7 +44,7 @@
             {{ form.main_step_media.label }}{{ form.main_step_media }}<br>
 
             <!--Loop for Detailed Steps-->
-            {% for x in range(1, num_detailed) %}
+            {% for x in range(0, num_steps[0]) %}
 
                 <div style="display: inline-block; min-width: 12em">
                     {{ form.detailed_step_title.label }}
@@ -58,10 +61,12 @@
                 <br>
 
             {% endfor %}
+        {% endfor %}
             <br>
-            <button type="submit" name="submit" value="add_detailed_step">+Detailed Step</button>
+            <button type="submit" name="add_detailed" value="{{ num_steps }}">+Detailed Step</button>
             TODO: Add button to add more detailed steps here.
         </div>
+        <button type="submit" name="add_main" value="{{ num_steps }}">+Main Step</button>
         TODO: Add button to add more main steps here.
         <br>
         <button type="submit" name="submit" value="save_as_draft">Save as Draft</button>

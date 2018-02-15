@@ -22,12 +22,21 @@ def index():
 
 @app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
-    num_detailed_steps = 1
+    steps = [1, 1]
     form = CreateTaskForm()
     if request.method == 'POST':
-        if request.form['submit'] == 'add_detailed_step':
-            num_detailed_steps += 1
-            return render_template('create_task.html', form=form, num_detailed=num_detailed_steps)
+        if 'add_detailed' in request.form:
+            steps = request.form['add_detailed']
+            for i in steps:
+                steps[i] = int(i)
+            steps[0] += 1
+            return render_template('create_task.html', form=form, num_steps=steps)
+        elif 'add_main' in request.form:
+            steps = request.form.getlist['add_main']
+            for i in steps:
+                steps[i] = int(i)
+            steps[1] += 1
+            return render_template('create_task.html', form=form, num_steps=steps)
         elif request.form['submit'] == 'save_as_draft':
             # User clicked save as draft button
             pass
@@ -35,4 +44,4 @@ def create_task():
             # User clicked publish button
             pass
     elif request.method == 'GET':
-        return render_template('create_task.html', form=form, num_detailed=num_detailed_steps)
+        return render_template('create_task.html', form=form, num_steps=steps)
