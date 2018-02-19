@@ -4,6 +4,7 @@
     <h1>Task Creation Test Page</h1>
 
     <form action="{{ url_for('create_task') }}" method="POST">
+        {{ form.hidden_tag() }}
         <div style="display: inline-block; min-width: 13em">
             {{ form.task_name.label }}
         </div>
@@ -19,9 +20,10 @@
         <br>
 
         {{ form.main_step }}
-
-        <button type="submit" name="submit" value="add_main_step">Add Main Step</button>
-        <button type="submit" name="submit" value="save_as_draft">Save as Draft</button>
-        <button type="submit" name="submit" value="publish">Publish</button>
+        <br>
+        {{ form.add_main_step }}
+        <br>
+        {{ form.save_as_draft }}
+        {{ form.publish }}
     </form>
 {% endblock content %}
