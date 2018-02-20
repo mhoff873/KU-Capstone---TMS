@@ -16,6 +16,9 @@ def create_task():
     print(request.method)
     if request.method == ['GET']:
         return render_template('create_task.html', form=form)
+    # When buttons are clicked on the form, it returns a True/False value
+    # We use those values to determine which buttons were clicked to add steps
+    # accordingly
     if form.add_main_step.data:
         print('Add main step')
         form.main_step.append_entry()
@@ -30,7 +33,8 @@ def create_task():
         print('Checking for detailed step button press.')
         for i, step in enumerate(form.main_step):
             print(i)
-            if step['add_detailed_step']:
+            print(step.add_detailed_step.data)
+            if step.add_detailed_step.data:
                 step.detailed_steps.append_entry()
-                print(f'Add detailed for main step {i}.')
+                print(f'Adding detailed for main step {i}.')
     return render_template('create_task.html', form=form)
