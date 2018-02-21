@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Team_B Forms</h1>
+    <h2>Requirement #27 & #28</h2>
+    <form method="POST">
+        {{ CreateAccount.csrf_token }}
+        {{ CreateAccount.email.label }}
+        {{ CreateAccount.email }}
+        <br>
+        {{ CreateAccount.password.label }}
+        {{ CreateAccount.password }}
+        <br>
+        {{ CreateAccount.confirm.label }}
+        {{ CreateAccount.confirm }}
+        <br>
+        {{ CreateAccount.is_supervisor.label}}
+        {{ CreateAccount.is_supervisor }}
+        <br>
+        {{ CreateAccount.submit }}
+    </form>
+    <br><br>
+    <h2>Requirement #29 & #30</h2>
+    <form method="POST">
+        {{ EditUser.csrf_token }}
+        {{ EditUser.person.label }}
+        {{ EditUser.person }}
+        <br>
+        {{ EditUser.is_supervisor.label }}
+        {{ EditUser.is_supervisor }}
+        <br>
+        {{ EditUser.phone.label }}
+        {{ EditUser.phone }}
+        <br>
+        {{ EditUser.fname.label }}
+        {{ EditUser.fname }}
+        <br>
+        {{ EditUser.mname.label }}
+        {{ EditUser.mname }}
+        <br>
+        {{ EditUser.lname.label }}
+        {{ EditUser.lname }}
+        <br>
+        {{ EditUser.gender.label }}
+        {{ EditUser.gender }}
+        <br>
+        {{ EditUser.birthday.label }}
+        {{ EditUser.birthday }}
+        <br>
+        {{ EditUser.affiliation.label }}
+        {{ EditUser.affiliation }}
+        <br>
+        {{ EditUser.ethnicity.label }}
+        {{ EditUser.ethnicity }}
+        <br>
+        {{ EditUser.picture.label }}
+        {{ EditUser.picture}}
+        <br>
+        {{ EditUser.submit }}
+    </form>
+    <br><br>
+    <h2>Requirement #31 & #34</h2>
+    <form method="POST">
+        {{ AddUser.csrf_token }}
+        {{ AddUser.supervisor_email.label }}
+        {{ AddUser.supervisor_email }}
+        <p>*Please note that the supervisor field will be filled out instead by
+        the session variable after sessions are integrated.*</p>
+        <br>
+        Unassigned Users:
+        {% for user in users %}            
+            {{ AddUser.user }}{{ user }}          
+            <br>            
+        {% endfor %}
+        <br>
+        {{ AddUser.submit }}
+    </form>
+    <br><br>
+    <h2>Requirement #33</h2>
+    <form method="POST">
+        {{ AssignUser.csrf_token }}
+        {{ AssignUser.supervisor.label }}
+        {{ AssignUser.supervisor }}
+        <br>
+        {{ AssignUser.user.label }}
+        {{ AssignUser.user }}
+        <br>
+        {{ AssignUser.submit }}
+    </form>
+{% endblock content %}
