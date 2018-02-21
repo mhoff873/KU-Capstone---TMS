@@ -1,7 +1,8 @@
 from flask import render_template, request
 
 from app import app
-from Forms.forms import CreateAccount, EditUser, AddUser, AssignUser, CreateTaskForm
+from Forms.forms import CreateAccount, EditUser, AddUser, AssignUser, \
+    CreateTaskForm
 from helper_methods import UserMgmt
 
 
