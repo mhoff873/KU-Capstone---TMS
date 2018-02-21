@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy(app)
 
-
 # This connects to the DB. Obviously we only want to connect when required, so
 # this will be of interest to Nate and his DB interface class.
 
