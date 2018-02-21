@@ -3,7 +3,7 @@ from flask import render_template, request
 from app import app
 from Forms.forms import CreateAccount, EditUser, AddUser, AssignUser, \
     CreateTaskForm
-from helper_methods import UserMgmt
+from helper_methods import UserMgmt, Tasks
 
 
 @app.route('/', methods=['GET'])
@@ -37,11 +37,10 @@ def team_b_forms():
                            AssignUser=assignUserForm,
                            users=unassigned_users)
 
+
 @app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
     form = CreateTaskForm()
-    print(form.data)
-    print(request.method)
     if request.method == ['GET']:
         return render_template('create_task.html', form=form)
     # When buttons are clicked on the form, it returns a True/False value
@@ -53,9 +52,11 @@ def create_task():
         return render_template('create_task.html', form=form)
     elif form.save_as_draft.data:
         print('Save as draft')
+        Tasks.create_task(form)
         return render_template('create_task.html', form=form)
     elif form.publish.data:
         print('Publish Task')
+        Tasks.create_task(form)
         return render_template('index.html')
     else:
         print('Checking for detailed step button press.')

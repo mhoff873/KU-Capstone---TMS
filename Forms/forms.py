@@ -83,6 +83,8 @@ class MainStep(FlaskForm):
 
 class CreateTaskForm(FlaskForm):
     task_name = StringField('Task Name:', validators=[DataRequired()])
+    task_description = StringField('Description:')
+    image = FileField('Upload image for Task:')
     required_items = StringField('Items Required for this Task:')
     main_step = FieldList(FormField(MainStep), min_entries=1)
     add_main_step = SubmitField('+ Main Step')

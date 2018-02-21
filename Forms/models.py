@@ -26,7 +26,7 @@ class Base(object):
     active = db.Column("active", db.Boolean, index=True)
     isLoggedIn = db.Column("isLoggedIn", db.Boolean, index=True)
     dateCreated = db.Column("dateCreated", db.DateTime, index=True)
-    picture = db.Column("dateCreated", db.DateTime, index=True)
+    picture = db.Column("picture", db.DateTime, index=True)
 
     def __init__(self):
         pass
@@ -67,3 +67,58 @@ class Supervisor(Base, db.Model):
 
     def __repr__(self):
         return "<Supervisor %r>" % (self.email)
+
+
+class Task(db.Model):
+    """Basic task fields that are used for the Task, Main Steps, and Detailed
+    Steps"""
+    __tablename__ = 'task'
+    taskID = db.Column('taskID', db.Integer, primary_key=True)
+    supervisorID = db.Column('supervisorID', db.Integer)
+    title = db.Column('title', db.String(255))
+    description = db.Column('description', db.String(255))
+    activated = db.Column('activated', db.String(255))
+    dateCreated = db.Column('dateCreated', db.Date)
+    dateModified = db.Column('dateModified', db.Date)
+    lastUsed = db.Column('lastUsed', db.DateTime)
+    published = db.Column('published', db.Boolean)
+    image = db.Column('image', db.String(255))
+
+    def __init__(self, title=None):
+        super(Task, self).__init__()
+        self.title = title
+        self.dateCreated = datetime.utcnow()
+        self.dateModified = datetime.utcnow()
+        self.lastUsed = datetime.utcnow()
+
+
+class MainStep(db.Model):
+    __tablename__ = 'mainSteps'
+    mainStepID = db.Column('mainStepID', db.Integer, primary_key=True)
+    taskID = db.Column('taskID', db.Integer)
+    title = db.Column('title', db.String(255))
+    requiredInfo = db.Column('requiredInfo', db.String(255))
+    listOrder = db.Column('listOrder', db.Integer)
+    requiredItem = db.Column('requiredItem', db.String(255))
+    stepText = db.Column('stepText', db.String(255))
+    audio = db.Column('audio', db.String(255))
+    image = db.Column('image', db.String(255))
+    video = db.Column('video', db.String(255))
+
+    def __init__(self, title=None):
+        super(MainStep, self).__init__()
+        self.title = title
+
+
+class DetailedStep(db.Model):
+    __tablename__ = 'detailedSteps'
+    detailedStepID = db.Column('detailedStepID', db.Integer, primary_key=True)
+    mainStepID = db.Column('mainStepID', db.Integer)
+    title = db.Column('title', db.String(255))
+    stepText = db.Column('stepText', db.String(255))
+    listOrder = db.Column('listOrder', db.Integer)
+    image = db.Column('image', db.String(255))
+
+    def __init__(self, title=None):
+        super(DetailedStep, self).__init__()
+        self.title = title
