@@ -1,13 +1,40 @@
 from flask import render_template, request
 
-from forms import CreateTaskForm
 from app import app
+from Forms.forms import CreateAccount, EditUser, AddUser, AssignUser, CreateTaskForm
+from helper_methods import UserMgmt
 
 
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
+
+@app.route("/teambforms/", methods=["GET", "POST"])
+def team_b_forms():
+    # Create Forms
+    createAccountForm = CreateAccount()
+    editUserForm = EditUser()
+    addUserForm = AddUser()
+    assignUserForm = AssignUser()
+    unassigned_users = [x.email for x in UserMgmt.get_unassigned()]    
+    if createAccountForm.validate_on_submit():
+        UserMgmt.create_account(createAccountForm)
+        return "New user created!"
+    elif editUserForm.validate_on_submit():
+        UserMgmt.edit_user(editUserForm)
+        return "EditUser Form submitted!"
+    elif addUserForm.validate_on_submit():
+        UserMgmt.add_user(addUserForm)
+        return str(addUserForm.user.data)  # "Successfully assigned user!"
+    elif assignUserForm.validate_on_submit():
+        return UserMgmt.assign_user(assignUserForm)
+    return render_template("TeamBForms.html",
+                           CreateAccount=createAccountForm,
+                           EditUser=editUserForm,
+                           AddUser=addUserForm,
+                           AssignUser=assignUserForm,
+                           users=unassigned_users)
 
 @app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
