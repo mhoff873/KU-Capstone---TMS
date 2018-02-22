@@ -2,31 +2,34 @@
 # Login Verification Functions
 # author: Mason Hoffman
 # created: 2/4/2018 (Go eagles!)
-# latest: 2/5/2018
-# purpose: hash comparison & login verification for the supervisors
+# latest: 2/21/2018
+# purpose: hash comparison & login verification (requirement 38)
 #
 
 import bcrypt
-import DB_Functions
-import mysql.connector
+import database
+from models import User, Supervisor
+from flask_login import login_user, logout_user
 
-#(encode the input as utf-8 on account creation hash)
-#hashed = bcrypt.hashpw(passw.encode('utf8'), bcrypt.gensalt())
-
+# requirement 38
 # root function for login verification
 def verifyMain(email,password):
-    print("verifying login")
-    hash = requestHash(email)
-    print("verifying hash")
-    return hash == bcrypt.hashpw(password.encode('utf-8'), hash)
+    usr = requestHash(email)
+    if usr:      # if the user was found in the table
+        if usr.password.encode('utf-8') == bcrypt.hashpw(password.encode('utf-8'), usr.password.encode('utf-8')):
+            login_user(usr)
+            return True  # Lets gooooo!
+        else:    # the password hash did not match
+            print("Invalid password")
+    else:        # the user was not found in the table
+        print("This account is not yet registered")
+    return False # Something was fucked up
 
 # return password hash and salt from database. (salt is stored with the hash)
-def requestHash(email):
-    db = DB_Functions.connect()
-    cursor = db.cursor()
-    cursor.execute("SELECT password FROM supervisors WHERE email = '%s'" % (email,))
-    user = None
-    user = cursor.fetchone()
-    #return the password hash when there is one
-    return user[0].encode('utf-8') if user else false
+def requestHash(submittedEmail):
+    p = None
+    p = (Supervisor.query.filter_by(email=submittedEmail).first())
+    return p if p else None
+    
+    
       
