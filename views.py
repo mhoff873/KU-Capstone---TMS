@@ -10,7 +10,7 @@ from helper_methods import UserMgmt, Tasks, Update, Login
 def index():
     return render_template('index.html')
 
-
+#supervisor account page
 @app.route('/dashboard', methods=['GET'])
 #@login_required
 def dashboard():
@@ -66,7 +66,7 @@ def update():
     # the page has not been submitted before so lets render the form instead
     return render_template('update.html', form=uForm)
 
-
+#create supervisor page
 @app.route("/chris/", methods=["GET", "POST"])
 def chris():
     form = CreateAccount()
@@ -82,7 +82,7 @@ def team_b_forms():
     editUserForm = EditUser()
     addUserForm = AddUser()
     assignUserForm = AssignUser()
-    unassigned_users = [x.email for x in UserMgmt.get_unassigned()]    
+    unassigned_users = [x.email for x in UserMgmt.get_unassigned()]
     if createAccountForm.validate_on_submit():
         UserMgmt.create_account(createAccountForm)
         return "New user created!"
@@ -101,7 +101,7 @@ def team_b_forms():
                            AssignUser=assignUserForm,
                            users=unassigned_users)
 
-
+#create task page
 @app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
     form = CreateTaskForm()
