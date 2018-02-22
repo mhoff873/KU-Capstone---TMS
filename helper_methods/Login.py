@@ -8,7 +8,7 @@
 
 import bcrypt
 import database
-from models import User, Supervisor
+from Forms.models import User, Supervisor
 from flask_login import login_user, logout_user
 
 # requirement 38
