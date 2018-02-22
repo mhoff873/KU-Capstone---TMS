@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="jumbotron text-center">
+  <h1>Supervisor Account</h1> <!--need to fix this-->
+</div>
+
+<div class="container">
+  <div class="page_content">
+
+  <!-- content goes in here, below. -->
+
+<!--<div class= "text-center">-->
+
+
+
+
+
+  <!-- Create Supervisor Account -->
+
+
+  <!-- Edit user info -->
+  <form method="POST">
+      {{ EditUser.csrf_token }}
+      {{ EditUser.person.label }}
+      {{ EditUser.person }}
+      <br>
+      {{ EditUser.is_supervisor.label }}
+      {{ EditUser.is_supervisor }}
+      <br>
+      {{ EditUser.phone.label }}
+      {{ EditUser.phone }}
+      <br>
+      {{ EditUser.fname.label }}
+      {{ EditUser.fname }}
+      <br>
+      {{ EditUser.mname.label }}
+      {{ EditUser.mname }}
+      <br>
+      {{ EditUser.lname.label }}
+      {{ EditUser.lname }}
+      <br>
+      {{ EditUser.gender.label }}
+      {{ EditUser.gender }}
+      <br>
+      {{ EditUser.birthday.label }}
+      {{ EditUser.birthday }}
+      <br>
+      {{ EditUser.affiliation.label }}
+      {{ EditUser.affiliation }}
+      <br>
+      {{ EditUser.ethnicity.label }}
+      {{ EditUser.ethnicity }}
+      <br>
+      {{ EditUser.picture.label }}
+      {{ EditUser.picture}}
+      <br>
+      {{ EditUser.submit }}
+  </form>
+
+  <!-- Add user to supervisor -->
+  <form method="POST">
+      {{ AddUser.csrf_token }}
+      {{ AddUser.supervisor_email.label }}
+      {{ AddUser.supervisor_email }}
+      <p>*Please note that the supervisor field will be filled out instead by
+      the session variable after sessions are integrated.*</p>
+      <br>
+      {% for user in users %}
+          {{ AddUser.user }}{{ user }}
+          <br>
+      {% endfor %}
+      <br>
+      {{ AddUser.submit }}
+  </form>
+
+  <!-- Assign user to a supervisor -->
+  <form method="POST">
+      {{ AssignUser.csrf_token }}
+      {{ AssignUser.supervisor.label }}
+      {{ AssignUser.supervisor }}
+      <br>
+      {{ AssignUser.user.label }}
+      {{ AssignUser.user }}
+      <br>
+      {{ AssignUser.submit }}
+  </form>
+
+
+
+
+
+<!--</div>-->
+
+
+
+
+  <!-- content goes here, above. -->
+
+  </div>
+</div><!-- /.container -->
+
+{% endblock content %}
