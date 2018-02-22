@@ -7,8 +7,7 @@
 #
 
 import bcrypt
-import models
-from models import Supervisor
+from Forms.models import Supervisor
 import database
 
 # return password hash and salt from database. (salt is stored with the hash)

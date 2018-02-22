@@ -2,20 +2,14 @@ from flask import render_template, request
 
 from app import app
 from Forms.forms import CreateAccount, EditUser, AddUser, AssignUser, \
-    CreateTaskForm
-from helper_methods import UserMgmt, Tasks
+    CreateTaskForm, ChangePassword, LoginForm
+from helper_methods import UserMgmt, Tasks, Update
 
-#team B start
-from app import app
-from Forms.forms import CreateAccount, EditUser, UpdatePassword, LoginForm, AddUser, AssignUser
-from Forms.models import User
-import Login
-import Update
-import bcrypt
 
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
 
 @app.route('/dashboard', methods=['GET'])
 #@login_required
@@ -34,7 +28,6 @@ def dashboard():
         aUser = AddUser()
         assUser = AssignUser()
         return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
-
 
 
 # login page
@@ -60,7 +53,7 @@ def login():
 # update password page (currently a page, maybe you will want a popup... whatever)
 @app.route('/update', methods=['POST','GET'])
 def update():
-    uForm = UpdatePassword()
+    uForm = ChangePassword()
     if uForm.validate_on_submit():
         Update.setPassword(uForm.email.data,uForm.password.data)
         # lets go back to the login page to test if the new password works
@@ -73,6 +66,7 @@ def update():
     # the page has not been submitted before so lets render the form instead
     return render_template('update.html', form=uForm)
 
+
 @app.route("/chris/", methods=["GET", "POST"])
 def chris():
     form = CreateAccount()
@@ -80,21 +74,6 @@ def chris():
         return "WOOOT you created and account/no you didn't... I am not adding this :D"
     return render_template("createSupervisorTest.html", form=form)
 
-@app.route("/teambforms/", methods=["GET", "POST"])
-def team_b_forms():
-    createAccountForm = CreateAccount()
-    editUserForm = EditUser()
-    if createAccountForm.validate_on_submit:
-        return "CreateAccount Form submitted!"
-    elif editUserForm.validate_on_submit:
-        return "EditUser Form submitted!"
-    return render_template("TeamBForms.html", CreateAccount=createAccountForm, EditUser=editUserForm)
-
-
-@app.route('/task', methods=["GET", "POST"])
-#@login_required
-def task():
-    return render_template('task.html')
 
 @app.route("/teambforms/", methods=["GET", "POST"])
 def team_b_forms():
@@ -121,6 +100,7 @@ def team_b_forms():
                            AddUser=addUserForm,
                            AssignUser=assignUserForm,
                            users=unassigned_users)
+
 
 @app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
@@ -149,5 +129,4 @@ def create_task():
             print(step.add_detailed_step.data)
             if step.add_detailed_step.data:
                 step.detailed_steps.append_entry()
-                print(f'Adding detailed for main step {i}.')
     return render_template('create_task.html', form=form)

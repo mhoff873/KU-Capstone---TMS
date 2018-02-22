@@ -25,6 +25,7 @@ class ChangePassword(FlaskForm):
     confirm = PasswordField('Repeat Password')
     submit = SubmitField('Submit')
 
+
 # Requirement 27, 28
 class CreateAccount(FlaskForm):
     """Account creation form. Email validation currently uses a crude RegEx.
