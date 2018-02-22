@@ -3,7 +3,7 @@ from flask import render_template, request
 from app import app
 from Forms.forms import CreateAccount, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm
-from helper_methods import UserMgmt, Tasks, Update
+from helper_methods import UserMgmt, Tasks, Update, Login
 
 
 @app.route('/', methods=['GET'])
