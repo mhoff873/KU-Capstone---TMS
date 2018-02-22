@@ -10,6 +10,7 @@ import bcrypt
 from Forms.models import Supervisor
 import database
 
+
 # return password hash and salt from database. (salt is stored with the hash)
 def setPassword(submittedEmail,passw):
     p = None
