@@ -1,7 +1,5 @@
-#Task editor/creator branch test.
-#Test of merging lockout
-from views import *  # Views imports app already, so no need to import here
+from views import *
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, port=55000, host="0.0.0.0")

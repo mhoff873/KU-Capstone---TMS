@@ -1,9 +1,9 @@
-from flask import render_template
+from flask import render_template, request
 
-#team A start
-#from forms import CreateTaskForm
-from Forms.forms import CreateTaskForm
-#team A end
+from app import app
+from Forms.forms import CreateAccount, EditUser, AddUser, AssignUser, \
+    CreateTaskForm
+from helper_methods import UserMgmt, Tasks
 
 #team B start
 from app import app
@@ -15,17 +15,6 @@ import bcrypt
 
 @app.route('/', methods=['GET'])
 def index():
-    """
-    Example flask-mysqldb implementation
-    cursor = mysql.connection.cursor()
-    cursor.execute('''SELECT * FROM users''')
-    NOTE: ^ is so so so so so unsecure. SQL injections yall.
-    results = cursor.fetchall()
-    return results
-
-    If this lib doesn't have all the support we need, we'll need to look at
-    using jQuery AJAX embedded within our python.
-    """
     return render_template('index.html')
 
 @app.route('/dashboard', methods=['GET'])
@@ -107,15 +96,35 @@ def team_b_forms():
 def task():
     return render_template('task.html')
 
-#end of team B
-
-#start of team A
+@app.route("/teambforms/", methods=["GET", "POST"])
+def team_b_forms():
+    # Create Forms
+    createAccountForm = CreateAccount()
+    editUserForm = EditUser()
+    addUserForm = AddUser()
+    assignUserForm = AssignUser()
+    unassigned_users = [x.email for x in UserMgmt.get_unassigned()]    
+    if createAccountForm.validate_on_submit():
+        UserMgmt.create_account(createAccountForm)
+        return "New user created!"
+    elif editUserForm.validate_on_submit():
+        UserMgmt.edit_user(editUserForm)
+        return "EditUser Form submitted!"
+    elif addUserForm.validate_on_submit():
+        UserMgmt.add_user(addUserForm)
+        return str(addUserForm.user.data)  # "Successfully assigned user!"
+    elif assignUserForm.validate_on_submit():
+        return UserMgmt.assign_user(assignUserForm)
+    return render_template("TeamBForms.html",
+                           CreateAccount=createAccountForm,
+                           EditUser=editUserForm,
+                           AddUser=addUserForm,
+                           AssignUser=assignUserForm,
+                           users=unassigned_users)
 
 @app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
     form = CreateTaskForm()
-    print(form.data)
-    print(request.method)
     if request.method == ['GET']:
         return render_template('create_task.html', form=form)
     # When buttons are clicked on the form, it returns a True/False value
@@ -127,9 +136,11 @@ def create_task():
         return render_template('create_task.html', form=form)
     elif form.save_as_draft.data:
         print('Save as draft')
+        Tasks.create_task(form)
         return render_template('create_task.html', form=form)
     elif form.publish.data:
         print('Publish Task')
+        Tasks.create_task(form)
         return render_template('index.html')
     else:
         print('Checking for detailed step button press.')
@@ -138,7 +149,5 @@ def create_task():
             print(step.add_detailed_step.data)
             if step.add_detailed_step.data:
                 step.detailed_steps.append_entry()
-                #print(f'Adding detailed for main step {i}.')
+                print(f'Adding detailed for main step {i}.')
     return render_template('create_task.html', form=form)
-
-    #end of Team A

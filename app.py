@@ -11,6 +11,5 @@ installation of all libraries the app uses. It is called via:
 """
 from flask import Flask
 
-
 app = Flask(__name__)
 app.config.from_object('config')
