@@ -1,7 +1,7 @@
 from flask import render_template, request
 
 from app import app
-from Forms.forms import CreateAccount, EditUser, AddUser, AssignUser, \
+from Forms.forms import CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm
 from helper_methods import UserMgmt, Tasks, Update, Login
 
@@ -19,15 +19,6 @@ def dashboard():
     aUser = AddUser()
     assUser = AssignUser()
     return render_template('dashboard.html', CreateAccount=createAccountForm,EditUser=eUser,AddUser=aUser,AssignUser=assUser)
-
-    @app.route('/supervisor_account', methods=['GET'])
-    #@login_required
-    def dashboard():
-
-        eUser = EditUser()
-        aUser = AddUser()
-        assUser = AssignUser()
-        return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
 
 
 # login page
@@ -67,12 +58,22 @@ def update():
     return render_template('update.html', form=uForm)
 
 #create supervisor page
-@app.route("/chris/", methods=["GET", "POST"])
-def chris():
-    form = CreateAccount()
+@app.route("/create_supervisor/", methods=["GET", "POST"])
+def create_supervisor():
+    form = CreateSupervisor()
     if form.validate_on_submit():
-        return "WOOOT you created and account/no you didn't... I am not adding this :D"
+        UserMgmt.create_supervisor(form)
+        return "WOOOT you created a new supervisor!"
     return render_template("createSupervisorTest.html", form=form)
+
+#create user page
+@app.route("/create_user/", methods=["GET", "POST"])
+def create_user():
+    form = CreateUser()
+    if form.validate_on_submit():
+        UserMgmt.create_user(form)
+        return "WOOOT you created a new user!"
+    return "This doesn't have an html file yet! Please make me :*("
 
 
 @app.route("/teambforms/", methods=["GET", "POST"])
