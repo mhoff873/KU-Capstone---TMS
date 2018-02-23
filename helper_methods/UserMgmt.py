@@ -9,6 +9,20 @@ from Forms.models import User, Supervisor
 from database import db
 import bcrypt
 
+def create_account(form):
+    """
+    need to get rid of this create_accout
+    need it for now to work on tms
+    """
+    user = None
+    email = form.email.data
+    password = form.password.data
+    if form.is_supervisor.data:
+        user = Supervisor()
+    else:
+        user = User()
+    user.email = email
+    user.password = password
 
 def create_user(form):
     """
@@ -107,7 +121,7 @@ def assign_user(form):
     supervisor = Supervisor.query.filter_by(email=form.supervisor.data).first()
     if supervisor is not None:
         user = User.query.filter_by(email=form.user.data).first()
-        if user is not None:            
+        if user is not None:
             user.supervisorID = supervisor.supervisorID
             db.session.commit()
         else:

@@ -14,5 +14,5 @@ MYSQL_PASSWORD = 'es92blkh'
 MYSQL_DB = 'TMS'
 MYSQL_PORT = '3306'
 MYSQL_CONNECT_TIMEOUT = 5
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://nathan:es92blkh@localhost:3306/TMS'
+SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://tmstadmin:humedavid@localhost:3306/tmst_db"
 SQLALCHEMY_TRACK_MODIFICATIONS = False

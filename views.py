@@ -1,8 +1,8 @@
 from flask import render_template, request
 
 from app import app
-from Forms.forms import CreateSupervisor, EditUser, AddUser, AssignUser, \
-    CreateTaskForm, ChangePassword, LoginForm
+from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
+    CreateTaskForm, ChangePassword, LoginForm, CreateUser #need to get rid of CreateAccount
 from helper_methods import UserMgmt, Tasks, Update, Login
 
 
@@ -10,7 +10,7 @@ from helper_methods import UserMgmt, Tasks, Update, Login
 def index():
     return render_template('index.html')
 
-#supervisor account page
+#dashboard
 @app.route('/dashboard', methods=['GET'])
 #@login_required
 def dashboard():
@@ -19,6 +19,15 @@ def dashboard():
     aUser = AddUser()
     assUser = AssignUser()
     return render_template('dashboard.html', CreateAccount=createAccountForm,EditUser=eUser,AddUser=aUser,AssignUser=assUser)
+
+#supervisor account
+@app.route('/supervisor_account', methods=['GET'])
+#@login_required
+def supervisor_account():
+    eUser = EditUser()
+    aUser = AddUser()
+    assUser = AssignUser()
+    return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
 
 
 # login page
@@ -73,7 +82,9 @@ def create_user():
     if form.validate_on_submit():
         UserMgmt.create_user(form)
         return "WOOOT you created a new user!"
-    return "This doesn't have an html file yet! Please make me :*("
+    return render_template("createUser.html", form=form)
+    "This doesn't have an html file yet! Please make me :*("
+
 
 
 @app.route("/teambforms/", methods=["GET", "POST"])
@@ -102,7 +113,7 @@ def team_b_forms():
                            AssignUser=assignUserForm,
                            users=unassigned_users)
 
-#create task page
+#create task
 @app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
     form = CreateTaskForm()

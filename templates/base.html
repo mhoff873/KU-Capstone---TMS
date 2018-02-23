@@ -9,6 +9,7 @@
 
     <!-- Custom css styles for this template -->
     <link href="../static/css/test.css" rel="stylesheet">
+    <link rel="stylesheet" href="#"
     <!--font awesome for icons-->
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
     <!--Google material use-->
@@ -28,7 +29,7 @@
     <div class="collapse navbar-collapse" id="navbarToggler">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{{url_for('dashboard')}}">Dashboard <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Library</a>
@@ -39,6 +40,9 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Survey Management</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('create_task')}}">{Create Task Page}</a>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">"User"</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -46,13 +50,13 @@
               Notificatitons
               <span class="badge badge-pill bg-light align-text-bottom">79</span>
             </a>
-            <a class="dropdown-item" href="#">Account</a>
+            <a class="dropdown-item" href="{{url_for('supervisor_account')}}">Account</a>
             <a class="dropdown-item" href="#">Logout</a>
             <div class="dropdown-divider"></div>
             <div class="dropdown-header">Administration</div>
             <a class="dropdown-item" href="#">Reports</a>
-            <a class="dropdown-item" href="#">Create User</a>
-            <a class="dropdown-item" href="#">Create Supervisor</a>
+            <a class="dropdown-item" href="{{url_for('create_user')}}">Create User</a>
+            <a class="dropdown-item" href="{{url_for('create_supervisor')}}">Create Supervisor</a>
           </div>
         </li>
       </ul>

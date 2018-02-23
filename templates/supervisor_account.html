@@ -10,7 +10,7 @@
 
   <!-- content goes in here, below. -->
 
-<!--<div class= "text-center">-->
+<div class= "text-center">
 
 
 
@@ -18,72 +18,107 @@
   <!-- Edit user info -->
   <form method="POST">
       {{ EditUser.csrf_token }}
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.person.label }}
-      {{ EditUser.person }}
+      {{ EditUser.person (class="form-control")}}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.is_supervisor.label }}
       {{ EditUser.is_supervisor }}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.phone.label }}
-      {{ EditUser.phone }}
+      {{ EditUser.phone (class="form-control")}}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.fname.label }}
-      {{ EditUser.fname }}
+      {{ EditUser.fname (class="form-control")}}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.mname.label }}
-      {{ EditUser.mname }}
+      {{ EditUser.mname (class="form-control")}}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.lname.label }}
-      {{ EditUser.lname }}
+      {{ EditUser.lname (class="form-control")}}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.gender.label }}
-      {{ EditUser.gender }}
+      {{ EditUser.gender (class="form-control")}}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.birthday.label }}
-      {{ EditUser.birthday }}
+      {{ EditUser.birthday (class="form-control")}}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.affiliation.label }}
-      {{ EditUser.affiliation }}
+      {{ EditUser.affiliation (class="form-control")}}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.ethnicity.label }}
-      {{ EditUser.ethnicity }}
+      {{ EditUser.ethnicity (class="form-control")}}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.picture.label }}
-      {{ EditUser.picture}}
+      {{ EditUser.picture(class="form-control")}}
+      </div>
       <br>
-      {{ EditUser.submit }}
+      <br>
+      {{ EditUser.submit (class='btn btn-secondary btn-md')}}
   </form>
 
   <!-- Add user to supervisor -->
   <form method="POST">
       {{ AddUser.csrf_token }}
+      <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ AddUser.supervisor_email.label }}
-      {{ AddUser.supervisor_email }}
+      {{ AddUser.supervisor_email (class="form-control")}}
+      </div>
       <p>*Please note that the supervisor field will be filled out instead by
       the session variable after sessions are integrated.*</p>
       <br>
       {% for user in users %}
-          {{ AddUser.user }}{{ user }}
+
+          {{ AddUser.user }}{{ user}}
+
           <br>
+
       {% endfor %}
       <br>
-      {{ AddUser.submit }}
+      {{ AddUser.submit (class='btn btn-secondary btn-md')}}
   </form>
 
   <!-- Assign user to a supervisor -->
   <form method="POST">
       {{ AssignUser.csrf_token }}
+      <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ AssignUser.supervisor.label }}
-      {{ AssignUser.supervisor }}
+      {{ AssignUser.supervisor (class="form-control")}}
+      </div>
       <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ AssignUser.user.label }}
-      {{ AssignUser.user }}
+      {{ AssignUser.user (class="form-control")}}
+      </div>
       <br>
-      {{ AssignUser.submit }}
+      <br>
+      {{ AssignUser.submit (class='btn btn-secondary btn-md')}}
   </form>
 
 
-<!--</div>-->
+</div>
 
 
 

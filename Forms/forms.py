@@ -25,11 +25,17 @@ class ChangePassword(FlaskForm):
     confirm = PasswordField('Repeat Password')
     submit = SubmitField('Submit')
 
+# need to get rid of this class. needed it for dashboard ->
+# sorry Nate
+class CreateAccount(FlaskForm):
+    email = StringField('Email', [Email(), InputRequired()])
+    password = PasswordField('Password', [InputRequired(), EqualTo('confirm', message='Passwords must match')])
+    confirm = PasswordField('Repeat Password')
+    submit = SubmitField('Create New Account')
+
 
 # Requirement 27
 class CreateSupervisor(FlaskForm):
-    """Account creation form. Email validation currently uses a crude RegEx.
-    Update to confirmation email in the future"""
     email = StringField('Email', [Email(), InputRequired()])
     password = PasswordField('Password', [InputRequired(), EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Repeat Password')
