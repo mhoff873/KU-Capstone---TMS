@@ -9,6 +9,20 @@ from Forms.models import User, Supervisor
 from database import db
 import bcrypt
 
+def create_account(form):
+    """
+    need to get rid of this create_accout
+    need it for now to work on tms
+    """
+    user = None
+    email = form.email.data
+    password = form.password.data
+    if form.is_supervisor.data:
+        user = Supervisor()
+    else:
+        user = User()
+    user.email = email
+    user.password = password
 
 def create_user(form):
     """
@@ -17,9 +31,7 @@ def create_user(form):
     :param form: Form that is submitted to create a new user.
     :return: N/A
     """
-    exists = True if User.query.filter_by(email=form.email.data).first() is not None else False
-    if exists:
-        return False
+    table = "users"
 
     # Create instance of User model
     user = User()
@@ -40,9 +52,7 @@ def create_supervisor(form):
     :param form: Form that is submitted to created a new supervisor.
     :return: N/A
     """
-    exists = True if Supervisor.query.filter_by(email=form.email.data).first() is not None else False
-    if exists:
-        return False
+    table = "supervisors"
 
     # Create instance of Supervisor model
     user = Supervisor()

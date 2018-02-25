@@ -71,11 +71,11 @@ def update():
 def create_supervisor():
     form = CreateSupervisor()
     if form.validate_on_submit():
-        if UserMgmt.create_supervisor(form):
-            eUser = EditUser()
-            aUser = AddUser()
-            assUser = AssignUser()
-            return render_template("supervisor_account.html", EditUser=eUser, AddUser=aUser, AssignUser=assUser)
+        UserMgmt.create_supervisor(form)
+        eUser = EditUser()
+        aUser = AddUser()
+        assUser = AssignUser()
+        return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
     return render_template("createSupervisorTest.html", form=form)
 
 #create user page
