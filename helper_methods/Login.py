@@ -30,6 +30,3 @@ def requestHash(submittedEmail):
     p = None
     p = (Supervisor.query.filter_by(email=submittedEmail).first())
     return p if p else None
-    
-    
-      

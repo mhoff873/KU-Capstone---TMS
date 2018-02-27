@@ -11,23 +11,14 @@ def index():
     return render_template('index.html')
 
 #supervisor account page
-@app.route('/dashboard', methods=['GET'])
+@app.route('/supervisor_account/', methods=['GET'])
 #@login_required
 def dashboard():
     createAccountForm = CreateAccount()
     eUser = EditUser()
     aUser = AddUser()
     assUser = AssignUser()
-    return render_template('dashboard.html', CreateAccount=createAccountForm,EditUser=eUser,AddUser=aUser,AssignUser=assUser)
-
-    @app.route('/supervisor_account', methods=['GET'])
-    #@login_required
-    def dashboard():
-
-        eUser = EditUser()
-        aUser = AddUser()
-        assUser = AssignUser()
-        return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
+    return render_template('supervisor_account.html', CreateAccount=createAccountForm,EditUser=eUser,AddUser=aUser,AssignUser=assUser)
 
 
 # login page
