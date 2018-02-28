@@ -3,9 +3,9 @@ from flask import render_template, request, jsonify
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser #need to get rid of CreateAccount
-from helper_methods import UserMgmt, Tasks, Update, Login
+from helper_methods import UserMgmt, Tasks, Update, Login, Library
 from database import *
-
+from Forms.models import Supervisor
 
 @app.route('/', methods=['GET'])
 def index():
@@ -184,7 +184,9 @@ def create_user():
 # library
 @app.route("/library/", methods=["GET", "POST"])
 def library():
-    return render_template("library.html")
+    bettycooper = Supervisor.query.filter_by(email="Bettycooper@gmail.com").first()
+    tasks = [x.title for x in Library.get_tasks(bettycooper.supervisorID)]
+    return render_template("library.html", tasks=tasks)
     
 
 @app.route("/teambforms/", methods=["GET", "POST"])
