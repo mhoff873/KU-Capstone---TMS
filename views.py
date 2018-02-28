@@ -129,8 +129,6 @@ def supervisor_account():
 def login():
     lForm = LoginForm()
     if lForm.validate_on_submit():
-        #print (str("Email: {e}").format(e=lForm.email.data))
-        #print (str("Password: {p}").format(p=lForm.password.data))
         if Login.verifyMain(lForm.email.data,lForm.password.data):
             print("login sucessful")
             return render_template('dashboard.html')
@@ -183,6 +181,11 @@ def create_user():
         return "WOOOT you created a new user!"
     return render_template("createUser.html", form=form)
 
+# library
+@app.route("/library/", methods=["GET", "POST"])
+def library():
+    return render_template("library.html")
+    
 
 @app.route("/teambforms/", methods=["GET", "POST"])
 def team_b_forms():
