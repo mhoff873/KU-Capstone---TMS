@@ -2,101 +2,92 @@
 {% block content %}
 
 <div class="jumbotron text-center">
-  <h1>Library</h1>
+    <h1>Library</h1>
 </div>
 
 <div class="container">
-  <div class="page_content">
+    <div class="page_content">
 
-  <!-- content goes in here, below. -->
-  {% for task in tasks %}
-    (image goes here)<br>
-    {{ task }}<br>
-  {% endfor %}
+        <!-- content goes in here, below. -->
 
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm">
+        <div class="row">
+            <div class="col-sm">
+                <div class="dropdown">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                    Library
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">My Library</a>
+                    </div>
+                </div>
 
-          <div class="dropdown">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-              Library
-            </button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="#">My Library</a>
             </div>
-          </div>
 
         </div>
-
-      </div>
     </div>
     <br>
 
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm">
+        <div class="row">
+            <div class="col-sm">
 
-          <div id="editableTextBox">
-            <div class= "form-control" contenteditable="true" style="border: 1px solid black">
-              Hit Enter to Search Library...
+                 <div id="editableTextBox">
+                    <div class= "form-control" contenteditable="true" style="border: 1px solid black">
+                        Hit Enter to Search Library...
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="col-sm">
+                <a class="btn btn-secondary btn-sm" href="#">
+                <i class="fas fa-microphone"></i>Voice</a>
+                <button type="submit" class="btn btn-secondary btn-sm">Search</button>
+            </div>
         </div>
-        <div class="col-sm">
-          <a class="btn btn-secondary btn-sm" href="#">
-            <i class="fas fa-microphone"></i>Voice</a>
-            <button type="submit" class="btn btn-secondary btn-sm">Search</button>
-        </div>
-
-      </div>
     </div>
     <br>
 
     <div class="container-fluid">
-  <div class="row">
-    <div class="col-sm">
+        <div class="row">
+            <div class="col-sm">
+                <div id="editableTextBox">
+                    <div class= "form-control" contenteditable="true" style="border: 1px solid black">
+                        Task Name A-Z (need a dropdown and reverse icon as a button)
+                    </div>
+                </div>
+                <br>
 
-      <div id="editableTextBox">
-        <div class= "form-control" contenteditable="true" style="border: 1px solid black">
-          Task Name A-Z (need a dropdown and reverse icon as a button)
+            </div>
         </div>
-      </div>
-      <br>
-
     </div>
-  </div>
 
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm">
+                <div class="container">
+                    <div class="card">
+                        <div class="card-body">"Task Image Here"</div>
+                            <div class="card-footer">"Task Name Here"</div>
+                            </div>
+                        </div>
 
-        <div class="container">
-          <div class="card">
-            <div class="card-body">"Task Image Here"</div>
-            <div class="card-footer">"Task Name Here"</div>
-          </div>
-        </div>
-
-      </div>
-      <div class="col-sm">
-
-        <div class="container">
-          <div class="card">
-            <div class="card-body">"Task Image Here"</div>
-            <div class="card-footer">"Task Name Here"</div>
-          </div>
-        </div>
-      </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="container">
+                            <div class="card">
+                                <div class="card-body">"Task Image Here"</div>
+                                    <div class="card-footer">"Task Name Here"</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+      <!-- content goes here, above. -->
+      
+      
+            </div>
+        </div><!-- /.container -->
     </div>
-  </div>
-  <br>
-  </div>
-  <!-- content goes here, above. -->
-  
-  
-  </div>
-</div><!-- /.container -->
-
-
 {% endblock content %}
