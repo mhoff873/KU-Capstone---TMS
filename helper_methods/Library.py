@@ -1,10 +1,14 @@
-# Author(s):        Nathan Yost
-# Creation Date:    February 27, 2018
-# Course:           CSC355
-# Purpose:          Library functions and forms dealing with the library.
+"""
+    Author(s):        Nathan Yost
+    Creation Date:    February 27, 2018
+    Course:           CSC355
+    Purpose:          Library functions and forms dealing with the library.
+"""
 
 from Forms.models import Task
-
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, DateField, SubmitField, \
+    BooleanField, FieldList, FormField, FileField
 
 def get_tasks(supervisorID=None):
     """
@@ -18,3 +22,8 @@ def get_tasks(supervisorID=None):
     else:
         tasks = Task.query.filter_by(supervisorID=supervisorID).all()
     return tasks
+
+
+# Not sure if this is going to be used...
+class TaskForm(FlaskForm):
+    submit = SubmitField("blah")
