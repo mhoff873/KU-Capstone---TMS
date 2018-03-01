@@ -63,31 +63,20 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm">
-                <div class="container">
-                    <div class="card">
-                        <div class="card-body">"Task Image Here"</div>
-                            <div class="card-footer">"Task Name Here"</div>
-                            </div>
+            <!-- start content here -->
+            {% for task in tasks %}
+                <div class="col-sm">
+                    <div class="container">
+                        <div class="card">
+                            <div class="card-body">"Task Image Here"</div>
+                            <div class="card-footer">{{ task }}</div>
                         </div>
-
-                    </div>
-                    <div class="col-sm">
-                        <div class="container">
-                            <div class="card">
-                                <div class="card-body">"Task Image Here"</div>
-                                    <div class="card-footer">"Task Name Here"</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
+                    </div>        
                 </div>
-      <!-- content goes here, above. -->
-      
-      
-            </div>
-        </div><!-- /.container -->
+            {% endfor %}
+            <br>
+            <!-- end content here -->
+        </div>     
     </div>
+</div> <!-- end of container -->
 {% endblock content %}
