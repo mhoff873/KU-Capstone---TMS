@@ -3,7 +3,7 @@ from flask import render_template, request, jsonify
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser #need to get rid of CreateAccount
-from helper_methods import UserMgmt, Tasks, Update, Login
+from helper_methods import UserMgmt, Tasks, Update, Login, Api
 from database import *
 
 
@@ -13,7 +13,7 @@ def index():
 
 
 @app.route('/api/user/login', methods=['POST'])
-def user_login():
+def api_login():
     '''
         Function:   user_login
         Purpose:    Allows Front End to login
@@ -21,23 +21,14 @@ def user_login():
     '''
     user = request.form['username']
     password = request.form['password']
-    print(password)
-    cur = mysql.connection.cursor()
-    # Since we are going to be using encryption, its better this way - Patrick
-    cur.execute('SELECT * FROM users WHERE email=%s', (user,))
-    results = cur.fetchone()
-    print(results)
-    if results is None:
+    success = Api.userLogin(user, password)
+    if success is False:
         return jsonify({'d': 'sign in failure'})
     else:
-        if results['password'] == password:
-            return jsonify({'d': "sign in success"})
-        else:
-            return jsonify({'d': 'sign in failure'})
-
+        return jsonify({'d': "sign in success"})
 
 @app.route('/api/user/GetByUser/<uname>', methods=['GET'])
-def getbyuser(uname):
+def api_getbyuser(uname):
     '''
         Function:       getbyuser
         Purpose:        Gets the User's tasks assigned to them
@@ -90,14 +81,17 @@ def getbyuser(uname):
 
 
 # For sprint 2
-'''
-@app.route("/api/GetTaskDetails/<taskid>")
-def GetTaskDetails(taskid):
-    return
+
+@app.route("/api/user/GetTaskDetails/<taskid>", methods=['GET'])
+def getTaskDetails(taskid):
+    results = Api.getTaskDetails(taskid)
+    return jsonify(results)
+
 @app.route("/api/GetAllCompletedSteps/<uname>/<taskid>")
-def GetAllCompletedSteps(uname, taskid):
-    return
-@app.route("/api/GetByUser/<uname>")
+def getAllCompletedSteps(uname, taskid):
+    results = Api.getAllCompletedSteps(uname, taskid)
+    return jsonify(results)
+'''@app.route("/api/GetByUser/<uname>")
 def GetByUser(uname):
     return
 '''
