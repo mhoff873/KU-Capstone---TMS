@@ -5,7 +5,8 @@ from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, Assig
     CreateTaskForm, ChangePassword, LoginForm, CreateUser #need to get rid of CreateAccount
 from helper_methods import UserMgmt, Tasks, Update, Login, Library
 from database import *
-from Forms.models import Supervisor
+from flask_login import current_user, login_required, logout_user
+from Forms.models import Task, User, Supervisor
 
 @app.route('/', methods=['GET'])
 def index():
@@ -105,18 +106,16 @@ def GetByUser(uname):
 
 # dashboard
 @app.route('/dashboard', methods=['GET'])
-# @login_required
+@login_required
 def dashboard():
-    createAccountForm = CreateAccount()
-    eUser = EditUser()
-    aUser = AddUser()
-    assUser = AssignUser()
-    return render_template('dashboard.html', CreateAccount=createAccountForm,EditUser=eUser,AddUser=aUser,AssignUser=assUser)
+    tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
+    users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
+    return render_template('dashboard.html', task_list=tasks, user_list=users)
 
 
 # supervisor account
 @app.route('/supervisor_account', methods=['GET'])
-# @login_required
+@login_required
 def supervisor_account():
     eUser = EditUser()
     aUser = AddUser()
@@ -131,14 +130,13 @@ def login():
     if lForm.validate_on_submit():
         if Login.verifyMain(lForm.email.data,lForm.password.data):
             print("login sucessful")
-            return render_template('dashboard.html')
+            return redirect("dashboard", code=302)
         else:
             print("login failed, try again")
     # form submission was invalid
     if lForm.errors:
         for error_field, error_message in lForm.errors.items():
             print("Field : {field}; error : {error}".format(field=error_field, error=error_message))
-    # the page has not been submitted before so lets render the form instead
     return render_template('login.html', form=lForm)
 
 
@@ -184,7 +182,7 @@ def create_user():
 # library
 @app.route("/library/", methods=["GET", "POST"])
 def library():
-    bettycooper = Supervisor.query.filter_by(email="Bettycooper@gmail.com").first()
+    bettycooper = Supervisor.query.filter_by(supervisorID=current_user.supervisorID).first()
     tasks = Library.get_tasks(bettycooper.supervisorID)
     tasks = Library.sort_alphabetically(tasks, reverse=True)
     return render_template("library.html", tasks=tasks)
