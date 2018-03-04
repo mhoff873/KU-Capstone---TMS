@@ -185,7 +185,8 @@ def create_user():
 @app.route("/library/", methods=["GET", "POST"])
 def library():
     bettycooper = Supervisor.query.filter_by(email="Bettycooper@gmail.com").first()
-    tasks = [x.title for x in Library.get_tasks(bettycooper.supervisorID)]
+    tasks = Library.get_tasks(bettycooper.supervisorID)
+    tasks = Library.sort_alphabetically(tasks, reverse=True)
     return render_template("library.html", tasks=tasks)
     
 

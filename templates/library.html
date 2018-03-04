@@ -61,15 +61,19 @@
         </div>
     </div>
 
+    <!-- Below are where the tasks are displayed -->
     <div class="container-fluid">
         <div class="row">
             <!-- start content here -->
             {% for task in tasks %}
                 <div class="col-sm">
                     <div class="container">
-                        <div class="card">
-                            <div class="card-body">"Task Image Here"</div>
-                            <div class="card-footer">{{ task }}</div>
+                        <!-- This temporarily is used to show description -->
+                        <div onclick="alert('{{ task.description }}')">
+                            <div class="card">
+                                <div class="card-body">"Task Image Here"</div>
+                                <div class="card-footer">{{ task.title }}</div>
+                            </div>
                         </div>
                     </div>        
                 </div>

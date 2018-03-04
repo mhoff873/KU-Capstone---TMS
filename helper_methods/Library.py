@@ -24,6 +24,13 @@ def get_tasks(supervisorID=None):
     return tasks
 
 
+def sort_alphabetically(tasks, reverse=False):
+    return sorted(tasks, key=sort_key, reverse=reverse)
+
+def sort_key(task):
+    return task.title
+
+
 # Not sure if this is going to be used...
 class TaskForm(FlaskForm):
     submit = SubmitField("blah")
