@@ -159,6 +159,7 @@ def update():
 
 #create supervisor page
 @app.route("/create_supervisor/", methods=["GET", "POST"])
+@login_required
 def create_supervisor():
     form = CreateSupervisor()
     if form.validate_on_submit():
@@ -172,6 +173,7 @@ def create_supervisor():
 
 #create user page
 @app.route("/create_user/", methods=["GET", "POST"])
+@login_required
 def create_user():
     form = CreateUser()
     if form.validate_on_submit():
@@ -181,6 +183,7 @@ def create_user():
 
 # library
 @app.route("/library/", methods=["GET", "POST"])
+@login_required
 def library():
     bettycooper = Supervisor.query.filter_by(supervisorID=current_user.supervisorID).first()
     tasks = Library.get_tasks(bettycooper.supervisorID)
@@ -189,6 +192,7 @@ def library():
     
 
 @app.route("/teambforms/", methods=["GET", "POST"])
+@login_required
 def team_b_forms():
     # Create Forms
     createAccountForm = CreateAccount()
@@ -217,6 +221,7 @@ def team_b_forms():
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
+@login_required
 def create_task():
     form = CreateTaskForm()
     if request.method == ['GET']:
