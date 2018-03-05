@@ -49,6 +49,8 @@ def search(keyword):
     :return: List of tasks that match the search criteria.
     """
     alltasks = get_tasks()
+    if keyword == "*":
+        return alltasks
     tasks = []
     for task in alltasks:
         if keyword in (task.title).lower():

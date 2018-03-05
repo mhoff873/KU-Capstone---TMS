@@ -142,6 +142,10 @@ def login():
             print("Field : {field}; error : {error}".format(field=error_field, error=error_message))
     return render_template('login.html', form=lForm)
 
+@app.route("/logout", methods=["GET"])
+def logout():
+    logout_user()
+    return login()
 
 # update password page (currently a page, maybe you will want a popup... whatever)
 @app.route('/update', methods=['POST','GET'])
