@@ -5,7 +5,7 @@
     Purpose:          Library functions and forms dealing with the library.
 """
 
-from Forms.models import Task
+from Forms.models import Task, Supervisor
 from flask_wtf import FlaskForm
 from wtforms import TextField, StringField, PasswordField, DateField, SubmitField, \
     BooleanField, FieldList, FormField, FileField
@@ -22,6 +22,10 @@ def get_tasks(supervisorID=None):
     else:
         tasks = Task.query.filter_by(supervisorID=supervisorID).all()
     return tasks
+
+
+def get_supervisors():
+    return Supervisor.query.all()
 
 
 def sort_alphabetically(tasks, reverse=False):

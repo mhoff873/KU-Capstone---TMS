@@ -191,17 +191,23 @@ def create_user():
 
 # library
 @app.route("/library/", methods=["GET", "POST"])
+@app.route("/library/<supervisor_email>", methods=["GET", "POST"])
 @login_required
-def library():
+def library(supervisor_email=None):
     search_form = Library.SearchForm()
+    allsupervisors = Library.get_supervisors()
+    tasks = []
     if search_form.validate_on_submit():
         keyword = search_form.search.data
         tasks = Library.search(keyword)
-        return render_template("library.html", tasks=tasks, search=search_form)
     else:
-        tasks = Library.get_tasks(current_user.supervisorID)
-        tasks = Library.sort_alphabetically(tasks, reverse=False)
-        return render_template("library.html", tasks=tasks, search=search_form)
+        # If the form is not submitted then I need to check if I am searching by supervisor
+        if supervisor_email is not None:
+            s = Supervisor.query.filter_by(email=supervisor_email).first()
+            tasks = Library.get_tasks(s.supervisorID)
+        else:
+            tasks = Library.get_tasks(current_user.supervisorID)
+    return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors)
 
 
 # create task

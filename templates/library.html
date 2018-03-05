@@ -18,7 +18,11 @@
                     Library
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">My Library</a>
+                        {% for supervisor in supervisors %}
+                            <a class="dropdown-item" href="{{ supervisor.email }}">
+                                {{ supervisor.fname }} {{ supervisor.lname }}
+                            </a>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -71,12 +75,12 @@
                                 <div class="card-footer">{{ task.title }}</div>
                             </div>
                         </div>
-                    </div>        
+                    </div>
                 </div>
             {% endfor %}
             <br>
             <!-- end content here -->
-        </div>     
+        </div>
     </div>
 </div> <!-- end of container -->
 {% endblock content %}
