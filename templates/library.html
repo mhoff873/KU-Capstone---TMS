@@ -28,23 +28,19 @@
     </div>
     <br>
 
+    <form method="POST">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm">
-
-                 <div id="editableTextBox">
-                    <div class= "form-control" contenteditable="true" style="border: 1px solid black">
-                        Hit Enter to Search Library...
-                    </div>
-                </div>
-            </div>
+                {{ search.csrf_token }}
+                {{ search.search }}
+           </div>
             <div class="col-sm">
-                <a class="btn btn-secondary btn-sm" href="#">
-                <i class="fas fa-microphone"></i>Voice</a>
-                <button type="submit" class="btn btn-secondary btn-sm">Search</button>
+                {{ search.submit }}
             </div>
         </div>
     </div>
+    </form>
     <br>
 
     <div class="container-fluid">

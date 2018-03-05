@@ -7,7 +7,7 @@
 
 from Forms.models import Task
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, DateField, SubmitField, \
+from wtforms import TextField, StringField, PasswordField, DateField, SubmitField, \
     BooleanField, FieldList, FormField, FileField
 
 def get_tasks(supervisorID=None):
@@ -25,12 +25,42 @@ def get_tasks(supervisorID=None):
 
 
 def sort_alphabetically(tasks, reverse=False):
+    """
+    Sorts a list of tasks alphabetically, ascending or descending
+    :param tasks: List of tasks to be sorted.
+    :param reverse: Optional on whether to sort ascending or descending.
+    :return: List of sorted tasks.
+    """
     return sorted(tasks, key=sort_key, reverse=reverse)
 
 def sort_key(task):
+    """
+    Allows the sorted functions to sort the tasks based on their title.
+    :param task: Task that will be passed in to be sorted.
+    :return: Title of each task passed into it.
+    """
     return task.title
 
 
+def search(keyword):
+    """
+    Checks for matching keywords to all titles of each task in database.
+    :param keyword: Some substring that can be found in a task title.
+    :return: List of tasks that match the search criteria.
+    """
+    alltasks = get_tasks()
+    tasks = []
+    for task in alltasks:
+        if keyword in (task.title).lower():
+            tasks.append(task)
+    return tasks
+
+
 # Not sure if this is going to be used...
+class SearchForm(FlaskForm):
+    search = TextField("Library Search Bar")
+    submit = SubmitField("Search")
+
+
 class TaskForm(FlaskForm):
     submit = SubmitField("blah")

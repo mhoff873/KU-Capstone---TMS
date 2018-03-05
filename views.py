@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, redirect
 
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
@@ -114,10 +114,13 @@ def dashboard():
 
 
 # supervisor account
-@app.route('/supervisor_account', methods=['GET'])
+@app.route('/supervisor_account', methods=['GET', "POST"])
 @login_required
 def supervisor_account():
     eUser = EditUser()
+    if eUser.validate_on_submit():
+        UserMgmt.edit_user(eUser)
+        return dashboard()
     aUser = AddUser()
     assUser = AssignUser()
     return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
@@ -181,42 +184,20 @@ def create_user():
         return "WOOOT you created a new user!"
     return render_template("createUser.html", form=form)
 
+
 # library
 @app.route("/library/", methods=["GET", "POST"])
 @login_required
 def library():
-    bettycooper = Supervisor.query.filter_by(supervisorID=current_user.supervisorID).first()
-    tasks = Library.get_tasks(bettycooper.supervisorID)
-    tasks = Library.sort_alphabetically(tasks, reverse=True)
-    return render_template("library.html", tasks=tasks)
-    
-
-@app.route("/teambforms/", methods=["GET", "POST"])
-@login_required
-def team_b_forms():
-    # Create Forms
-    createAccountForm = CreateAccount()
-    editUserForm = EditUser()
-    addUserForm = AddUser()
-    assignUserForm = AssignUser()
-    unassigned_users = [x.email for x in UserMgmt.get_unassigned()]
-    if createAccountForm.validate_on_submit():
-        UserMgmt.create_account(createAccountForm)
-        return "New user created!"
-    elif editUserForm.validate_on_submit():
-        UserMgmt.edit_user(editUserForm)
-        return "EditUser Form submitted!"
-    elif addUserForm.validate_on_submit():
-        UserMgmt.add_user(addUserForm)
-        return str(addUserForm.user.data)  # "Successfully assigned user!"
-    elif assignUserForm.validate_on_submit():
-        return UserMgmt.assign_user(assignUserForm)
-    return render_template("TeamBForms.html",
-                           CreateAccount=createAccountForm,
-                           EditUser=editUserForm,
-                           AddUser=addUserForm,
-                           AssignUser=assignUserForm,
-                           users=unassigned_users)
+    search_form = Library.SearchForm()
+    if search_form.validate_on_submit():
+        keyword = search_form.search.data
+        tasks = Library.search(keyword)
+        return render_template("library.html", tasks=tasks, search=search_form)
+    else:
+        tasks = Library.get_tasks(current_user.supervisorID)
+        tasks = Library.sort_alphabetically(tasks, reverse=False)
+        return render_template("library.html", tasks=tasks, search=search_form)
 
 
 # create task
