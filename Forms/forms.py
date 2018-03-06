@@ -128,8 +128,14 @@ class CreateTaskForm(FlaskForm):
     required_items = StringField('Items Required for this Task:')
     main_step = FieldList(FormField(MainStep), min_entries=0)
     add_main_step = SubmitField('+ Main Step')
+    # Displays in library only for self AND disabled
     save_as_draft = SubmitField('Save to Library as Draft')
+    # Displays in library for everyone AND enables it for user assignment
     publish = SubmitField('Save to Library and Publish')
+    # enable/disable button
+    toggle_enabled = SubmitField('Enable/Disable Task')
+    # "Archive" button to re-hide it from everyone
+    toggle_activation = SubmitField('Activate/Deactivate Task')
 
     @staticmethod
     def process_data(data):

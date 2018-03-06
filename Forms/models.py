@@ -82,7 +82,9 @@ class Supervisor(Base, db.Model):
 
 
 class Task(db.Model):
-    """Basic task fields that are used for the Task, Main Steps, and Detailed
+    """
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    Basic task fields that are used for the Task, Main Steps, and Detailed
     Steps"""
     __tablename__ = 'task'
     taskID = Column('taskID', Integer, primary_key=True)
@@ -105,6 +107,9 @@ class Task(db.Model):
 
 
 class MainStep(db.Model):
+    """
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    """
     __tablename__ = 'mainSteps'
     mainStepID = Column('mainStepID', Integer, primary_key=True)
     taskID = Column('taskID', Integer)
@@ -123,6 +128,9 @@ class MainStep(db.Model):
 
 
 class DetailedStep(db.Model):
+    """
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    """
     __tablename__ = 'detailedSteps'
     detailedStepID = Column('detailedStepID', Integer, primary_key=True)
     mainStepID = Column('mainStepID', Integer)
