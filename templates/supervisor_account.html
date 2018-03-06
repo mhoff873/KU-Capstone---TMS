@@ -19,16 +19,6 @@
   <form method="POST">
       {{ EditUser.csrf_token }}
       <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.person.label }}
-      {{ EditUser.person (class="form-control")}}
-      </div>
-      <br>
-      <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.is_supervisor.label }}
-      {{ EditUser.is_supervisor }}
-      </div>
-      <br>
-      <div style="display: inline-block; min-width: 13em">
       {{ EditUser.phone.label }}
       {{ EditUser.phone (class="form-control")}}
       </div>

@@ -119,7 +119,7 @@ def dashboard():
 def supervisor_account():
     eUser = EditUser()
     if eUser.validate_on_submit():
-        UserMgmt.edit_user(eUser)
+        UserMgmt.edit_supervisor(eUser, current_user)
         return dashboard()
     aUser = AddUser()
     assUser = AssignUser()
