@@ -19,7 +19,7 @@
                     </button>
                     <div class="dropdown-menu">
                         {% for supervisor in supervisors %}
-                            <a class="dropdown-item" href="{{ supervisor.email }}">
+                            <a class="dropdown-item" href="{{ supervisor.supervisorID }}">
                                 {{ supervisor.fname }} {{ supervisor.lname }}
                             </a>
                         {% endfor %}
