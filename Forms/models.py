@@ -8,14 +8,14 @@
 
 from database import db, login_manager
 from datetime import datetime
-from flask_login import UserMixin  
+from flask_login import UserMixin
 from sqlalchemy import Boolean, DateTime, Column, Integer, \
                        String, ForeignKey, Date
 
 @login_manager.user_loader
 def load_user(id):
-    return User.query.get(int(id))
-    
+    return Supervisor.query.get(int(id))
+
 class Base(UserMixin, object):
     """Class that represents a basic person"""
     supervisorID = Column("supervisorID", Integer, index=True)
@@ -52,7 +52,7 @@ class User(Base, db.Model):
         self.password = password
         self.dateCreated = datetime.utcnow()
         self.lastActive = datetime.utcnow()
-    
+
     def get_id(self):
         return str(self.userID)
 
@@ -65,10 +65,10 @@ class Supervisor(Base, db.Model):
     """Supervisor that is a child of base"""
     __tablename__ = "supervisors"
     supervisorID = Column("supervisorID", Integer, primary_key=True)
-    
+
     def get_id(self):
         return str(self.supervisorID)
-        
+
     def __init__(self, email=None, password=None):
         # Call parent constructor
         super(Supervisor, self).__init__()

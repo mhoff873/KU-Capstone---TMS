@@ -66,48 +66,6 @@
       <br>
       {{ EditUser.submit (class="btn btn-secondary btn-md")}}
   </form>
-
-  <!-- Add user to supervisor -->
-  <form method="POST">
-      {{ AddUser.csrf_token }}
-      <br>
-      <div style="display: inline-block; min-width: 13em">
-      {{ AddUser.supervisor_email.label }}
-      {{ AddUser.supervisor_email (class="form-control")}}
-      </div>
-      <p>*Please note that the supervisor field will be filled out instead by
-      the session variable after sessions are integrated.*</p>
-      <br>
-      {% for user in users %}
-
-          {{ AddUser.user }}{{ user}}
-
-          <br>
-
-      {% endfor %}
-      <br>
-      {{ AddUser.submit (class='btn btn-secondary btn-md')}}
-  </form>
-
-  <!-- Assign user to a supervisor -->
-  <form method="POST">
-      {{ AssignUser.csrf_token }}
-      <br>
-      <div style="display: inline-block; min-width: 13em">
-      {{ AssignUser.supervisor.label }}
-      {{ AssignUser.supervisor (class="form-control")}}
-      </div>
-      <br>
-      <div style="display: inline-block; min-width: 13em">
-      {{ AssignUser.user.label }}
-      {{ AssignUser.user (class="form-control")}}
-      </div>
-      <br>
-      <br>
-      {{ AssignUser.submit (class='btn btn-secondary btn-md')}}
-  </form>
-
-
 </div>
 
 
