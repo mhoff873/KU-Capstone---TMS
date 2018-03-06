@@ -214,29 +214,66 @@ def team_b_forms():
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
-    form = CreateTaskForm()
-    if request.method == ['GET']:
+    """
+    Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
+    Called when a supervisor wishes to create a new task from scratch.
+    :return: the rendered task creation page
+    """
+    if request.method == 'GET':
+        form = CreateTaskForm()
         return render_template('create_task.html', form=form)
     # When buttons are clicked on the form, it returns a True/False value
-    # We use those values to determine which buttons were clicked to add steps
-    # accordingly
+    # We use those values to determine which buttons were clicked to add/remove
+    # steps accordingly
+    form = CreateTaskForm(request.form)
     if form.add_main_step.data:
-        print('Add main step')
+        """Add new main step."""
         form.main_step.append_entry()
         return render_template('create_task.html', form=form)
-    elif form.save_as_draft.data:
-        print('Save as draft')
+    if form.save_as_draft.data:
         Tasks.create_task(form)
         return render_template('create_task.html', form=form)
-    elif form.publish.data:
-        print('Publish Task')
+    if form.publish.data:
         Tasks.create_task(form)
         return render_template('index.html')
-    else:
-        print('Checking for detailed step button press.')
-        for i, step in enumerate(form.main_step):
-            print(i)
-            print(step.add_detailed_step.data)
-            if step.add_detailed_step.data:
-                step.detailed_steps.append_entry()
+    for i, main_step in enumerate(form.main_step):
+        # Handling of main step deletion and moving as well as detailed steps
+        # addition, deletion, and moving which reside inside main steps
+        if main_step.main_step_removal.data:
+            """User removes a main step."""
+            form.main_step.entries.pop(i)
+            return render_template('create_task.html', form=form)
+        if main_step.main_step_up.data and len(form.main_step) > 1 and i > 0:
+            print(form.main_step.data)
+            """User moves a main step up.
+            We do nothing if there is only a single main step or they are
+            attempting to move the first step up."""
+            step_to_move = form.main_step.entries.pop(i)
+            form.main_step.entries.insert(i-1, step_to_move)
+            print(form.main_step.data)
+            return render_template('create_task.html', form=form)
+        if main_step.main_step_down.data and len(form.main_step) > 1 \
+                and i < len(form.main_step)-1:
+            print(form.main_step.data)
+            """User moves a main step down.
+            We do nothing if there is only a single main step or they are
+            attempting to move the last step down."""
+            step_to_move = form.main_step.entries.pop(i)
+            if i+1 == len(form.main_step):
+                form.main_step.entries.append(step_to_move)
+            else:
+                form.main_step.entries.insert(i+1, step_to_move)
+            print(form.main_step.data)
+            return render_template('create_task.html', form=form)
+        # Handling of detailed step addition, deletion, and moving
+        if main_step.add_detailed_step.data:
+            """User adds detailed step to a main step."""
+            main_step.detailed_steps.append_entry()
+            return render_template('create_task.html', form=form)
+        for j, detailed_step in enumerate(main_step.detailed_steps):
+            if detailed_step.detailed_step_removal.data:
+                """User removes a detailed step from a main step.
+                We don't care if they remove every detailed step."""
+                main_step.detailed_steps.entries.pop(j)
+                return render_template('create_task.html', form=form)
     return render_template('create_task.html', form=form)
