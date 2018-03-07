@@ -8,7 +8,7 @@
 
 from database import db, login_manager
 from datetime import datetime
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from sqlalchemy import Boolean, DateTime, Column, Integer, String, ForeignKey, \
     Date
 from sqlalchemy.orm import relationship
@@ -16,6 +16,7 @@ from sqlalchemy.orm import relationship
 
 @login_manager.user_loader
 def load_user(id):
+    print(type(current_user))
     return User.query.get(int(id))
 
 
