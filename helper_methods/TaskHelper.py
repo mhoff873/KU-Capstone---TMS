@@ -28,20 +28,20 @@ def create_task(form):
     db.session.add(new_task)
     db.session.commit()
     print(new_task.taskID)
-    # for i, main_step in enumerate(form.main_steps.entries):
-    #     new_main_step = MainStep(main_step.title.data)
-    #     # Need to query taskID
-    #     new_main_step.taskID = 0
-    #     new_main_step.stepText = main_step.stepText.data
-    #     new_main_step.listOrder = i+1
-    #     new_main_step.image = main_step.image.data
-    #     for j, detailed_step in enumerate(main_step.detailed_steps.entries):
-    #         new_detailed_step = DetailedStep(detailed_step.title.data)
-    #         # Need to query mainStepID
-    #         new_detailed_step.mainStepID = 0
-    #         new_detailed_step.stepText = detailed_step.stepText.data
-    #         new_detailed_step.listOrder = i+1
-    #         new_detailed_step.image = detailed_step.image.data
+    for i, main_step in enumerate(form.main_steps.entries):
+        new_main_step = MainStep(main_step.title.data)
+        new_main_step.taskID = new_task.taskID
+        new_main_step.stepText = main_step.stepText.data
+        new_main_step.listOrder = i+1
+        new_main_step.image = main_step.image.data
+        db.session.add(new_main_step)
+        db.session.commit()
+        for j, detailed_step in enumerate(main_step.detailed_steps.entries):
+            new_detailed_step = DetailedStep(detailed_step.title.data)
+            new_detailed_step.mainStepID = new_main_step.taskID
+            new_detailed_step.stepText = detailed_step.stepText.data
+            new_detailed_step.listOrder = i+1
+            new_detailed_step.image = detailed_step.image.data
     return new_task
 
 
