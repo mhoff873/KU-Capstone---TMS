@@ -108,8 +108,8 @@ def GetByUser(uname):
 @app.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
-    users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
+    tasks = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
+    users = User.query.filter_by(supervisorID=current_user.supervisorID).all()
     return render_template('dashboard.html', task_list=tasks, user_list=users)
 
 
@@ -142,10 +142,12 @@ def login():
             print("Field : {field}; error : {error}".format(field=error_field, error=error_message))
     return render_template('login.html', form=lForm)
 
+
 @app.route("/logout", methods=["GET"])
 def logout():
     logout_user()
     return login()
+
 
 # update password page (currently a page, maybe you will want a popup... whatever)
 @app.route('/update', methods=['POST','GET'])
@@ -164,7 +166,7 @@ def update():
     return render_template('update.html', form=uForm)
 
 
-#create supervisor page
+# create supervisor page
 @app.route("/create_supervisor/", methods=["GET", "POST"])
 @login_required
 def create_supervisor():
@@ -178,7 +180,7 @@ def create_supervisor():
     return render_template("createSupervisorTest.html", form=form)
 
 
-#create user page
+# create user page
 @app.route("/create_user/", methods=["GET", "POST"])
 @login_required
 def create_user():

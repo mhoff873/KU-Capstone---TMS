@@ -15,6 +15,7 @@ def create_task(form):
         new_task = existing_task
     else:
         new_task = Task(form.title.data)
+    print(current_user)
     if current_user == Supervisor:
         new_task.supervisorID = current_user.supervisorID
     elif current_user == Admin:
