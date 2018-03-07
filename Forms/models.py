@@ -1,8 +1,8 @@
 #
 # Database Models
-# author: Mason Hoffman, Nathaniel Yost, David Schaeffer
+# authors: Mason Hoffman, Nathaniel Yost, David Yocum, David Schaeffer
 # created: 2/13/2018
-# latest: 3/7/2018
+# latest: 3/6/2018
 # purpose: Model classes for interaction with SQLAlchemy
 #
 
@@ -12,7 +12,6 @@ from flask_login import UserMixin
 from sqlalchemy import Boolean, DateTime, Column, Integer, String, ForeignKey, \
     Date
 from sqlalchemy.orm import relationship
-
 
 # Base class inherited by Supervisor and User class
 class Base(UserMixin, object):
@@ -36,7 +35,6 @@ class Base(UserMixin, object):
     def __init__(self):
         pass
 
-
 # User account class. Child of Base
 class User(Base, db.Model):
     """User that is a child of base"""
@@ -44,7 +42,7 @@ class User(Base, db.Model):
     lastActive = Column("lastActive", DateTime, index=True)
     userID = Column("userID", Integer, primary_key=True)
     role = "user"
-
+    
     # user constructor
     def __init__(self, email=None, password=None):
         # Call parent constructor
@@ -62,7 +60,7 @@ class User(Base, db.Model):
     def __repr__(self):
         return '<User %r>' % (self.email)
 
-
+      
 # Supervisor account class. Child of Base
 class Supervisor(Base, db.Model):
     """Supervisor that is a child of base"""
@@ -120,8 +118,24 @@ class Request(db.Model):
 
     def __repr__(self):
         return "<Request taskID:%r>" % (self.taskID)
+      
 
+class Request(db.Model):
+    __tablename__="request"
+    requestID=Column('requestID', Integer, primary_key=True)
+    userID=Column('userID', Integer, index=True)
+    supervisorID=Column('supervisorID', Integer, index=True)
+    taskID=Column('taskID', Integer, index=True)
+    isApproved=Column('isApproved', Boolean, index=True)
+    dateRequest=Column('dateRequested', Date, index=True)
+    
+    def __init__(self):
+        pass
+    
+    def __repr__(self):
+        return "<Request taskID:%r>" % (self.taskID)
 
+      
 class Task(db.Model):
     """
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
@@ -145,8 +159,8 @@ class Task(db.Model):
         self.dateCreated = datetime.utcnow()
         self.dateModified = datetime.utcnow()
         self.lastUsed = datetime.utcnow()
-
-
+    
+    
 class MainStep(db.Model):
     """
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
@@ -184,38 +198,36 @@ class DetailedStep(db.Model):
         super(DetailedStep, self).__init__()
         self.title = title
 
-
+        
 class SurveyQuest(db.Model):
-    __tablename__ = 'surveyQuest'
-    questID = Column('questID', Integer, unique=True, index=True,
-                     primary_key=True)
-    formID = Column(Integer, ForeignKey('surveyForm.formID'))
-    questType = Column('questType', String(255), index=True)
-    questionText = Column('questText', String(255), index=True)
-    questOrder = Column('questOrder', Integer, index=True)
-    isActive = Column('isActive', Boolean, index=True)
-    survey_form = relationship("SurveyForm", back_populates="survey_quest")
-
-    def __init__(self, questionText=None, questType=None, questionOrder=None):
-        super(SurveyQuest, self).__init__()
-        self.questionText = questionText
-        self.questType = questType
-        self.questOrder = questionOrder
-
+	__tablename__ = 'surveyQuest'
+	questID = Column('questID', Integer, unique = True, index=True, primary_key=True) 
+	formID = Column(Integer, ForeignKey('surveyForm.formID'))
+	questType = Column('questType', String(255), index=True)
+	questionText = Column('questText', String(255), index=True)
+	questOrder = Column('questOrder', Integer, index=True)
+	isActive = Column('isActive', Boolean, index=True)
+	survey_form = relationship("SurveyForm", back_populates="survey_quest")
+	    
+	def __init__(self, questionText=None, questType = None, questionOrder = None):
+		super(SurveyQuest, self).__init__()
+		self.questionText = questionText
+		self.questType = questType
+		self.questOrder = questionOrder
+		
 
 class SurveyForm(db.Model):
-    __tablename__ = 'surveyForm'
-    formID = Column('formID', Integer, unique=True, index=True,
-                    primary_key=True)
-    supervisorID = Column('supervisorID', Integer, index=True)
-    formTitle = Column('formTitle', String(255), index=True)
-    description = Column('description', String(255), index=True)
-    dateCreated = Column('dateCreated', Date, index=True)
-    dateModified = Column('dateModified', Date, index=True)
-    isActive = Column('isActive', Boolean, index=True)
-    survey_quest = relationship("SurveyQuest", back_populates="survey_form")
-
-    def __init__(self, formTitle=None, surv_quest=None):
-        super(SurveyQuest, self).__init__()
-        self.formTitle = formTitle
-        survey_quest = surv_quest
+	__tablename__ = 'surveyForm'
+	formID = Column('formID', Integer, unique = True, index=True, primary_key=True)
+	supervisorID = Column('supervisorID', Integer, index=True)
+	formTitle = Column('formTitle', String(255), index=True)
+	description = Column('description', String(255), index=True)
+	dateCreated = Column('dateCreated', Date, index=True)
+	dateModified = Column('dateModified', Date, index=True)
+	isActive = Column('isActive', Boolean, index=True)
+	survey_quest = relationship("SurveyQuest", back_populates="survey_form")
+	
+	def __init__(self, formTitle=None, surv_quest=None):
+		super(SurveyQuest, self).__init__()
+		self.formTitle = formTitle
+		survey_quest = surv_quest

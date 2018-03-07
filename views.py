@@ -1,10 +1,11 @@
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, redirect
 
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser #need to get rid of CreateAccount
 from helper_methods import UserMgmt, TaskHelper, Update, Login
 from database import *
-
+from flask_login import current_user, login_required, logout_user
+from Forms.models import Task, User, Supervisor
 
 @app.route('/', methods=['GET'])
 def index():
@@ -104,20 +105,21 @@ def GetByUser(uname):
 
 # dashboard
 @app.route('/dashboard', methods=['GET'])
-# @login_required
+@login_required
 def dashboard():
-    createAccountForm = CreateAccount()
-    eUser = EditUser()
-    aUser = AddUser()
-    assUser = AssignUser()
-    return render_template('dashboard.html', CreateAccount=createAccountForm,EditUser=eUser,AddUser=aUser,AssignUser=assUser)
+    tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
+    users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
+    return render_template('dashboard.html', task_list=tasks, user_list=users)
 
 
 # supervisor account
-@app.route('/supervisor_account', methods=['GET'])
-# @login_required
+@app.route('/supervisor_account', methods=['GET', "POST"])
+@login_required
 def supervisor_account():
     eUser = EditUser()
+    if eUser.validate_on_submit():
+        UserMgmt.edit_supervisor(eUser, current_user)
+        return dashboard()
     aUser = AddUser()
     assUser = AssignUser()
     return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
@@ -128,20 +130,21 @@ def supervisor_account():
 def login():
     lForm = LoginForm()
     if lForm.validate_on_submit():
-        #print (str("Email: {e}").format(e=lForm.email.data))
-        #print (str("Password: {p}").format(p=lForm.password.data))
         if Login.verifyMain(lForm.email.data,lForm.password.data):
             print("login sucessful")
-            return render_template('dashboard.html')
+            return redirect("dashboard", code=302)
         else:
             print("login failed, try again")
     # form submission was invalid
     if lForm.errors:
         for error_field, error_message in lForm.errors.items():
             print("Field : {field}; error : {error}".format(field=error_field, error=error_message))
-    # the page has not been submitted before so lets render the form instead
     return render_template('login.html', form=lForm)
 
+@app.route("/logout", methods=["GET"])
+def logout():
+    logout_user()
+    return login()
 
 # update password page (currently a page, maybe you will want a popup... whatever)
 @app.route('/update', methods=['POST','GET'])
@@ -162,6 +165,7 @@ def update():
 
 #create supervisor page
 @app.route("/create_supervisor/", methods=["GET", "POST"])
+@login_required
 def create_supervisor():
     form = CreateSupervisor()
     if form.validate_on_submit():
@@ -175,6 +179,7 @@ def create_supervisor():
 
 #create user page
 @app.route("/create_user/", methods=["GET", "POST"])
+@login_required
 def create_user():
     form = CreateUser()
     if form.validate_on_submit():
@@ -183,35 +188,29 @@ def create_user():
     return render_template("createUser.html", form=form)
 
 
-@app.route("/teambforms/", methods=["GET", "POST"])
-def team_b_forms():
-    # Create Forms
-    createAccountForm = CreateAccount()
-    editUserForm = EditUser()
-    addUserForm = AddUser()
-    assignUserForm = AssignUser()
-    unassigned_users = [x.email for x in UserMgmt.get_unassigned()]
-    if createAccountForm.validate_on_submit():
-        UserMgmt.create_account(createAccountForm)
-        return "New user created!"
-    elif editUserForm.validate_on_submit():
-        UserMgmt.edit_user(editUserForm)
-        return "EditUser Form submitted!"
-    elif addUserForm.validate_on_submit():
-        UserMgmt.add_user(addUserForm)
-        return str(addUserForm.user.data)  # "Successfully assigned user!"
-    elif assignUserForm.validate_on_submit():
-        return UserMgmt.assign_user(assignUserForm)
-    return render_template("TeamBForms.html",
-                           CreateAccount=createAccountForm,
-                           EditUser=editUserForm,
-                           AddUser=addUserForm,
-                           AssignUser=assignUserForm,
-                           users=unassigned_users)
+# library
+@app.route("/library/", methods=["GET", "POST"])
+@app.route("/library/<supervisor_id>", methods=["GET", "POST"])
+@login_required
+def library(supervisor_id=None):
+    search_form = Library.SearchForm()
+    allsupervisors = Library.get_supervisors()
+    tasks = []
+    if search_form.validate_on_submit():
+        keyword = search_form.search.data
+        tasks = Library.search(keyword)
+    else:
+        # If the form is not submitted then I need to check if I am searching by supervisor
+        if supervisor_id is not None:
+            tasks = Library.get_tasks(supervisor_id)
+        else:
+            tasks = Library.get_tasks(current_user.supervisorID)
+    return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors)
 
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
+@login_required
 def create_task():
     """
     Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>

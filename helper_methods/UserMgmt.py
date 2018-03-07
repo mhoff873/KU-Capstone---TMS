@@ -66,17 +66,13 @@ def create_supervisor(form):
     db.session.commit()
 
 
-def edit_user(form):
+def edit_supervisor(form, current_user):
     """
-    Allows the supervisor/admin to edit a user.
+    Allows the admin to edit a supervisor.
     :param form: Form submitted to edit the user/supervisor info.
     :return: N/A
     """
-    user = None
-    if form.is_supervisor.data:
-        user = Supervisor.query.filter_by(email=form.person.data).first()
-    else:
-        user = User.query.filter_by(email=form.person.data).first()
+    user = Supervisor.query.filter_by(email=current_user.email).first()
     user.phone = form.phone.data
     user.fname = form.fname.data
     user.mname = form.mname.data
@@ -87,6 +83,26 @@ def edit_user(form):
     user.ethnicity = form.ethnicity.data
     user.picture = form.picture.data
     db.session.commit()
+
+
+def edit_user(form):
+    """
+    Allows the supervisor/admin to edit a user.
+    :param form: Form submitted to edit the user/supervisor info.
+    :return: N/A
+    """
+    user = User.query.filter_by(email=form.person.data).first()
+    user.phone = form.phone.data
+    user.fname = form.fname.data
+    user.mname = form.mname.data
+    user.lname = form.lname.data
+    user.gender = form.gender.data
+    user.birthday = form.birthday.data
+    user.affiliation = form.affiliation.data
+    user.ethnicity = form.ethnicity.data
+    user.picture = form.picture.data
+    db.session.commit()
+
 
 
 # Requirement 32

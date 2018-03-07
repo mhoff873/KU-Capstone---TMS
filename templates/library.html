@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="jumbotron text-center">
+    <h1>Library</h1>
+</div>
+
+<div class="container">
+    <div class="page_content">
+
+        <!-- content goes in here, below. -->
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm">
+                <div class="dropdown">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                    Library
+                    </button>
+                    <div class="dropdown-menu">
+                        {% for supervisor in supervisors %}
+                            <a class="dropdown-item" href="{{ supervisor.supervisorID }}">
+                                {{ supervisor.fname }} {{ supervisor.lname }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <br>
+
+    <form method="POST">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm">
+                {{ search.csrf_token }}
+                {{ search.search }}
+           </div>
+            <div class="col-sm">
+                {{ search.submit }}
+            </div>
+        </div>
+    </div>
+    </form>
+    <br>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm">
+                <div id="editableTextBox">
+                    <div class= "form-control" contenteditable="true" style="border: 1px solid black">
+                        Task Name A-Z (need a dropdown and reverse icon as a button)
+                    </div>
+                </div>
+                <br>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Below are where the tasks are displayed -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- start content here -->
+            {% for task in tasks %}
+                <div class="col-sm">
+                    <div class="container">
+                        <!-- This temporarily is used to show description -->
+                        <div onclick="alert('{{ task.description }}')">
+                            <div class="card">
+                                <div class="card-body">"Task Image Here"</div>
+                                <div class="card-footer">{{ task.title }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <br>
+            <!-- end content here -->
+        </div>
+    </div>
+</div> <!-- end of container -->
+{% endblock content %}

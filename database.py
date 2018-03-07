@@ -1,12 +1,9 @@
-from flask_mysqldb import MySQL
-
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager                         
                                 
 # creates the database session object for connecting later                              
 db = SQLAlchemy(app)
-mysql = MySQL(app)
 
 # LoginManager allows the application and Flask-Login to work together.
 login_manager = LoginManager()

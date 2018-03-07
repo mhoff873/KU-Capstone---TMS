@@ -51,11 +51,10 @@ class CreateUser(FlaskForm):
     submit = SubmitField('Create New Account')
 
 
-
 # Requirement 29, 30
 class EditUser(FlaskForm):
-    person = StringField("Person being editted (ie: email)", [Email(), InputRequired()])
-    is_supervisor = BooleanField("Is Supervisor?")
+    #person = StringField("Person being editted (ie: email)", [Email(), InputRequired()])
+    #is_supervisor = BooleanField("Is Supervisor?")
     phone = StringField("Phone")
     fname = StringField("First Name", [InputRequired()])
     mname = StringField("Middle Name")
