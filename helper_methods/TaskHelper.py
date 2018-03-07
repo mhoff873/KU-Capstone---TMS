@@ -9,7 +9,7 @@ from database import db
 def create_task(form):
     existing_task = Task.query.filter_by(title=form.title.data).first()
     print(existing_task)
-    if len(existing_task) > 0:
+    if existing_task is not None:
         new_task = existing_task
     else:
         new_task = Task(form.title.data)
@@ -57,12 +57,12 @@ def create_task(form):
 # Req 20
 def toggle_enabled(form):
     task = Task.query.filter_by(title=form.title.data).first()
-    if len(task) > 0:
+    if task is not None:
         task.activated = not task.activated
 
 
 # Req 22
 def toggle_published(form):
     task = Task.query.filter_by(title=form.title.data).first()
-    if len(task) > 0:
+    if task is not None:
         task.published = not task.published
