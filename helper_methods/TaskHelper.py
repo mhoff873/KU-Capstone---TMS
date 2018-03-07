@@ -9,6 +9,7 @@ from database import db
 # Req 1
 def create_task(form):
     new_task = Task(form.title.data)
+    new_task.supervisorID = 1
     new_task.description = form.description.data
     new_task.image = form.image.data
     # 0 = false, 1 = true
@@ -26,6 +27,7 @@ def create_task(form):
         pass
     db.session.add(new_task)
     db.session.commit()
+    print(new_task.taskID)
     # for i, main_step in enumerate(form.main_steps.entries):
     #     new_main_step = MainStep(main_step.title.data)
     #     # Need to query taskID
