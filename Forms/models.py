@@ -1,6 +1,6 @@
 #
 # Database Models
-# author: Mason Hoffman, Nathaniel Yost
+# author: Mason Hoffman, Nathaniel Yost, David Yocum
 # created: 2/13/2018
 # latest: 3/6/2018
 # purpose: Model classes for interaction with SQLAlchemy
