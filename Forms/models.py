@@ -6,12 +6,17 @@
 # purpose: Model classes for interaction with SQLAlchemy
 #
 
-from database import db
+from database import db, login_manager
 from datetime import datetime
 from flask_login import UserMixin
 from sqlalchemy import Boolean, DateTime, Column, Integer, String, ForeignKey, \
     Date
 from sqlalchemy.orm import relationship
+
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 # Base class inherited by Supervisor and User class

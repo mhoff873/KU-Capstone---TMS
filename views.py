@@ -8,11 +8,6 @@ from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get(user_id)
-
-
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
