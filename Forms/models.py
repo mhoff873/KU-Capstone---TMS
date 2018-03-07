@@ -118,22 +118,6 @@ class Request(db.Model):
 
     def __repr__(self):
         return "<Request taskID:%r>" % (self.taskID)
-      
-
-class Request(db.Model):
-    __tablename__="request"
-    requestID=Column('requestID', Integer, primary_key=True)
-    userID=Column('userID', Integer, index=True)
-    supervisorID=Column('supervisorID', Integer, index=True)
-    taskID=Column('taskID', Integer, index=True)
-    isApproved=Column('isApproved', Boolean, index=True)
-    dateRequest=Column('dateRequested', Date, index=True)
-    
-    def __init__(self):
-        pass
-    
-    def __repr__(self):
-        return "<Request taskID:%r>" % (self.taskID)
 
       
 class Task(db.Model):

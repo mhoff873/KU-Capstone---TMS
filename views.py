@@ -2,7 +2,7 @@ from flask import render_template, request, jsonify, redirect
 
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser #need to get rid of CreateAccount
-from helper_methods import UserMgmt, TaskHelper, Update, Login
+from helper_methods import UserMgmt, TaskHelper, Update, Login, Library
 from database import *
 from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor
