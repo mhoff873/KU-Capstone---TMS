@@ -1,14 +1,17 @@
 """
 Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
 """
-
 from Models.task_models import Task, MainStep, DetailedStep
 from database import db
 
 
 # Req 1
 def create_task(form):
-    new_task = Task(form.title.data)
+    existing_task = db.query(Task).filter(Task.title).limit(1)
+    if len(existing_task) > 0:
+        new_task = existing_task
+    else:
+        new_task = Task(form.title.data)
     new_task.supervisorID = 1
     new_task.description = form.description.data
     new_task.image = form.image.data
@@ -19,14 +22,11 @@ def create_task(form):
     if form.publish.data:
         new_task.published = 1
         new_task.activated = 1
-    if form.toggle_enabled.data:
-        # query for curr status, set to opposite
-        pass
-    if form.toggle_activation.data:
-        # query for curr status, set to opposite
-        pass
-    db.session.add(new_task)
-    db.session.commit()
+    try:
+        db.session.add(new_task)
+        db.session.commit()
+    except Exception:
+        db.session.commit()
     print(new_task.taskID)
     for i, main_step in enumerate(form.main_steps.entries):
         new_main_step = MainStep(main_step.title.data)
@@ -34,22 +34,34 @@ def create_task(form):
         new_main_step.stepText = main_step.stepText.data
         new_main_step.listOrder = i+1
         new_main_step.image = main_step.image.data
-        db.session.add(new_main_step)
-        db.session.commit()
+        try:
+            db.session.add(new_main_step)
+            db.session.commit()
+        except Exception:
+            db.session.commit()
         for j, detailed_step in enumerate(main_step.detailed_steps.entries):
             new_detailed_step = DetailedStep(detailed_step.title.data)
             new_detailed_step.mainStepID = new_main_step.taskID
             new_detailed_step.stepText = detailed_step.stepText.data
             new_detailed_step.listOrder = i+1
             new_detailed_step.image = detailed_step.image.data
+            try:
+                db.session.add(new_detailed_step)
+                db.session.commit()
+            except Exception:
+                db.session.commit()
     return new_task
 
 
 # Req 20
-def toggle_enabled(taskID):
-    pass
+def toggle_enabled(form):
+    task = db.query(Task).filter(Task.title == form.title.data).limit(1)
+    if len(task) > 0:
+        task.activated = not task.activated
 
 
 # Req 22
-def toggle_published(taskID):
-    pass
+def toggle_published(form):
+    task = db.query(Task).filter(Task.title == form.title.data).limit(1)
+    if len(task) > 0:
+        task.published = not task.published

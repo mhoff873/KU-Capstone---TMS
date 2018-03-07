@@ -211,7 +211,7 @@ def team_b_forms():
 
 
 # create task
-@app.route('/create_task/', methods=['GET', 'POST'])
+@app.route('/create_task_draft/', methods=['GET', 'POST'])
 def create_task():
     """
     Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
@@ -230,10 +230,16 @@ def create_task():
         return render_template('create_task.html', form=form)
     if form.save_as_draft.data:
         TaskHelper.create_task(form)
-        # return render_template('create_task.html', form=form)
+        return render_template('create_task.html', form=form)
     if form.publish.data:
         TaskHelper.create_task(form)
         return render_template('index.html')
+    if form.toggle_enabled.data:
+        TaskHelper.toggle_enabled(form)
+        return render_template('create_task.html', form=form)
+    if form.toggle_activation.data:
+        TaskHelper.toggle_published(form)
+        return render_template('create_task.html', form=form)
     for i, main_step in enumerate(form.main_steps):
         # Handling of main step deletion and moving as well as detailed steps
         # addition, deletion, and moving which reside inside main steps
@@ -249,7 +255,7 @@ def create_task():
         #     step_to_move = new_order.pop(i)
         #     new_order.insert(i-1, step_to_move)
         #     form.main_steps = new_order
-        #     return render_template('create_task.html', form=form)
+        #     return render_template('create_task_draft.html', form=form)
         # if main_step.main_step_down.data and len(form.main_steps) > 1 \
         #         and i < len(form.main_steps)-1:
         #     """User moves a main step down.
@@ -262,7 +268,7 @@ def create_task():
         #     else:
         #         new_order.insert(i+1, step_to_move)
         #     form.main_steps = new_order
-        #     return render_template('create_task.html', form=form)
+        #     return render_template('create_task_draft.html', form=form)
         # Handling of detailed step addition, deletion, and moving
         if main_step.add_detailed_step.data:
             """User adds detailed step to a main step."""
