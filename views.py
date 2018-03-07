@@ -211,7 +211,7 @@ def team_b_forms():
 
 
 # create task
-@app.route('/create_task_draft/', methods=['GET', 'POST'])
+@app.route('/create_task/', methods=['GET', 'POST'])
 def create_task():
     """
     Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
