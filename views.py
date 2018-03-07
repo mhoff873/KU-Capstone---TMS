@@ -280,5 +280,4 @@ def create_task():
                 We don't care if they remove every detailed step."""
                 main_step.detailed_steps.entries.pop(j)
                 return render_template('create_task.html', form=form)
-
     return render_template('create_task.html', form=form)
