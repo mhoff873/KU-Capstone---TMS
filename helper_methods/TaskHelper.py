@@ -7,7 +7,7 @@ from database import db
 
 # Req 1
 def create_task(form):
-    existing_task = db.query(Task).filter(Task.title == form.title.data).limit(1)
+    existing_task = Task.query.filter_by(title=form.title.data).first()
     print(existing_task)
     if len(existing_task) > 0:
         new_task = existing_task
@@ -56,13 +56,13 @@ def create_task(form):
 
 # Req 20
 def toggle_enabled(form):
-    task = db.query(Task).filter(Task.title == form.title.data).limit(1)
+    task = Task.query.filter_by(title=form.title.data).first()
     if len(task) > 0:
         task.activated = not task.activated
 
 
 # Req 22
 def toggle_published(form):
-    task = db.query(Task).filter(Task.title == form.title.data).limit(1)
+    task = Task.query.filter_by(title=form.title.data).first()
     if len(task) > 0:
         task.published = not task.published
