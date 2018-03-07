@@ -86,9 +86,10 @@ class DetailedStep(FlaskForm):
     """
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     """
-    detailed_step_title = StringField('Detailed Step Name:')
-    detailed_step_description = StringField('Detailed Step Description:')
-    detailed_step_image = FileField('Upload Image for Detailed Step:')
+    title = StringField('Detailed Step Name:')
+    stepText = StringField('Detailed Step Description:')
+    image = FileField('Upload Image for Detailed Step:')
+
     detailed_step_removal = SubmitField('- Detailed Step')
     detailed_step_up = SubmitField('↑')
     detailed_step_down = SubmitField('↓')
@@ -102,11 +103,13 @@ class MainStep(FlaskForm):
     """
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     """
-    main_step_title = StringField('Main Step Title:')
-    main_step_description = StringField('Main Step Description:')
-    main_step_audio = FileField('Upload Audio:')
-    main_step_image = FileField('Upload Image:')
-    main_step_video = FileField('Upload Video:')
+    title = StringField('Main Step Title:')
+    requiredItem = StringField('Required Items:')
+    stepText = StringField('Main Step Description:')
+    audio = FileField('Upload Audio:')
+    image = FileField('Upload Image:')
+    video = FileField('Upload Video:')
+
     detailed_steps = FieldList(FormField(DetailedStep), min_entries=0)
     add_detailed_step = SubmitField('+ Detailed Step')
     main_step_removal = SubmitField('- Main Step')
@@ -122,11 +125,11 @@ class CreateTaskForm(FlaskForm):
     """
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     """
-    task_name = StringField('Task Name:', validators=[DataRequired()])
-    task_description = StringField('Description:')
+    title = StringField('Task Name:', validators=[DataRequired()])
+    description = StringField('Description:')
     image = FileField('Upload image for Task:')
-    required_items = StringField('Items Required for this Task:')
-    main_step = FieldList(FormField(MainStep), min_entries=0)
+
+    main_steps = FieldList(FormField(MainStep), min_entries=0)
     add_main_step = SubmitField('+ Main Step')
     # Displays in library only for self AND disabled
     save_as_draft = SubmitField('Save to Library as Draft')

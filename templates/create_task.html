@@ -13,52 +13,63 @@
 
             <form action="{{ url_for('create_task') }}" method="POST">
                 {{ form.hidden_tag() }}
+
+                <!-- Title -->
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.task_name.label }}
+                    {{ form.title.label }}
                 </div>
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.task_name (class="form-control") }}
+                    {{ form.title (class="form-control") }}
                 </div>
                 <a class="btn btn-secondary btn-md" href="#">
                     <i class="fas fa-microphone"></i>Voice</a>
 
                 <br>
 
+                <!-- Description -->
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.task_description.label }}
+                    {{ form.description.label }}
                 </div>
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.task_description (class="form-control") }}
+                    {{ form.description (class="form-control") }}
                 </div>
 
                 <br>
 
+                <!-- Image -->
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.required_items.label }}
+                    {{ form.image.label }}
                 </div>
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.required_items (class="form-control") }}
+                    {{ form.image }}
                 </div>
+
                 <hr>
+
+                <!-- Main Steps -->
                 <div style="display: inline-block">
-                {% for main_step in form.main_step %}
-                    {{ main_step.main_step_title.label }}{{ main_step.main_step_title (class="form-control") }}
+                {% for main_step in form.main_steps %}
+                    {{ main_step.title.label }}{{ main_step.title (class="form-control") }}
                     <br>
-                    {{ main_step.main_step_description.label }}{{ main_step.main_step_description }}
+                    {{ main_step.requiredItem.label }}{{ main_step.requiredItem }}
                     <br>
-                    {{ main_step.main_step_audio.label }}{{ main_step.main_step_audio }}
+                    {{ main_step.stepText.label }}{{ main_step.stepText }}
                     <br>
-                    {{ main_step.main_step_image.label }}{{ main_step.main_step_image }}
+                    {{ main_step.audio.label }}{{ main_step.audio }}
                     <br>
-                    {{ main_step.main_step_video.label }}{{ main_step.main_step_video }}
+                    {{ main_step.image.label }}{{ main_step.image }}
                     <br>
+                    {{ main_step.video.label }}{{ main_step.video }}
+                    <br>
+
+                    <!-- Detailed Steps -->
                     <div style="display: inline-block; margin-left:3em">
                         {% for detailed_step in main_step.detailed_steps %}
-                            {{ detailed_step.detailed_step_title.label }}{{ detailed_step.detailed_step_title }}
+                            {{ detailed_step.title.label }}{{ detailed_step.title }}
                             <br>
-                            {{ detailed_step.detailed_step_description.label }}{{ detailed_step.detailed_step_description }}
+                            {{ detailed_step.stepText.label }}{{ detailed_step.stepText }}
                             <br>
-                            {{ detailed_step.detailed_step_image.label }}{{ detailed_step.detailed_step_image }}
+                            {{ detailed_step.image.label }}{{ detailed_step.image }}
                             <br>
                             {{ detailed_step.detailed_step_removal (class='btn btn-secondary btn-md') }}
                             {{ detailed_step.detailed_step_up (class='btn btn-secondary btn-md') }}

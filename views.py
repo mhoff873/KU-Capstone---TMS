@@ -1,9 +1,8 @@
 from flask import render_template, request, jsonify
 
-from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser #need to get rid of CreateAccount
-from helper_methods import UserMgmt, Tasks, Update, Login
+from helper_methods import UserMgmt, TaskHelper, Update, Login
 from database import *
 
 
@@ -222,68 +221,58 @@ def create_task():
     if request.method == 'GET':
         form = CreateTaskForm()
         return render_template('create_task.html', form=form)
-    # When buttons are clicked on the form, it returns a True/False value
-    # We use those values to determine which buttons were clicked to add/remove
-    # steps accordingly
-    form = CreateTaskForm(request.form)
-    """
-    Pass form to Task Object
-    Handle manipulation in object
-    Populate form from task object
-    """
 
-    # if form.add_main_step.data:
-    #     """Add new main step."""
-    #     form.main_step.append_entry()
-    #     return render_template('create_task.html', form=form)
-    # if form.save_as_draft.data:
-    #     Tasks.create_task(form)
-    #     # return render_template('create_task.html', form=form)
-    # if form.publish.data:
-    #     Tasks.create_task(form)
-    #     return render_template('index.html')
-    # for i, main_step in enumerate(form.main_step):
-    #     # Handling of main step deletion and moving as well as detailed steps
-    #     # addition, deletion, and moving which reside inside main steps
-    #     if main_step.main_step_removal.data:
-    #         """User removes a main step."""
-    #         form.main_step.entries.pop(i)
-    #         return render_template('create_task.html', form=form)
-    #     if main_step.main_step_up.data and len(form.main_step) > 1 and i > 0:
-    #         print(form.main_step.data)
-    #         """User moves a main step up.
-    #         We do nothing if there is only a single main step or they are
-    #         attempting to move the first step up."""
-    #         new_order = form.main_step.entries
-    #         step_to_move = new_order.pop(i)
-    #         new_order.insert(i-1, step_to_move)
-    #         form.main_step = new_order
-    #         #print(form.main_step.data)
-    #         return render_template('create_task.html', form=form)
-    #     if main_step.main_step_down.data and len(form.main_step) > 1 \
-    #             and i < len(form.main_step)-1:
-    #         print(form.main_step.data)
-    #         """User moves a main step down.
-    #         We do nothing if there is only a single main step or they are
-    #         attempting to move the last step down."""
-    #         new_order = form.main_step.entries
-    #         step_to_move = new_order.pop(i)
-    #         if i+1 == len(form.main_step):
-    #             new_order.append(step_to_move)
-    #         else:
-    #             new_order.insert(i+1, step_to_move)
-    #         form.main_step = new_order
-    #         #print(form.main_step.data)
-    #         return render_template('create_task.html', form=form)
-    #     # Handling of detailed step addition, deletion, and moving
-    #     if main_step.add_detailed_step.data:
-    #         """User adds detailed step to a main step."""
-    #         main_step.detailed_steps.append_entry()
-    #         return render_template('create_task.html', form=form)
-    #     for j, detailed_step in enumerate(main_step.detailed_steps):
-    #         if detailed_step.detailed_step_removal.data:
-    #             """User removes a detailed step from a main step.
-    #             We don't care if they remove every detailed step."""
-    #             main_step.detailed_steps.entries.pop(j)
-    #             return render_template('create_task.html', form=form)
+    form = CreateTaskForm(request.form)
+
+    if form.add_main_step.data:
+        """Add new main step."""
+        form.main_steps.append_entry()
+        return render_template('create_task.html', form=form)
+    if form.save_as_draft.data:
+        TaskHelper.create_task(form)
+        # return render_template('create_task.html', form=form)
+    if form.publish.data:
+        TaskHelper.create_task(form)
+        return render_template('index.html')
+    for i, main_step in enumerate(form.main_steps):
+        # Handling of main step deletion and moving as well as detailed steps
+        # addition, deletion, and moving which reside inside main steps
+        if main_step.main_step_removal.data:
+            """User removes a main step."""
+            form.main_steps.entries.pop(i)
+            return render_template('create_task.html', form=form)
+        # if main_step.main_step_up.data and len(form.main_steps) > 1 and i > 0:
+        #     """User moves a main step up.
+        #     We do nothing if there is only a single main step or they are
+        #     attempting to move the first step up."""
+        #     new_order = form.main_steps.entries
+        #     step_to_move = new_order.pop(i)
+        #     new_order.insert(i-1, step_to_move)
+        #     form.main_steps = new_order
+        #     return render_template('create_task.html', form=form)
+        # if main_step.main_step_down.data and len(form.main_steps) > 1 \
+        #         and i < len(form.main_steps)-1:
+        #     """User moves a main step down.
+        #     We do nothing if there is only a single main step or they are
+        #     attempting to move the last step down."""
+        #     new_order = form.main_steps.entries
+        #     step_to_move = new_order.pop(i)
+        #     if i+1 == len(form.main_steps):
+        #         new_order.append(step_to_move)
+        #     else:
+        #         new_order.insert(i+1, step_to_move)
+        #     form.main_steps = new_order
+        #     return render_template('create_task.html', form=form)
+        # Handling of detailed step addition, deletion, and moving
+        if main_step.add_detailed_step.data:
+            """User adds detailed step to a main step."""
+            main_step.detailed_steps.append_entry()
+            return render_template('create_task.html', form=form)
+        for j, detailed_step in enumerate(main_step.detailed_steps):
+            if detailed_step.detailed_step_removal.data:
+                """User removes a detailed step from a main step.
+                We don't care if they remove every detailed step."""
+                main_step.detailed_steps.entries.pop(j)
+                return render_template('create_task.html', form=form)
+
     return render_template('create_task.html', form=form)
