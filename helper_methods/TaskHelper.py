@@ -7,7 +7,7 @@ from database import db
 
 # Req 1
 def create_task(form):
-    existing_task = db.session.query(Task).filter(Task.title).limit(1)
+    existing_task = db.session.query(Task).filter(Task.title == form.data.title).limit(1)
     print(existing_task)
     if len(existing_task) > 0:
         new_task = existing_task
