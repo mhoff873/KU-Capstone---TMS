@@ -8,7 +8,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateField, SubmitField, \
-    BooleanField, FieldList, FormField, FileField
+    BooleanField, FieldList, FormField, FileField, RadioField
 from wtforms.validators import InputRequired, EqualTo, Email, DataRequired
 
 
@@ -106,3 +106,11 @@ class CreateTaskForm(FlaskForm):
     save_as_draft = SubmitField('Save as Draft')
     publish = SubmitField('Publish')
 # End Task Creation
+
+# Yocums create survey form 3/6/18 4:53pm
+class CreateASurvey(FlaskForm):
+	stockQuestion = RadioField ("Did You Have Fun?", choices = [("1","1"),("2","2"),("3","3"),("4","4"),("5","5")])
+	save = SubmitField("Save")
+	delete = SubmitField("Delete")
+        
+        

@@ -2,15 +2,15 @@ from flask import render_template, request, jsonify, redirect
 
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
-    CreateTaskForm, ChangePassword, LoginForm, CreateUser #need to get rid of CreateAccount
+    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey #need to get rid of CreateAccount
 from helper_methods import UserMgmt, Tasks, Update, Login, Library
 from database import *
 from flask_login import current_user, login_required, logout_user
-from Forms.models import Task, User, Supervisor
+from Forms.models import Task, User, Supervisor, Request
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    return render_template('login')
 
 
 @app.route('/api/user/login', methods=['POST'])
@@ -104,14 +104,61 @@ def GetByUser(uname):
 '''
 
 
-# dashboard
+
+# supervisor dashboard
 @app.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
-    users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
-    return render_template('dashboard.html', task_list=tasks, user_list=users)
-
+    if(current_user.role=="supervisor"):
+        tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
+        users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
+        requests = Request.query.filter_by(supervisorID=current_user.supervisorID).all()
+        if requests:
+            for r in requests:
+                print("requestID: "+str(r.requestID))
+                print("userID: "+str(r.userID))
+                print("supervisorID: "+str(r.supervisorID))
+                print("taskID: "+str(r.taskID))
+                print("requestDescription: "+str(r.requestDescription))
+                print("isApproved: "+str(r.isApproved))
+                print("dateRequested: "+str(r.dateRequested))
+        else:
+            print("did not find any requests") 
+            
+            # need a structure that is indexable by userID for the Request object
+            
+        return render_template('dashboard.html', task_list=tasks, user_list=users, request_list=requests)
+        
+    if(current_user.role=="admin"):
+        return redirect("adminDashboard", code=302)
+    
+# admin dash
+@app.route("/adminDashboard/", methods=["GET", "POST"])
+@login_required
+def admin_dash():
+    if(current_user.role=="supervisor"):
+        return redirect("dashboard", code=302)
+    if(current_user.role=="admin"):
+        supervisors  = Supervisor.query.all()
+        users  = User.query.all()
+        return render_template("adminDashboard.html", supervisor_list=supervisors, user_list=users)
+  
+# survey management
+@app.route("/surveys/", methods=["GET", "POST"])
+def surveys():
+	form = CreateASurvey()
+	#db.session.add(SurveyForm("form 1",SurveyQuest("Take a shot of whisky","multiple choice",1)))
+	#db.session.commit()
+	if form.validate_on_submit():
+	    return ("You have Submitted the Survey")
+	return render_template("surveysTemp.html", form=form)
+        
+# link to the logout page to log an account out
+@app.route('/logout', methods=['GET'])
+@login_required
+def logout_account():
+    logout_user()
+    return redirect("login", code=302)
 
 # supervisor account
 @app.route('/supervisor_account', methods=['GET', "POST"])
@@ -142,10 +189,6 @@ def login():
             print("Field : {field}; error : {error}".format(field=error_field, error=error_message))
     return render_template('login.html', form=lForm)
 
-@app.route("/logout", methods=["GET"])
-def logout():
-    logout_user()
-    return login()
 
 # update password page (currently a page, maybe you will want a popup... whatever)
 @app.route('/update', methods=['POST','GET'])
@@ -213,6 +256,8 @@ def library(supervisor_id=None):
 @app.route('/create_task/', methods=['GET', 'POST'])
 @login_required
 def create_task():
+    if(current_user.role=="admin"):
+        return redirect("adminDashboard", code=302)
     form = CreateTaskForm()
     if request.method == ['GET']:
         return render_template('create_task.html', form=form)

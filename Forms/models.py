@@ -1,6 +1,6 @@
 #
 # Database Models
-# authors: Mason Hoffman, Nathaniel Yost, David Yocum
+# author: Mason Hoffman, Nathaniel Yost
 # created: 2/13/2018
 # latest: 3/6/2018
 # purpose: Model classes for interaction with SQLAlchemy
@@ -130,8 +130,9 @@ class Request(db.Model):
     userID=Column('userID', Integer, index=True)
     supervisorID=Column('supervisorID', Integer, index=True)
     taskID=Column('taskID', Integer, index=True)
+    requestDescription=Column('requestDescription', String(255), index=True)
     isApproved=Column('isApproved', Boolean, index=True)
-    dateRequest=Column('dateRequested', Date, index=True)
+    dateRequested=Column('dateRequested', Date, index=True)
     
     def __init__(self):
         pass
@@ -169,23 +170,6 @@ class DetailedStep(db.Model):
     def __init__(self, title=None):
         super(DetailedStep, self).__init__()
         self.title = title
-
-class SurveyQuest(db.Model):
-	__tablename__ = 'surveyQuest'
-	questID = Column('questID', Integer, unique = True, index=True, primary_key=True) 
-	formID = Column(Integer, ForeignKey('surveyForm.formID'))
-	questType = Column('questType', String(255), index=True)
-	questionText = Column('questText', String(255), index=True)
-	questOrder = Column('questOrder', Integer, index=True)
-	isActive = Column('isActive', Boolean, index=True)
-	survey_form = relationship("SurveyForm", back_populates="survey_quest")
-	    
-	def __init__(self, questionText=None, questType = None, questionOrder = None):
-		super(SurveyQuest, self).__init__()
-		self.questionText = questionText
-		self.questType = questType
-		self.questOrder = questionOrder
-		
 
 class SurveyForm(db.Model):
 	__tablename__ = 'surveyForm'

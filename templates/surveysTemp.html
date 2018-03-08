@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="jumbotron text-center">
+	<h1>Survey Creation Page</h1>
+</div>
+<form method="POST">
+	{{form.csrf_token}}
+
+	{{form.stockQuestion.label}}
+	{{form.stockQuestion}}
+	{{form.save}}
+	{{form.delete}}
+</form>
+<h1>Betty Cooper </h1>
+<p>Veronica Lodge.</p>
+<p>Gal Gadot</p>
+
+
+{% endblock content %}
