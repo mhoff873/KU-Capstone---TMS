@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, json
 
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
@@ -19,8 +19,8 @@ def api_login():
         Purpose:    Allows Front End to login
         Author:     Patrick Earl
     '''
-    user = request.form['username']
-    password = request.form['password']
+    user = request.form.get('username')
+    password = request.form.get('password')
     success = Api.userLogin(user, password)
     if success is False:
         return jsonify({'d': 'sign in failure'})
@@ -45,11 +45,30 @@ def getAllCompletedSteps(uname, taskid):
     results = Api.getAllCompletedSteps(uname, taskid)
     return jsonify(results)
 
-'''@app.route("/api/GetByUser/<uname>")
-def GetByUser(uname):
-    return
-'''
+@app.route("/api/user/PostMainStepCompleted", methods=['POST'])
+def postMainStepCompleted():
+    d = json.loads(request.data)
+    # print(d['MainStepName'])
+    results = Api.postMainStepCompleted(d['TaskID'],d['MainStepID'],d['AssignedUser'],d['TotalDetailedStepsUsed'],d['TotalTime'], request.remote_addr)
+    return jsonify(results)
 
+@app.route("/api/user/PostTaskCompleted", methods=['POST'])
+def postTaskCompleted():
+    d = json.loads(request.data)
+    # print(d['TaskID'], d['AssignedUser'])
+    results = Api.postTaskCompleted(d['TaskID'],d['AssignedUser'],d['TotalTime'],d['TotalDetailedStepsUsed'])
+    return jsonify(results)
+                
+@app.route("/api/user/GetAllCompletedTasksByUser/<uname>", methods=['GET'])
+def getAllCompletedTasksByUser(uname):
+    results = Api.getAllCompletedTasksByUser(uname)
+    return jsonify(results)
+
+# change to post then
+@app.route("/api/user/PostLoggedInIp/<data>", methods=['GET'])
+def postLoggedInIp(data):
+    results = Api.postLoggedInIp(data)
+    return jsonify(results)
 
 # dashboard
 @app.route('/dashboard', methods=['GET'])
