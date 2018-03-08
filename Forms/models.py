@@ -188,4 +188,19 @@ class SurveyForm(db.Model):
 		super(SurveyQuest, self).__init__()
 		self.formTitle = formTitle
 		survey_quest = surv_quest
-                
+		
+class SurveyQuest(db.Model):
+	__tablename__ = 'surveyQuest'
+	questID = Column('questID', Integer, unique = True, index=True, primary_key=True) 
+	formID = Column(Integer, ForeignKey('surveyForm.formID'))
+	questType = Column('questType', String(255), index=True)
+	questionText = Column('questText', String(255), index=True)
+	questOrder = Column('questOrder', Integer, index=True)
+	isActive = Column('isActive', Boolean, index=True)
+	survey_form = relationship("SurveyForm", back_populates="survey_quest")
+	    
+	def __init__(self, questionText=None, questType = None, questionOrder = None):
+		super(SurveyQuest, self).__init__()
+		self.questionText = questionText
+		self.questType = questType
+		self.questOrder = questionOrder            
