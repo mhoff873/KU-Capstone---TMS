@@ -223,7 +223,7 @@ def create_task():
     if request.method == 'GET':
         form = CreateTaskForm()
         return render_template('create_task.html', form=form)
-
+    # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
 
     if form.add_main_step.data:
@@ -231,20 +231,24 @@ def create_task():
         form.main_steps.append_entry()
         return render_template('create_task.html', form=form)
     if form.save_as_draft.data:
+        """Save task as draft."""
         TaskHelper.create_task(form)
         return render_template('create_task.html', form=form)
     if form.publish.data:
+        """Save task as published."""
         TaskHelper.create_task(form)
         return render_template('index.html')
     if form.toggle_enabled.data:
+        """Toggles task enabled or not."""
         TaskHelper.toggle_enabled(form)
         return render_template('create_task.html', form=form)
     if form.toggle_activation.data:
+        """Toggles task published or not."""
         TaskHelper.toggle_published(form)
         return render_template('create_task.html', form=form)
     for i, main_step in enumerate(form.main_steps):
-        # Handling of main step deletion and moving as well as detailed steps
-        # addition, deletion, and moving which reside inside main steps
+        # Handling of main step deletion as well as detailed steps
+        # addition and deletion which reside inside main steps
         if main_step.main_step_removal.data:
             """User removes a main step."""
             form.main_steps.entries.pop(i)

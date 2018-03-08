@@ -9,13 +9,17 @@ from database import db
 
 # Req 1
 def create_task(form):
+    """
+    Extracts data from form entering it into our Task, MainStep, DetailedStep
+    objects to be entered into the database.
+    :param form: The CreateTaskForm.
+    :return: The newly created task.
+    """
     existing_task = Task.query.filter_by(title=form.title.data).first()
-    print(existing_task)
     if existing_task is not None:
         new_task = existing_task
     else:
         new_task = Task(form.title.data)
-    print(current_user)
     if current_user == Supervisor:
         new_task.supervisorID = current_user.supervisorID
     elif current_user == Admin:
@@ -29,12 +33,11 @@ def create_task(form):
     if form.publish.data:
         new_task.published = 1
         new_task.activated = 1
-    try:
+    try:  # try/excepts to catch IntegrityErrors, if it exists, we update.
         db.session.add(new_task)
         db.session.commit()
     except Exception:
         db.session.commit()
-    print(new_task.taskID)
     for i, main_step in enumerate(form.main_steps.entries):
         new_main_step = MainStep(main_step.title.data)
         new_main_step.taskID = new_task.taskID
@@ -62,6 +65,11 @@ def create_task(form):
 
 # Req 20
 def toggle_enabled(form):
+    """
+    Toggles whether a task is enabled or not in database.
+    :param form: The CreateTaskForm.
+    :return: None
+    """
     task = Task.query.filter_by(title=form.title.data).first()
     if task is not None:
         task.activated = not task.activated
@@ -69,6 +77,11 @@ def toggle_enabled(form):
 
 # Req 22
 def toggle_published(form):
+    """
+    Toggles whether a task is published or not in the database.
+    :param form: The CreateTaskForm.
+    :return: None
+    """
     task = Task.query.filter_by(title=form.title.data).first()
     if task is not None:
         task.published = not task.published
