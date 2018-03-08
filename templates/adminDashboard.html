@@ -1,104 +1,84 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
 <div class="jumbotron text-center">
-  <h1>Administration Dashboard</h1>
+    <h1>Administration Dashboard</h1>
 </div>
 
 <div class="container">
-  <div class="page_content">
+    <div class="page_content">
+        <!-- content goes in here, below. -->
+        <!--Two tables that will be populated with surveys-->
+        <div class="row">
+            <div class="table-responsive col-md-6">
+                <h2 class="sub-header text-center">Supervisors</h2>
+                <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>User ID</th>
+                        <th>Date Assigned</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                        <td>john@example.com</td>
+                      </tr>
+                      <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                        <td>mary@example.com</td>
+                      </tr>
+                      <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                        <td>july@example.com</td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive col-md-6">
+                <h2 class="sub-header text-center">Users</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <!--need to put a create button here -->
+                      <tr>
+                        <th>Task ID</th>
+                        <th>Date Assigned</th>
+                        <th>Description</th>
+                        <th>Progress</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                        <td>john@example.com</td>
+                      </tr>
+                      <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                        <td>john@example.com</td>
+                      </tr>
+                      <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                        <td>john@example.com</td>
+                      </tr>
 
-  <!-- content goes in here, below. -->
-
-  <div class="container-fluid">
-      <div class="row">
-          <div class="col-sm">
-              <div id="editableTextBox">
-                  <div class= "form-control" contenteditable="true" style="border: 1px solid black">
-                      Task Name A-Z (need a dropdown and reverse icon as a button)
-                  </div>
-              </div>
-          </div>
-          <div>
-              <button type="#" class="btn btn-secondary btn-sm"><i class="fas fa-microphone"></i>Voice</button>
-              <button type="submit" class="btn btn-secondary btn-sm">Search</button>
-          </div>
-      </div>
-  </div>
-  <br>
-
-<!--Two tables that will be populated with surveys-->
-<div class="row">
-  <div class="table-responsive col-md-6">
-      <h2 class="sub-header text-center">Supervisors</h2>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>User ID</th>
-            <th>Date Assigned</th>
-            <th>Email</th>
-            <th>Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-            <td>john@example.com</td>
-          </tr>
-          <tr>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td>mary@example.com</td>
-            <td>mary@example.com</td>
-          </tr>
-          <tr>
-            <td>July</td>
-            <td>Dooley</td>
-            <td>july@example.com</td>
-            <td>july@example.com</td>
-          </tr>
-        </tbody>
-    </table>
-  </div>
-  <div class="table-responsive col-md-6">
-      <h2 class="sub-header text-center">Users</h2>
-      <table class="table table-hover">
-        <thead>
-            <!--need to put a create button here -->
-          <tr>
-            <th>Task ID</th>
-            <th>Date Assigned</th>
-            <th>Description</th>
-            <th>Progress</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-            <td>john@example.com</td>
-          </tr>
-          <tr>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td>mary@example.com</td>
-            <td>john@example.com</td>
-          </tr>
-          <tr>
-            <td>July</td>
-            <td>Dooley</td>
-            <td>july@example.com</td>
-            <td>john@example.com</td>
-          </tr>
-
-        </tbody>
-    </table>
-  </div>
-</div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
 
 
@@ -109,7 +89,7 @@
 
  <!-- content goes here, above. -->
 
-  </div><!-- end of page content -->
+    </div><!-- end of page content -->
 </div><!-- /. end of container -->
 
 

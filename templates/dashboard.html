@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <script>
-         // highlight a row     
+         // highlight a row
         function select_row(id,last){
             //console.log(last);
             try{
@@ -9,25 +9,25 @@
                     if (document.getElementById(last).bgColor=="lightblue")
                          unselect_row(id);
                     else
-                         document.getElementById(id).bgColor = "lightblue"; 
+                         document.getElementById(id).bgColor = "lightblue";
                 }else{
-                    document.getElementById(last).bgColor = "white"; 
-                    document.getElementById(id).bgColor = "lightblue"; 
+                    document.getElementById(last).bgColor = "white";
+                    document.getElementById(id).bgColor = "lightblue";
                     }
             }catch(err){
-                document.getElementById(id).bgColor = "lightblue"; 
+                document.getElementById(id).bgColor = "lightblue";
             }
-             
+
         }
-        
-        // unselect a row     
+
+        // unselect a row
         function unselect_row(r){
             if (r!=0)
                 document.getElementById(r).bgColor = "white";
         }
-        
-                
-        
+
+
+
         function sort_table(tbody, col, asc) {
             var rows = tbody.rows,
                 rlen = rows.length,
@@ -53,8 +53,8 @@
                 for (j = 0; j < clen; j++)
                     rows[i].cells[j].textContent = arr[i][j];
         }
-        
-        
+
+
         var asc1=1;
         var asc2=1;
         var asc3=1;
@@ -88,7 +88,6 @@
               </div>
           </div>
           <div>
-              <button type="#" class="btn btn-secondary btn-sm"><i class="fas fa-microphone"></i>Voice</button>
               <button type="submit" class="btn btn-secondary btn-sm">Search</button>
           </div>
       </div>
@@ -109,13 +108,13 @@
           </tr>
         </thead>
         <tbody id='user_table'>
-        {% for u in user_list %} 
+        {% for u in user_list %}
           <tr id='user_{{u.userID}}' >
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.userID}}</td>
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.dateCreated}}</td>
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.fname}} {{u.lname}}</td>
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.email}}</td>
-          </tr> 
+          </tr>
         {% endfor %}
         </tbody>
     </table>
@@ -132,7 +131,7 @@
           </tr>
         </thead>
         <tbody id='task_table'>
-           {% for t in task_list %} 
+           {% for t in task_list %}
                   <tr id='task_{{t.taskID}}' >
                     <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);'>{{t.taskID}}</td>
                     <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);'>{{t.dateCreated}}</td>
