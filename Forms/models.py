@@ -11,10 +11,6 @@ from datetime import datetime
 from flask_login import UserMixin  
 from sqlalchemy import Boolean, DateTime, Column, Integer, \
                        String, ForeignKey, Date
-
-@login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
     
 class Base(UserMixin, object):
     """Class that represents a basic person"""

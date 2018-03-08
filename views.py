@@ -5,6 +5,8 @@ from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, Assig
     CreateTaskForm, ChangePassword, LoginForm, CreateUser #need to get rid of CreateAccount
 from helper_methods import UserMgmt, Tasks, Update, Login
 from database import *
+from flask_login import current_user
+from Forms.models import User, Supervisor
 
 
 @app.route('/', methods=['GET'])
@@ -240,3 +242,10 @@ def create_task():
             if step.add_detailed_step.data:
                 step.detailed_steps.append_entry()
     return render_template('create_task.html', form=form)
+
+#User Assignment
+@app.route('/user_assignment/', methods=['GET', 'POST'])
+def user_assignment():
+    print("hello Dylan")
+    users = UserMgmt.get_supervisor_users(current_user.email).all()
+    return render_template('user_assignment.html', users=users)
