@@ -6,4 +6,3 @@ sqlalchemy
 flask-login
 flask-cors
 flask-mysqldb
-bcrypt
