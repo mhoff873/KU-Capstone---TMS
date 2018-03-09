@@ -1,7 +1,7 @@
 from flask import render_template, request, jsonify, redirect
 
 from Forms.forms import CreateSupervisor, EditUser, AddUser, AssignUser, \
-    CreateTaskForm, ChangePassword, LoginForm, CreateUser
+    CreateTaskForm, ChangePassword, LoginForm, CreateUser, UserAssignmentForm
 from helper_methods import UserMgmt, TaskHelper, Update, Login, Library
 from database import *
 from flask_login import current_user, login_required, logout_user
