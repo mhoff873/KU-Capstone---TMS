@@ -220,6 +220,7 @@ def user_assignment():
     users = []
     tasks = []
     assign = False
+    # not sure if this line works below
     if current_user.role == "supervisor":
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
@@ -230,7 +231,7 @@ def user_assignment():
             tasks = get_assignable_tasks(current_user.supervisorID)
             assign = True
         else:
-            tasks = get_assignable_tasks()
+            tasks = get_assignable_tasks(supervisorID)
     # on show history button press, show task history
     #"""
     return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
