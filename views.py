@@ -215,7 +215,7 @@ def library(supervisor_id=None):
 @login_required
 def user_assignment():
     users = []
-    users = get_supervisor_users(current_user.email)
+    users = UserMgmt.get_supervisor_users(current_user.email)
     return render_template("user_assignment.html", users=users)
 
 
