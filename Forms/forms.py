@@ -145,7 +145,7 @@ class CreateTaskForm(FlaskForm):
 
 
 class UserAssignmentForm(FlaskForm):
-    add_task = BooeleanField('Assign Task')
+    add_task = BooleanField('Assign Task')
     show_history = BooleanField('View Assigned Tasks')
 
     #def process_data(data):
