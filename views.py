@@ -226,7 +226,7 @@ def user_assignment():
         users = User.query.all()
     # on add_task button press, show list of tasks
     if form.add_task.data:
-        if current_user.role == "supervisor":
+        if current_user == Supervisor:
             tasks = get_assignable_tasks(current_user.supervisorID)
             assign = True
         else:
