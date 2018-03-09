@@ -14,10 +14,12 @@
                     <p> {{ user.fname }} {{ user.lname }} </p>
                     {{form.add_task (class='btn btn-secondary btn-sm')}}
                     {{form.show_history (class='btn btn-secondary btn-sm')}}
-                    {% for task in tasks %}
-                        {{ task.title }}
-                        <br>
-                    {% endfor %}
+                    {% if tasks.length > 1 %}
+                        {% for task in tasks %}
+                            {{ task.title }}
+                            <br>
+                        {% endfor %}
+                    {% endif %}
                 {% endfor %}
                 </form>
             </div>
