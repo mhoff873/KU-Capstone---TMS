@@ -210,6 +210,12 @@ def library(supervisor_id=None):
             tasks = Library.get_tasks(current_user.supervisorID)
     return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors)
 
+#assign tasks to users
+@app.route('/user_assignment/', methods=["GET", "POST"])
+@login_required
+def user_assignment():
+    return render_template("user_assignment.html")
+
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
