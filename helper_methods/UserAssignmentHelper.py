@@ -6,7 +6,6 @@ Created 3/9/2018
 
 from Forms.models import User, Supervisor, Request, Task
 from database import db
-from flask_login import current_user
 
 
 def get_assignable_tasks(supervisorID=None):
@@ -28,7 +27,7 @@ def get_tasks_assigned(userID=None):
     return requests
 
 
-def assign_task(user=None, task=None, supervisor=None):
+def assign_task(user=None,task=None,supervisor=None):
     request = Request()
     request.isApproved = True
     request.taskID = task.taskID
