@@ -215,7 +215,10 @@ def library(supervisor_id=None):
 @login_required
 def user_assignment():
     users = []
-    users = UserMgmt.get_supervisor_users(current_user.email)
+    if current_user.supervisorID is not None:
+        users = UserMgmt.get_supervisor_users(current_user.email)
+    else
+        users = None
     return render_template("user_assignment.html", users=users)
 
 
