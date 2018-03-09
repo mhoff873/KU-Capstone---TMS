@@ -216,11 +216,16 @@ def library(supervisor_id=None):
 def user_assignment():
     form = UserAssignmentForm()
     users = []
+    tasks = []
     if current_user.role == "supervisor":
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
         users = User.query.all()
-    return render_template("user_assignment.html", users=users, form=form)
+    if form.add_task.data:
+        tasks = Task.query.all()
+    else:
+        tasks = None
+    return render_template("user_assignment.html", users=users, tasks=tasks, form=form)
 
 
 # create task
