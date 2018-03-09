@@ -6,6 +6,7 @@ from helper_methods import UserMgmt, TaskHelper, Update, Login, Library
 from database import *
 from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor
+from flask_login import current_user
 
 
 @app.route('/', methods=['GET'])
@@ -214,7 +215,8 @@ def library(supervisor_id=None):
 @app.route('/user_assignment/', methods=["GET", "POST"])
 @login_required
 def user_assignment():
-    return render_template("user_assignment.html")
+    users = get_supervisor_users(current_user.email)
+    return render_template("user_assignment.html", users=users)
 
 
 # create task
