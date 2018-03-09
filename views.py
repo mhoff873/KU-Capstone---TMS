@@ -218,7 +218,7 @@ def user_assignment():
     if current_user.role == "supervisor":
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
-        users = None
+        users = User.query.all()
     return render_template("user_assignment.html", users=users)
 
 
