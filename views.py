@@ -223,6 +223,7 @@ def user_assignment():
         users = User.query.all()
     if form.add_task.data:
         tasks = Task.query.all()
+        return render_template("user_assignment.html", users=users, tasks=tasks, form=form)
     else:
         tasks = Task.query.filter_by(taskID=18).first()
     return render_template("user_assignment.html", users=users, tasks=tasks, form=form)
