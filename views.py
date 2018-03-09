@@ -230,7 +230,7 @@ def user_assignment():
             tasks = get_assignable_tasks(current_user.supervisorID)
             assign = True
         else:
-            tasks = get_assignable_tasks(0)
+            tasks = get_assignable_tasks(int(0))
     # on show history button press, show task history
     #"""
     return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)

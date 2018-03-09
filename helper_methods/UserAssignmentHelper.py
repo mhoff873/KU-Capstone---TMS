@@ -7,10 +7,11 @@ Created 3/9/2018
 from Forms.models import User, Supervisor, Request, Task
 from database import db
 
+
 def get_assignable_tasks(supervisorID=None):
     tasks = None
     if supervisorID is None:
-        tasks = Task.query.filter_by(supervisorID=supervisorID).all()
+        tasks = Task.query.filter_by(supervisorID=supervisorID, enabled=True).all()
     return tasks
 
 
