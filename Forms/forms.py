@@ -142,3 +142,10 @@ class CreateTaskForm(FlaskForm):
     @staticmethod
     def process_data(data):
         return data
+
+
+class UserAssignmentForm(FlaskForm):
+    add_task = SubmitField('Assign Task')
+
+    #def process_data(data):
+    #   return data

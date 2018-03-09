@@ -10,6 +10,7 @@
 
             {% for user in users %}
                 <p> {{ user.fname }} {{ user.lname }} </p>
+                {{form.add_task (class='btn btn-secondary btn-lg')}}
             {% endfor %}
 
         </div>

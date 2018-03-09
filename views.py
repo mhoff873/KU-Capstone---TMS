@@ -214,6 +214,7 @@ def library(supervisor_id=None):
 @app.route('/user_assignment/', methods=["GET", "POST"])
 @login_required
 def user_assignment():
+    form = UserAssignmentForm()
     users = []
     if current_user.role == "supervisor":
         users = UserMgmt.get_supervisor_users(current_user.email)
