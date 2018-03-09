@@ -223,14 +223,15 @@ def user_assignment():
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
         users = User.query.all()
+    # on add_task button press, show list of tasks
     if form.add_task.data:
         if current_user.role == "supervisor":
             tasks = get_assignable_tasks(current_user.supervisorID)
             assign = True
         else:
             tasks = get_assignable_tasks(0)
-    else:
-        tasks = Task.query.filter_by(taskID=18).first()
+    # on show history button press, show task history
+
     return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
 
 
