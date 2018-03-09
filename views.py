@@ -215,7 +215,7 @@ def library(supervisor_id=None):
 @login_required
 def user_assignment():
     users = []
-    if current_user.supervisorID is not None:
+    if current_user.role is "supervisor":
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
         users = None
