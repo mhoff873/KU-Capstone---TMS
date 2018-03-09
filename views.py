@@ -222,7 +222,8 @@ def user_assignment():
     else:
         users = User.query.all()
     if form.add_task.data:
-        tasks = "Clicked"#Task.query.all()
+        tasks = "Clicked" #Task.query.all()
+        return render_template("user_assignment.html", users=users, tasks=tasks, form=form)
     else:
         tasks = "NotClicked"
     return render_template("user_assignment.html", users=users, tasks=tasks, form=form)
