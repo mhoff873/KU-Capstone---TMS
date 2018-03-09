@@ -1,0 +1,4 @@
+{
+  "test_forms.py::FormTests::test_db_connection": true,
+  "test_forms.py::FormTests::test_form_creation": true
+}

@@ -7,10 +7,5 @@
 SECRET_KEY = 'wefb292h3d9be#@@YEBBCE2NION32UDFEBUE2U202hfeu2onwdsjdf'
 
 # Database Configs
-# See: http://flask-mysqldb.readthedocs.io/en/latest/
-MYSQL_HOST = ''
-MYSQL_USER = ''
-MYSQL_PASSWORD = ''
-MYSQL_DB = ''
-MYSQL_PORT = ''
-MYSQL_CONNECT_TIMEOUT = 20
+SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://tmstadmin:humedavid@localhost:3306/tmst_db'
+SQLALCHEMY_TRACK_MODIFICATIONS = False

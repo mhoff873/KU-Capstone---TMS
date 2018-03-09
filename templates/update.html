@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>Update your password</h1>
+
+    <form action="{{ url_for('update') }}" method="POST">
+        {{ form.csrf_token }}
+        {% if form.csrf_token.errors %}
+            <h1><strong>You have submitted an invalid CSRF token!</strong></h1>
+        {% endif %}
+        {{ form.email.label }}
+        {{ form.email }}
+        <br>
+        {{ form.password.label }}
+        {{ form.password }}
+        <br>
+        {{ form.confirm.label }}
+        {{ form.confirm }}
+        <br>
+        {{ form.submit }}
+    </form>
+
+{% endblock content %}
