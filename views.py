@@ -216,6 +216,7 @@ def library(supervisor_id=None):
 @login_required
 def user_assignment():
     form = UserAssignmentForm()
+    #"""
     users = []
     tasks = []
     assign = False
@@ -231,7 +232,7 @@ def user_assignment():
         else:
             tasks = get_assignable_tasks(0)
     # on show history button press, show task history
-
+    #"""
     return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
 
 
