@@ -217,7 +217,7 @@ def user_assignment():
     users = []
     if current_user.supervisorID is not None:
         users = UserMgmt.get_supervisor_users(current_user.email)
-    else
+    else:
         users = None
     return render_template("user_assignment.html", users=users)
 
