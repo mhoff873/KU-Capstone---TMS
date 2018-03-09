@@ -123,15 +123,15 @@ def dashboard():
                 print("isApproved: "+str(r.isApproved))
                 print("dateRequested: "+str(r.dateRequested))
         else:
-            print("did not find any requests") 
-            
+            print("did not find any requests")
+
             # need a structure that is indexable by userID for the Request object
-            
+
         return render_template('dashboard.html', task_list=tasks, user_list=users, request_list=requests)
-        
+
     if(current_user.role=="admin"):
         return redirect("adminDashboard", code=302)
-    
+
 # admin dash
 @app.route("/adminDashboard/", methods=["GET", "POST"])
 @login_required
@@ -142,7 +142,7 @@ def admin_dash():
         supervisors  = Supervisor.query.all()
         users  = User.query.all()
         return render_template("adminDashboard.html", supervisor_list=supervisors, user_list=users)
-  
+
 # survey management
 @app.route("/surveys/", methods=["GET", "POST"])
 def surveys():
@@ -152,7 +152,7 @@ def surveys():
 	if form.validate_on_submit():
 	    return ("You have Submitted the Survey")
 	return render_template("surveysTemp.html", form=form)
-        
+
 # link to the logout page to log an account out
 @app.route('/logout', methods=['GET'])
 @login_required
@@ -234,22 +234,55 @@ def create_user():
 
 # library
 @app.route("/library/", methods=["GET", "POST"])
-@app.route("/library/<supervisor_id>", methods=["GET", "POST"])
+@app.route("/library/<arguments>", methods=["GET", "POST"])
 @login_required
-def library(supervisor_id=None):
-    search_form = Library.SearchForm()
-    allsupervisors = Library.get_supervisors()
+def library(arguments=None):
     tasks = []
+
+    # Create form(s).
+    search_form = Library.SearchForm()
+
+    # Get complete list of all supervisors for dropdown.
+    allsupervisors = Library.get_supervisors()
+
+    # selected_id is the current supervisor selected or the current_user logged
+    # in if no supervisor was selected from dropdown
+    selected_id = current_user.supervisorID
+
+    # Check if the form is validated, or whether it was submitted.
     if search_form.validate_on_submit():
+        # Uses the search form data to look for tasks that match.
         keyword = search_form.search.data
-        tasks = Library.search(keyword)
-    else:
-        # If the form is not submitted then I need to check if I am searching by supervisor
-        if supervisor_id is not None:
-            tasks = Library.get_tasks(supervisor_id)
+        tasks = []
+        if arguments is not None:
+            sort = arguments.split(':')[0]
+            if sort == "alpha":
+                tasks = Library.sort_alphabetically(Library.search(keyword))
+            elif sort == "alpha-rev":
+                tasks = Library.sort_alphabetically(Library.search(keyword), reverse=True)
         else:
-            tasks = Library.get_tasks(current_user.supervisorID)
-    return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors)
+            tasks = Library.sort_alphabetically(Library.search(keyword))
+    else:
+        # Check if arguments were passed to page or not.
+        if arguments is not None:
+            # Arguments are passed in the following format: sort:supervisor_id
+            sort, supervisor_id = arguments.split(':')
+
+            # If the tasks were already sorted based on supervisor, keep those
+            # tasks and just sort them.
+            if supervisor_id != "":
+                selected_id = supervisor_id
+
+            # Check sort options
+            if sort == "alpha":
+                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
+            if sort == "alpha-rev":
+                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id), reverse=True)
+            else: # Default option is to sort alphabetically
+                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
+        else:
+            tasks = Library.sort_alphabetically(Library.get_tasks(current_user.supervisorID))
+    return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors, selectedID=selected_id)
 
 
 # create task

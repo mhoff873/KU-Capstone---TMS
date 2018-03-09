@@ -11,30 +11,34 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm">
+                    <!-- Supervisor Dropdown -->
                     <div class="dropdown">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                            Library
+                            Supervisor
                         </button>
                         <div class="dropdown-menu force-scroll">
                             {% for supervisor in supervisors %}
-                            <a class="dropdown-item" href="{{ supervisor.supervisorID }}">
+                            <a class="dropdown-item" href="/library/alpha:{{ supervisor.supervisorID }}">
                                 {{ supervisor.fname }} {{ supervisor.lname }}
                             </a> {% endfor %}
                         </div>
                     </div>
+                    <!-- END Supervisor Dropdown -->
+                    <!-- Sort dropdown -->
                     <div class="dropdown">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                             Sort
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="/library/alpha:{{ selectedID }}">
                                 Alphabetical
                             </a>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="/library/alpha-rev:{{ selectedID }}">
                                 Alphabetical (Reverse)
                             </a>
                         </div>
                     </div>
+                    <!-- END Sort Dropdown -->
                 </div>
             <!--inline search bar start-->
                 <form method="POST">
