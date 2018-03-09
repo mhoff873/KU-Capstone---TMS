@@ -7,11 +7,16 @@
 
     <div class="container">
         <div class="page_content">
+            <div class= "text-center">
+                <form method="POST">
 
             {% for user in users %}
                 <p> {{ user.fname }} {{ user.lname }} </p>
                 {{form.add_task (class='btn btn-secondary btn-lg')}}
             {% endfor %}
+
+                </form>
+            </div>
 
         </div>
     </div><!-- /.container -->
