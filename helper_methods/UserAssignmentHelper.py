@@ -9,7 +9,7 @@ from database import db
 
 
 def get_assignable_tasks(supervisorID=None):
-    tasks = None
+    tasks = []
     if supervisorID is None:
         tasks = Task.query.filter_by(supervisorID=supervisorID, enabled=True).all()
     return tasks
