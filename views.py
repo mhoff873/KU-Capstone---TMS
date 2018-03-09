@@ -210,13 +210,15 @@ def library(supervisor_id=None):
             tasks = Library.get_tasks(current_user.supervisorID)
     return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors)
 
-#assign tasks to users
+
+# user assignment
 @app.route('/user_assignment/', methods=["GET", "POST"])
 @login_required
 def user_assignment():
     form = UserAssignmentForm()
     users = []
     tasks = []
+    assign = False
     if current_user.role == "supervisor":
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
@@ -224,11 +226,12 @@ def user_assignment():
     if form.add_task.data:
         if current_user.role == "supervisor":
             tasks = get_assignable_tasks(current_user.supervisorID)
+            assign = True
         else:
             tasks = get_assignable_tasks(0)
     else:
         tasks = Task.query.filter_by(taskID=18).first()
-    return render_template("user_assignment.html", users=users, tasks=tasks, form=form)
+    return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
 
 
 # create task
