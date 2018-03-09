@@ -1,5 +1,15 @@
+# ************************************************************/
+# Flask request routing to map URLs to code
+# Author: Patrick Earl, Tyler Lance, <devs add names here>
+# Created: 03/04/2018
+# Updated: 03/09/2017
+# Purpose: these @app.route map URLs called in the browser to code. each of these
+#          routes pulls data from the url (get) or the form (post) and calls the
+#          corresponding function in the Api.py file. then gets the results from
+#          the function and format the results into a json string object or form.
+# Version: Python Version 3.6
+# ************************************************************/
 from flask import render_template, request, jsonify, json
-
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser #need to get rid of CreateAccount
@@ -11,14 +21,9 @@ from database import *
 def index():
     return render_template('index.html')
 
-
+# begin URL dispatching for iPaws
 @app.route('/api/user/login', methods=['POST'])
 def api_login():
-    '''
-        Function:   user_login
-        Purpose:    Allows Front End to login
-        Author:     Patrick Earl
-    '''
     user = request.form.get('username')
     password = request.form.get('password')
     success = Api.userLogin(user, password)
@@ -31,9 +36,6 @@ def api_login():
 def api_getbyuser(uname):
     r = Api.getByUser(uname)
     return jsonify([r])
-
-
-# For sprint 2
 
 @app.route("/api/user/GetTaskDetails/<taskid>", methods=['GET'])
 def getTaskDetails(taskid):
@@ -48,14 +50,12 @@ def getAllCompletedSteps(uname, taskid):
 @app.route("/api/user/PostMainStepCompleted", methods=['POST'])
 def postMainStepCompleted():
     d = json.loads(request.data)
-    # print(d['MainStepName'])
     results = Api.postMainStepCompleted(d['TaskID'],d['MainStepID'],d['AssignedUser'],d['TotalDetailedStepsUsed'],d['TotalTime'], request.remote_addr)
     return jsonify(results)
 
 @app.route("/api/user/PostTaskCompleted", methods=['POST'])
 def postTaskCompleted():
     d = json.loads(request.data)
-    # print(d['TaskID'], d['AssignedUser'])
     results = Api.postTaskCompleted(d['TaskID'],d['AssignedUser'],d['TotalTime'],d['TotalDetailedStepsUsed'])
     return jsonify(results)
                 
@@ -64,12 +64,26 @@ def getAllCompletedTasksByUser(uname):
     results = Api.getAllCompletedTasksByUser(uname)
     return jsonify(results)
 
-# change to post then
-@app.route("/api/user/PostLoggedInIp/<data>", methods=['GET'])
-def postLoggedInIp(data):
-    results = Api.postLoggedInIp(data)
+@app.route("/api/user/PostLoggedInIp", methods=['POST'])
+def postLoggedInIp():
+    ip = request.form.get('IpAddress')
+    signIn = request.form.get('SignedIn')
+    user = request.form.get('Username')
+    results = Api.postLoggedInIp(ip,user,signIn)
     return jsonify(results)
+# end URL dispatching for iPaws
 
+#http://tmst.kutztown.edu:5004/api/user/PostSurveyResults/test
+# this must be changed from get to post
+@app.route("/api/user/PostSurveyResults/<test>", methods=['GET'])
+def postSurveyResults(test):
+    SR = ""
+    SQR = ""
+    # created the required dictionary & lists and pass to function
+    results = Api.postSurveyResults(SR,SQR)
+    return test
+
+# begin URL dispatching for TMS
 # dashboard
 @app.route('/dashboard', methods=['GET'])
 # @login_required

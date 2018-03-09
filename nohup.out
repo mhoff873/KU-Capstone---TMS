@@ -1,0 +1,298 @@
+ * Running on http://0.0.0.0:5004/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 187-611-006
+156.12.44.114 - - [08/Mar/2018 13:11:32] "POST /api/user/login HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:11:32] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:11:33] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:11:36] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:11:41] "POST /api/user/login HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:11:41] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:11:41] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:12:00] "POST /api/user/login HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:12:00] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:12:00] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:12:02] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:12:06] "POST /api/user/login HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:12:06] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:12:07] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:12:15] "POST /api/user/login HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:12:15] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:12:16] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:13:06] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:14:52] "POST /api/user/login HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:14:52] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:14:52] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:14:55] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:14:57] "GET /api/user/GetTaskDetails/18 HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:15:00] "GET /api/user/GetTaskDetails/15 HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:15:00] "GET /api/user/GetAllCompletedSteps/test.com/15 HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:15:08] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:15:08] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:15:09] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:15:09] "OPTIONS /api/user/PostTaskCompleted HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:15:09] "POST /api/user/PostTaskCompleted HTTP/1.1" 200 -
+156.12.44.114 - - [08/Mar/2018 13:15:10] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:10] "POST /api/user/login HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:10] "GET /api/user/GetByUser/Test.com HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:10] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:13] "GET /api/user/GetAllCompletedTasksByUser/Test.com HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:16] "GET /api/user/GetTaskDetails/654706 HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:16] "GET /api/user/GetAllCompletedSteps/Test.com/654706 HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:25] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:25] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:27] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:28] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:29] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:30] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:31] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:31] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:32] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:33] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:34] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:34] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:34] "OPTIONS /api/user/PostTaskCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:34] "POST /api/user/PostTaskCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:16:35] "POST /api/user/login HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:16:35] "GET /api/user/GetByUser/tmstadmin HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:36] "GET /api/user/GetAllCompletedTasksByUser/Test.com HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:49] "GET /api/user/GetAllCompletedTasksByUser/Test.com HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:16:51] "GET /api/user/GetTaskDetails/18 HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:17:21] "GET /api/user/GetTaskDetails/18 HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:17:40] "GET /api/user/GetByUser/Test.com HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:17:40] "GET /api/user/GetAllCompletedTasksByUser/Test.com HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:18:04] "POST /api/user/login HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:18:04] "GET /api/user/GetByUser/guest HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:24:45] "POST /api/user/login HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:24:45] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:24:45] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:24:56] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:25:05] "GET /api/user/GetTaskDetails/15 HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:25:05] "GET /api/user/GetAllCompletedSteps/test.com/15 HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:25:20] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:25:20] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:25:39] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:25:40] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:25:41] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:25:41] "OPTIONS /api/user/PostTaskCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:25:41] "POST /api/user/PostTaskCompleted HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:28:20] "POST /api/user/login HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:28:20] "GET /api/user/GetByUser/Test.com HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:28:20] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+166.170.30.152 - - [08/Mar/2018 13:28:24] "GET /api/user/GetAllCompletedTasksByUser/Test.com HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:33:37] "GET /api/user/GetAllCompletedSteps/test.com/15 HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:33:42] "POST /api/user/login HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:33:42] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:33:43] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:33:50] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:33:53] "GET /api/user/GetTaskDetails/654706 HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:33:53] "GET /api/user/GetAllCompletedSteps/test.com/654706 HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:34:46] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:34:46] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:34:53] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:34:53] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:01] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:01] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:06] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:07] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:23] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:23] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:30] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:30] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:33] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:43] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:43] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:50] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:35:50] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:36:07] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:36:07] "OPTIONS /api/user/PostTaskCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:36:07] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:36:07] "POST /api/user/PostTaskCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:36:35] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:36:43] "GET /api/user/GetTaskDetails/18 HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:36:52] "GET /api/user/GetTaskDetails/15 HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:36:53] "GET /api/user/GetAllCompletedSteps/test.com/15 HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:37:17] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:37:17] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:37:31] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:37:31] "OPTIONS /api/user/PostTaskCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:37:31] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:37:31] "POST /api/user/PostTaskCompleted HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 13:41:54] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 14:56:32] "POST /api/user/login HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 14:56:32] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 14:56:32] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 14:56:36] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 14:56:38] "GET /api/user/GetTaskDetails/15 HTTP/1.1" 200 -
+50.32.211.139 - - [08/Mar/2018 14:56:39] "GET /api/user/GetAllCompletedSteps/test.com/15 HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:33:55] "GET /api/user/GetByUser/test HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:33:55] "POST /api/user/login HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:33:55] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:33:59] "GET /api/user/GetAllCompletedTasksByUser/test HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:34:03] "GET /api/user/GetTaskDetails/15 HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:34:03] "GET /api/user/GetAllCompletedSteps/test/15 HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:34:18] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:34:18] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:34:22] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:34:22] "OPTIONS /api/user/PostTaskCompleted HTTP/1.1" 200 -
+71.230.54.106 - - [08/Mar/2018 15:34:22] "POST /api/user/PostTaskCompleted HTTP/1.1" 200 -
+156.12.154.79 - - [08/Mar/2018 19:46:18] "POST /api/user/login HTTP/1.1" 200 -
+156.12.154.79 - - [08/Mar/2018 19:46:18] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.154.79 - - [08/Mar/2018 19:46:18] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.154.79 - - [08/Mar/2018 19:46:21] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+IP ImmutableMultiDict([('IpAddress', '156.12.44.114'), ('SignedIn', 'true'), ('Username', 'test.com')])
+IP ImmutableMultiDict([('IpAddress', '156.12.44.114'), ('SignedIn', 'true'), ('Username', 'test.com')])
+IP ImmutableMultiDict([('IpAddress', '156.12.44.114'), ('SignedIn', 'true'), ('Username', 'test.com')])
+IP ImmutableMultiDict([('IpAddress', '156.12.44.114'), ('SignedIn', 'true'), ('Username', 'test.com')])
+IP ImmutableMultiDict([('IpAddress', '156.12.44.114'), ('SignedIn', 'true'), ('Username', 'test.com')])
+IP ImmutableMultiDict([('IpAddress', '156.12.44.114'), ('SignedIn', 'true'), ('Username', 'test.com')])
+IP ImmutableMultiDict([('IpAddress', '166.137.240.129'), ('SignedIn', 'true'), ('Username', 'Test.com')])
+IP ImmutableMultiDict([('IpAddress', '50.32.211.139'), ('SignedIn', 'true'), ('Username', 'test.com')])
+IP ImmutableMultiDict([('IpAddress', '166.137.240.129'), ('SignedIn', 'true'), ('Username', 'Test.com')])
+IP ImmutableMultiDict([('IpAddress', '50.32.211.139'), ('SignedIn', 'true'), ('Username', 'test.com')])
+IP ImmutableMultiDict([('IpAddress', '50.32.211.139'), ('SignedIn', 'true'), ('Username', 'test.com')])
+IP ImmutableMultiDict([('IpAddress', '71.230.54.106'), ('SignedIn', 'true'), ('Username', 'test')])
+IP ImmutableMultiDict([('IpAddress', '156.12.154.79'), ('SignedIn', 'true'), ('Username', 'test.com')])
+ * Running on http://0.0.0.0:5004/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 187-611-006
+156.12.154.79 - - [08/Mar/2018 21:17:39] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.154.79 - - [08/Mar/2018 21:17:39] "POST /api/user/login HTTP/1.1" 200 -
+156.12.154.79 - - [08/Mar/2018 21:17:39] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.154.79 - - [08/Mar/2018 21:17:45] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.154.79 - - [08/Mar/2018 21:17:47] "GET /api/user/GetTaskDetails/654706 HTTP/1.1" 200 -
+156.12.154.79 - - [08/Mar/2018 21:17:47] "GET /api/user/GetAllCompletedSteps/test.com/654706 HTTP/1.1" 200 -
+156.12.154.79 - - [08/Mar/2018 21:17:58] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:07] "POST /api/user/login HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:07] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:07] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:10] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:12] "GET /api/user/GetTaskDetails/654706 HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:12] "GET /api/user/GetAllCompletedSteps/test.com/654706 HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:15] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:16] "GET /api/user/GetTaskDetails/15 HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:16] "GET /api/user/GetAllCompletedSteps/test.com/15 HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:20] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:20] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:24] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:24] "OPTIONS /api/user/PostTaskCompleted HTTP/1.1" 200 -
+156.12.44.114 - - [09/Mar/2018 10:53:24] "POST /api/user/PostTaskCompleted HTTP/1.1" 200 -
+ * Running on http://0.0.0.0:5004/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 187-611-006
+156.12.40.171 - - [09/Mar/2018 14:45:40] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:45:42] "POST /api/user/login HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:45:42] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:45:42] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:45:44] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:45:48] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:45:59] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:01] "GET /api/user/GetTaskDetails/18 HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:03] "GET /api/user/GetTaskDetails/654706 HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:03] "GET /api/user/GetAllCompletedSteps/test.com/654706 HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:13] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:14] "POST /api/user/PostMainStepCompleted HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/usr/local/lib/python3.6/dist-packages/flask_cors/extension.py", line 161, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib/python3.6/dist-packages/flask_cors/extension.py", line 161, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/team_db/tms/views.py", line 53, in postMainStepCompleted
+    results = Api.postMainStepCompleted(d['TaskID'],d['MainStepID'],d['AssignedUser'],d['TotalDetailedStepsUsed'],d['TotalTime'], request.remote_addr)
+  File "/home/team_db/tms/helper_methods/Api.py", line 233, in postMainStepCompleted
+    values(%d,%d,%d,%d)''' % (int(cTaskID['LAST_INSERT_ID()']),int(i['mainStepID']),0,0,))
+TypeError: 'int' object is not subscriptable
+156.12.40.171 - - [09/Mar/2018 14:46:15] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:16] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:17] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:17] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:18] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:19] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:19] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:19] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:20] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:21] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:21] "OPTIONS /api/user/PostTaskCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:21] "POST /api/user/PostTaskCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:23] "GET /api/user/GetAllCompletedSteps/test.com/654706 HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:32] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:32] "POST /api/user/PostMainStepCompleted HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/usr/local/lib/python3.6/dist-packages/flask_cors/extension.py", line 161, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib/python3.6/dist-packages/flask_cors/extension.py", line 161, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/team_db/.local/lib/python3.6/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/team_db/tms/views.py", line 53, in postMainStepCompleted
+    results = Api.postMainStepCompleted(d['TaskID'],d['MainStepID'],d['AssignedUser'],d['TotalDetailedStepsUsed'],d['TotalTime'], request.remote_addr)
+  File "/home/team_db/tms/helper_methods/Api.py", line 233, in postMainStepCompleted
+    values(%d,%d,%d,%d)''' % (int(cTaskID['LAST_INSERT_ID()']),int(i['mainStepID']),0,0,))
+TypeError: 'int' object is not subscriptable
+156.12.40.171 - - [09/Mar/2018 14:46:34] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:38] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:38] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:39] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:46:42] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:10] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:10] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:11] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:12] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:12] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:13] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:14] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:14] "POST /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:14] "OPTIONS /api/user/PostTaskCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:14] "POST /api/user/PostTaskCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:15] "GET /api/user/GetAllCompletedTasksByUser/test.com HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:18] "GET /api/user/GetTaskDetails/15 HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:18] "GET /api/user/GetAllCompletedSteps/test.com/15 HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:24] "OPTIONS /api/user/PostMainStepCompleted HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:47:24] "POST /api/user/PostMainStepCompleted HTTP/1.1" 500 -
+ * Running on http://0.0.0.0:5004/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 187-611-006
+156.12.40.171 - - [09/Mar/2018 14:51:59] "GET /api/user/GetByUser/test.com HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:51:59] "POST /api/user/login HTTP/1.1" 200 -
+156.12.40.171 - - [09/Mar/2018 14:51:59] "POST /api/user/PostLoggedInIp HTTP/1.1" 200 -
