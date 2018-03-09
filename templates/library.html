@@ -1,86 +1,112 @@
-{% extends 'base.html' %}
-{% block content %}
-
+{% extends 'base.html' %} {% block content %}
+<!--top of page heading of page-->
 <div class="jumbotron text-center">
-    <h1>Library</h1>
+  <h1>Library</h1>
 </div>
-
+<!-- everything is held within this container for responsiveness-->
 <div class="container">
     <div class="page_content">
 
-        <!-- content goes in here, below. -->
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm">
-                <div class="dropdown">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                    Library
-                    </button>
-                    <div class="dropdown-menu">
-                        {% for supervisor in supervisors %}
+    <!-- content goes in here, below. -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                            Library
+                        </button>
+                        <div class="dropdown-menu force-scroll">
+                            {% for supervisor in supervisors %}
                             <a class="dropdown-item" href="{{ supervisor.supervisorID }}">
                                 {{ supervisor.fname }} {{ supervisor.lname }}
+                            </a> {% endfor %}
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                            Sort
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">
+                                Alphabetical
                             </a>
-                        {% endfor %}
+                            <a class="dropdown-item" href="#">
+                                Alphabetical (Reverse)
+                            </a>
+                        </div>
                     </div>
                 </div>
-
-            </div>
-
-        </div>
-    </div>
-    <br>
-
-    <form method="POST">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm">
-                {{ search.csrf_token }}
-                {{ search.search }}
-           </div>
-            <div class="col-sm">
-                {{ search.submit }}
-            </div>
-        </div>
-    </div>
-    </form>
-    <br>
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm">
-                <div id="editableTextBox">
-                    <div class= "form-control" contenteditable="true" style="border: 1px solid black">
-                        Task Name A-Z (need a dropdown and reverse icon as a button)
+            <!--inline search bar start-->
+                <form method="POST">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm">
+                                <div style="display: inline-block; min-width: 20em">
+                                    {{ search.csrf_token }}
+                                    {{ search.search }}
+                                    <!--</div>-->
+                                    <!--<div class="col-sm">-->
+                                    {{ search.submit }}
+                                    <!--</div>-->
+                                    <!---<div class="col-sm">-->
+                                    <!--{{ search.submit }}-->
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <br>
+                </form>
 
             </div>
         </div>
-    </div>
+        <!--end of inline search bar-->
+        <br>
 
-    <!-- Below are where the tasks are displayed -->
-    <div class="container-fluid">
-        <div class="row">
-            <!-- start content here -->
-            {% for task in tasks %}
+        <!--<form method="POST">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm">
+        <div style="display: inline-block; min-width: 20em">
+                    {{ search.csrf_token }}
+                    {{ search.search }}
+
+               <!--</div>-->
+        <!--<div class="col-sm">-->
+        <!--{{ search.submit }}-->
+        <!--</div>-->
+        <!---<div class="col-sm">-->
+        <!--{{ search.submit }}-->
+        <!--</div>
+                </div>
+            </div>
+        </div>
+        </form>
+        <br>-->
+
+
+        <!-- Below are where the tasks are displayed -->
+        <div class="container-fluid">
+            <div class="row">
+                <!-- start content here -->
+                {% for task in tasks %}
                 <div class="col-sm">
                     <div class="container">
                         <!-- This temporarily is used to show description -->
                         <div onclick="alert('{{ task.description }}')">
-                            <div class="card">
-                                <div class="card-body">"Task Image Here"</div>
-                                <div class="card-footer">{{ task.title }}</div>
+                            <!--card sizing below-->
+                            <div class="card border-dark mb-3" style="width:175px">
+                                <img class="card-img-top" src="../static/img/letter-33690_960_720.png" alt="Card Image Cap">
+                                <div class="card-body">
+                                    <p class="card-text">{{ task.title }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-            <br>
-            <!-- end content here -->
+                {% endfor %}
+                <br>
+                <!-- end content here -->
+            </div>
         </div>
     </div>
-</div> <!-- end of container -->
+</div>
+<!-- end of container -->
 {% endblock content %}
