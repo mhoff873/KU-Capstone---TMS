@@ -221,11 +221,11 @@ def user_assignment():
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
         users = User.query.all()
-    if form.add_task.data:
-        tasks = "Clicked" #Task.query.all()
+    if validate_on_submit():
+        tasks = Task.query.all()
         return render_template("user_assignment.html", users=users, tasks=tasks, form=form)
     else:
-        tasks = "NotClicked"
+        tasks = None
     return render_template("user_assignment.html", users=users, tasks=tasks, form=form)
 
 
