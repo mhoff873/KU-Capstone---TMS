@@ -221,7 +221,7 @@ def user_assignment():
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
         users = User.query.all()
-    if form.add_task():
+    if form.add_task.data:
         tasks = Task.query.all()
         return render_template("user_assignment.html", users=users, tasks=tasks, form=form)
     else:
