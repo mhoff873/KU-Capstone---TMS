@@ -2,7 +2,7 @@ from flask import render_template, request, jsonify, redirect
 
 from Forms.forms import CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser, UserAssignmentForm
-from helper_methods import UserMgmt, TaskHelper, Update, Login, Library
+from helper_methods import UserMgmt, TaskHelper, Update, Login, Library, UserAssignmentHelper
 from database import *
 from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor
@@ -221,8 +221,11 @@ def user_assignment():
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
         users = User.query.all()
-    if form.add_task:
-        tasks = Task.query.all()
+    if form.add_task.data:
+        if current_user.role == "supervisor":
+            tasks = get_assignable_tasks(current_user.supervisorID)
+        else:
+            tasks = get_assignable_tasks(0)
     else:
         tasks = Task.query.filter_by(taskID=18).first()
     return render_template("user_assignment.html", users=users, tasks=tasks, form=form)
