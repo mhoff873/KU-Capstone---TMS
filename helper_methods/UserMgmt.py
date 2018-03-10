@@ -85,13 +85,13 @@ def edit_supervisor(form, current_user):
     db.session.commit()
 
 
-def edit_user(form):
+def edit_user(form, user):
     """
     Allows the supervisor/admin to edit a user.
     :param form: Form submitted to edit the user/supervisor info.
     :return: N/A
     """
-    user = User.query.filter_by(email=form.person.data).first()
+    user = User.query.filter_by(email=user).first()
     user.phone = form.phone.data
     user.fname = form.fname.data
     user.mname = form.mname.data

@@ -16,7 +16,7 @@
 
 
   <!-- Edit user info -->
-  <form method="POST">
+  <form action="/user_account/{{ User }}" method="POST">
       {{ EditUser.csrf_token }}
       {{ EditUser.password }}
       {{ EditUser.password.data }}

@@ -256,7 +256,7 @@ def create_user():
     form = CreateUser()
     if form.validate_on_submit():
         UserMgmt.create_user(form)
-        return "WOOOT you created a new user!"
+        return user_account(form.email.data)
     return render_template("createUser.html", form=form)
 
 
@@ -348,11 +348,11 @@ def create_task():
 
 
 #User Account
-@app.route("/user_account/", methods=["GET", "POST"])
+@app.route("/user_account/<user>", methods=["GET", "POST"])
 @login_required
-def user_account():
+def user_account(user):
     eUser = EditUser()
     if eUser.validate_on_submit():
-        UserMgmt.edit_user(eUser, current_user)
+        UserMgmt.edit_user(eUser, user)
         return dashboard()
-    return render_template("userAccount.html", EditUser=eUser)
+    return render_template("userAccount.html", EditUser=eUser, User=user)
