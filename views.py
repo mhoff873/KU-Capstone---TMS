@@ -255,8 +255,9 @@ def create_supervisor():
 def create_user():
     form = CreateUser()
     if form.validate_on_submit():
+        email = form.email.data
         UserMgmt.create_user(form)
-        return user_account(form.email.data)
+        return user_account(email)
     return render_template("createUser.html", form=form)
 
 
