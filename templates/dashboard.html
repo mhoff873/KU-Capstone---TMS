@@ -14,39 +14,46 @@
         var last_row = 0;
         /*var task_row = 0;
         var last_task_row = 0;*/
-
-         // highlight a row
+        
+         // highlight a row     
         function select_row(id,last){
             try{
                 if(last==id){
                     if (document.getElementById(last).bgColor=="lightblue"){
+                         unselect_row(id);
                          refresh_tasks();
                          refresh_users();
-                         unselect_row(id);
+                         
                     }else{
-                         document.getElementById(id).bgColor = "lightblue";
+                         document.getElementById(id).bgColor = "lightblue"; 
                     }
                 }else{
-                    document.getElementById(last).bgColor = "white";
-                    document.getElementById(id).bgColor = "lightblue";
+                    document.getElementById(last).bgColor = "white"; 
+                    document.getElementById(id).bgColor = "lightblue"; 
                     }
             }catch(err){
-                document.getElementById(id).bgColor = "lightblue";
+                document.getElementById(id).bgColor = "lightblue"; 
             }
-
+             
         }
-
+        
+                // unselect a row     
+        function unselect_row(r){
+            if (r!=0)
+                document.getElementById(r).bgColor = "white";
+        }
+        
         function refresh_tables(){
                 //console.log(document.getElementById("task_table").parentNode.childNodes.length);
                 //console.log(document.getElementById("user_table").childNodes);
                 //console.log(task_list);
                 //c = document.getElementById("user_table").childNodes;
                 //console.log(c.getElementsByTagName('tr').length);
-                // c.style.visibility="visible";
-
+                // c.style.visibility="visible"; 
+                
                  var rows = document.getElementById("user_table").rows,
                     rlen = rows.length;
-
+                    
                 //for (i = 0; i <  rlen; i++){
                         //rows[i].style.color="yellow";
                 //}
@@ -55,7 +62,7 @@
                         //console.log("*****");
                         //if (rows[i].style.display === "none") {
                                 rows[i].style.display = "block";
-                        //}
+                        //} 
                         //rows[i].style.display="block";
                         //console.log(document.getElementById(rows[i].id).style.visibility);
                         //rows[i].style.visibility="visible";
@@ -63,34 +70,30 @@
 
 
         }
-
+        
         function refresh_tasks(){
                   trows = document.getElementById("task_table").rows,
                   rlen = trows.length;
-
+                  
                 for (i = 0; i <  rlen; i++){
                         if (trows[i].style.display === "none") {
                                 trows[i].style.display = "block";
-                        }
+                        } 
                 }
         }
-
+        
         function refresh_users(){
                   urows = document.getElementById("user_table").rows,
                   rlen = urows.length;
-
+                  
                 for (i = 0; i <  rlen; i++){
                         if (urows[i].style.display === "none") {
                                 urows[i].style.display = "block";
-                        }
+                        } 
                 }
         }
-        // unselect a row
-        function unselect_row(r){
-            if (r!=0)
-                document.getElementById(r).bgColor = "white";
-        }
 
+        
         // sorts a column of a tbody
         function sort_table(tbody, col, asc) {
             var rows = tbody.rows,
@@ -117,37 +120,37 @@
                 for (j = 0; j < clen; j++)
                     rows[i].cells[j].textContent = arr[i][j];
         }
-
+        
         // when you click on a task, this function hides all the users not assigned that task
         function find_users(id,task_to_users,u_list){
                 if(task_to_users[id]){ // if the taskID is associated with a request
                    for (i = 0; i < u_list.length; i++)
                        if (u_list[i]!=id)
                             document.getElementById("user_"+u_list[i]).style.display="none";
-
-                   for (i = 0; i < task_to_users[id].length; i++)
-                       for (j = 0; j < u_list.length; j++)
+                                
+                   for (i = 0; i < task_to_users[id].length; i++) 
+                       for (j = 0; j < u_list.length; j++) 
                             if (u_list[j]==task_to_users[id][i]) // if the supervisor's user is also assigned to a task under that supervisor
                                 document.getElementById("user_"+u_list[j]).style.display="block";
                                 //moveRowUp(document.getElementById("user_"+u_list[j]));
                  }
         }
-
+        
         function find_tasks(id,user_to_tasks,t_list){
                 if(user_to_tasks[id]){
                    for (i = 0; i < t_list.length; i++)
                        if (t_list[i]!=id)
                             document.getElementById("task_"+t_list[i]).style.display="none";
-
-                   for (i = 0; i < user_to_tasks[id].length; i++)
-                       for (j = 0; j < t_list.length; j++)
+                                
+                   for (i = 0; i < user_to_tasks[id].length; i++) 
+                       for (j = 0; j < t_list.length; j++) 
                             if (t_list[j]==user_to_tasks[id][i]) // if the supervisor's user is also assigned to a task under that supervisor
                                 document.getElementById("task_"+t_list[j]).style.display="block";
                                 //moveRowUp(document.getElementById("task_"+t_list[j]));
                  }
         }
-
-
+        
+        
         // moves a row to the top of the table
         function moveRowUp(tasked_user) {
                 tasked_user.style.visibility="visible";
@@ -159,7 +162,7 @@
                         moveRowUp(tasked_user);
                 }
         }
-
+        
 </script>
 
 <div class="jumbotron text-center">
@@ -183,13 +186,13 @@
           </tr>
         </thead>
         <tbody id='user_table'>
-        {% for u in user_list %}
+        {% for u in user_list %} 
           <tr id='user_{{u.userID}}' >
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.userID}}</td>
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.dateCreated}}</td>
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.fname}} {{u.lname}}</td>
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.email}}</td>
-          </tr>
+          </tr> 
         {% endfor %}
         </tbody>
     </table>
@@ -206,7 +209,7 @@
           </tr>
         </thead>
         <tbody id='task_table'>
-           {% for t in task_list %}
+           {% for t in task_list %} 
                   <tr id='task_{{t.taskID}}' ><!-- -->
                     <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.taskID}}</td>
                     <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.dateCreated}}</td>

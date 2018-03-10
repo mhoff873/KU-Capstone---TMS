@@ -121,7 +121,7 @@ def dashboard():
         
         # mapping of user
         user_2_tasks={}
-        tasks_2_users={}
+        task_2_users={}
         
         # a plain array of user and tasks IDs assigned to the Supervisor
         userIDs=[]
@@ -345,3 +345,10 @@ def create_task():
             if step.add_detailed_step.data:
                 step.detailed_steps.append_entry()
     return render_template('create_task.html', form=form)
+
+
+#User Account
+@app.route("/user_account/", methods=["GET", "POST"])
+@login_required
+def user_account():
+    return render_template("userAccount.html")

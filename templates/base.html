@@ -75,6 +75,7 @@
             {% if current_user.role=="admin" %}
             <a class="dropdown-item" href="#">Reports</a>
             <a class="dropdown-item" href="{{url_for('create_user')}}">Create User</a>
+            <a class="dropdown-item" href="{{url_for('user_account')}}">User Account</a>
             <a class="dropdown-item" href="{{url_for('create_supervisor')}}">Create Supervisor</a>
             {% endif %}
             
