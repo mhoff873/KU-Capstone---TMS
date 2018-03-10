@@ -353,7 +353,9 @@ def create_task():
 @login_required
 def user_account(user):
     eUser = EditUser()
+    # DO NOT REMOVE NEXT LINE!!!! PASSWORD WILL SHOW IN FORM. DUNNO WHY :)
     eUser.password.data = ""
+    # DO NOT REMOVE ABOVE LINE!!!! SERIOUSLY...
     if eUser.validate_on_submit():
         UserMgmt.edit_user(eUser, user)
         return dashboard()
