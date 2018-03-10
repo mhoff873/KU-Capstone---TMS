@@ -56,6 +56,7 @@ class CreateUser(FlaskForm):
 class EditUser(FlaskForm):
     #person = StringField("Person being editted (ie: email)", [Email(), InputRequired()])
     #is_supervisor = BooleanField("Is Supervisor?")
+    password = StringField("Password", [InputRequired()])
     phone = StringField("Phone")
     fname = StringField("First Name", [InputRequired()])
     mname = StringField("Middle Name")
