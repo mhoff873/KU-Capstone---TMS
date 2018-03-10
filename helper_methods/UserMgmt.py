@@ -92,6 +92,7 @@ def edit_user(form, user):
     :return: N/A
     """
     user = User.query.filter_by(email=user).first()
+    user.password = bcrypt.hashpw((form.password.data).encode("utf8"), bcrypt.gensalt())
     user.phone = form.phone.data
     user.fname = form.fname.data
     user.mname = form.mname.data

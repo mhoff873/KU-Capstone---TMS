@@ -355,7 +355,6 @@ def user_account(user):
     eUser = EditUser()
     eUser.password.data = ""
     if eUser.validate_on_submit():
-        return "THis is being submitted?"
         UserMgmt.edit_user(eUser, user)
         return dashboard()
     return render_template("userAccount.html", EditUser=eUser, User=user)
