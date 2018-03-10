@@ -110,24 +110,52 @@ def GetByUser(uname):
 @login_required
 def dashboard():
     if(current_user.role=="supervisor"):
+        # query all the information
         tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
         users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
         requests = Request.query.filter_by(supervisorID=current_user.supervisorID).all()
+        
+        # form some data dictionaries for use later
+        # supervisor_to_users={}
+        # user_to_supervisor{}
+        
+        # mapping of user
+        user_2_tasks={}
+        tasks_2_users={}
+        
+        # a plain array of user and tasks IDs assigned to the Supervisor
+        userIDs=[]
+        taskIDs=[]
+        
+        for t in tasks:
+            taskIDs.append(t.taskID)
+            
+        for u in users:
+            userIDs.append(u.userID)
+            
         if requests:
             for r in requests:
-                print("requestID: "+str(r.requestID))
-                print("userID: "+str(r.userID))
-                print("supervisorID: "+str(r.supervisorID))
-                print("taskID: "+str(r.taskID))
-                print("requestDescription: "+str(r.requestDescription))
-                print("isApproved: "+str(r.isApproved))
-                print("dateRequested: "+str(r.dateRequested))
+                # structuring ddata
+                # { userID : [taskID,*] }
+                if r.userID in user_2_tasks:
+                    user_2_tasks[r.userID].append(r.taskID)
+                else:
+                    user_2_tasks[r.userID]=[r.taskID]
+                # structuring data
+                # { taskID : [userID,*] }
+                if r.taskID in task_2_users:
+                    task_2_users[r.taskID].append(r.userID)
+                else:
+                    task_2_users[r.taskID]=[r.userID]
         else:
             print("did not find any requests")
-
+            
+        #print(user_to_tasks)
+        #print(task_to_users)
             # need a structure that is indexable by userID for the Request object
 
-        return render_template('dashboard.html', task_list=tasks, user_list=users, request_list=requests)
+        return render_template('dashboard.html', task_list=tasks, user_list=users, request_list=requests, task_to_users=task_2_users, user_to_tasks=user_2_tasks,userID_list=userIDs,taskID_list=taskIDs)
+
 
     if(current_user.role=="admin"):
         return redirect("adminDashboard", code=302)

@@ -21,6 +21,7 @@ class LoginForm(FlaskForm):
 
 # Change password Popup form
 class ChangePassword(FlaskForm):
+    email = StringField("Email", [InputRequired()])
     password = PasswordField('New Password', [InputRequired(), EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Repeat Password')
     submit = SubmitField('Submit')
@@ -64,7 +65,7 @@ class EditUser(FlaskForm):
     affiliation = StringField("Affiliation", [InputRequired()])
     ethnicity = StringField("Ethnicity", [InputRequired()])
     picture = StringField("Picture")
-    submit = SubmitField("Edit user")
+    submit = SubmitField("Submit Edit")
 
 
 # Requirement 31

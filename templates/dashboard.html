@@ -1,15 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
 <script>
+        /* stores the ordered state of columns */
+        var asc1=1;
+        var asc2=1;
+        var asc3=1;
+        var asc4=1;
+        var asc5=1;
+        var asc6=1;
+        var asc7=1;
+        var asc8=1;
+        var row = 0;
+        var last_row = 0;
+        /*var task_row = 0;
+        var last_task_row = 0;*/
+
          // highlight a row
         function select_row(id,last){
-            //console.log(last);
             try{
                 if(last==id){
-                    if (document.getElementById(last).bgColor=="lightblue")
+                    if (document.getElementById(last).bgColor=="lightblue"){
+                         refresh_tasks();
+                         refresh_users();
                          unselect_row(id);
-                    else
+                    }else{
                          document.getElementById(id).bgColor = "lightblue";
+                    }
                 }else{
                     document.getElementById(last).bgColor = "white";
                     document.getElementById(id).bgColor = "lightblue";
@@ -20,14 +36,62 @@
 
         }
 
+        function refresh_tables(){
+                //console.log(document.getElementById("task_table").parentNode.childNodes.length);
+                //console.log(document.getElementById("user_table").childNodes);
+                //console.log(task_list);
+                //c = document.getElementById("user_table").childNodes;
+                //console.log(c.getElementsByTagName('tr').length);
+                // c.style.visibility="visible";
+
+                 var rows = document.getElementById("user_table").rows,
+                    rlen = rows.length;
+
+                //for (i = 0; i <  rlen; i++){
+                        //rows[i].style.color="yellow";
+                //}
+                for (i = 0; i <  rlen; i++){
+                        //console.log(document.getElementById(rows[i].id).style.visibility);
+                        //console.log("*****");
+                        //if (rows[i].style.display === "none") {
+                                rows[i].style.display = "block";
+                        //}
+                        //rows[i].style.display="block";
+                        //console.log(document.getElementById(rows[i].id).style.visibility);
+                        //rows[i].style.visibility="visible";
+                }
+
+
+        }
+
+        function refresh_tasks(){
+                  trows = document.getElementById("task_table").rows,
+                  rlen = trows.length;
+
+                for (i = 0; i <  rlen; i++){
+                        if (trows[i].style.display === "none") {
+                                trows[i].style.display = "block";
+                        }
+                }
+        }
+
+        function refresh_users(){
+                  urows = document.getElementById("user_table").rows,
+                  rlen = urows.length;
+
+                for (i = 0; i <  rlen; i++){
+                        if (urows[i].style.display === "none") {
+                                urows[i].style.display = "block";
+                        }
+                }
+        }
         // unselect a row
         function unselect_row(r){
             if (r!=0)
                 document.getElementById(r).bgColor = "white";
         }
 
-
-
+        // sorts a column of a tbody
         function sort_table(tbody, col, asc) {
             var rows = tbody.rows,
                 rlen = rows.length,
@@ -54,19 +118,48 @@
                     rows[i].cells[j].textContent = arr[i][j];
         }
 
+        // when you click on a task, this function hides all the users not assigned that task
+        function find_users(id,task_to_users,u_list){
+                if(task_to_users[id]){ // if the taskID is associated with a request
+                   for (i = 0; i < u_list.length; i++)
+                       if (u_list[i]!=id)
+                            document.getElementById("user_"+u_list[i]).style.display="none";
 
-        var asc1=1;
-        var asc2=1;
-        var asc3=1;
-        var asc4=1;
-        var asc5=1;
-        var asc6=1;
-        var asc7=1;
-        var asc8=1;
-        var row = 0;
-        var last_row = 0;
-        /*var task_row = 0;
-        var last_task_row = 0;*/
+                   for (i = 0; i < task_to_users[id].length; i++)
+                       for (j = 0; j < u_list.length; j++)
+                            if (u_list[j]==task_to_users[id][i]) // if the supervisor's user is also assigned to a task under that supervisor
+                                document.getElementById("user_"+u_list[j]).style.display="block";
+                                //moveRowUp(document.getElementById("user_"+u_list[j]));
+                 }
+        }
+
+        function find_tasks(id,user_to_tasks,t_list){
+                if(user_to_tasks[id]){
+                   for (i = 0; i < t_list.length; i++)
+                       if (t_list[i]!=id)
+                            document.getElementById("task_"+t_list[i]).style.display="none";
+
+                   for (i = 0; i < user_to_tasks[id].length; i++)
+                       for (j = 0; j < t_list.length; j++)
+                            if (t_list[j]==user_to_tasks[id][i]) // if the supervisor's user is also assigned to a task under that supervisor
+                                document.getElementById("task_"+t_list[j]).style.display="block";
+                                //moveRowUp(document.getElementById("task_"+t_list[j]));
+                 }
+        }
+
+
+        // moves a row to the top of the table
+        function moveRowUp(tasked_user) {
+                tasked_user.style.visibility="visible";
+                sibling = tasked_user.previousElementSibling;
+                parent = tasked_user.parentNode;
+                if (sibling!=null){
+                        parent.insertBefore(tasked_user, sibling);
+                        // YAY RECURSION! :D
+                        moveRowUp(tasked_user);
+                }
+        }
+
 </script>
 
 <div class="jumbotron text-center">
@@ -76,30 +169,12 @@
 <div class="container">
   <div class="page_content">
 
-  <!-- content goes in here, below. -->
-
-  <div class="container-fluid">
-      <div class="row">
-          <div class="col-sm">
-              <div id="editableTextBox">
-                  <div class= "form-control" contenteditable="true" style="border: 1px solid black">
-                      Task Name A-Z (need a dropdown and reverse icon as a button)
-                  </div>
-              </div>
-          </div>
-          <div>
-              <button type="submit" class="btn btn-secondary btn-sm">Search</button>
-          </div>
-      </div>
-  </div>
-  <br>
-
 <!--Two tables for users and tasks-->
 <div class="row">
   <div class="table-responsive col-md-6">
       <h2 class="sub-header text-center">Assigned Users</h2>
-      <table class="table table-hover"><!--  -->
-        <thead>
+      <table class="table table-hover">
+        <thead id='user_table_header'>
           <tr>
             <th onclick='sort_table(user_table, 0, asc1); asc1 *= -1; asc2 =1;asc3 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_id").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_email").style.visibility="hidden"; document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_id").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"' >User ID <img id="user_id" style="height:1em;"></span></th>
             <th onclick='sort_table(user_table, 1, asc2); asc2 *= -1; asc1 =1;asc3 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_date").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_email").style.visibility="hidden"; document.getElementById("user_id").style.visibility="hidden"; document.getElementById("user_date").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"' >Date Assigned <img id="user_date" style="height:1em;"></span></th>
@@ -110,10 +185,10 @@
         <tbody id='user_table'>
         {% for u in user_list %}
           <tr id='user_{{u.userID}}' >
-            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.userID}}</td>
-            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.dateCreated}}</td>
-            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.fname}} {{u.lname}}</td>
-            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.email}}</td>
+            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.userID}}</td>
+            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.dateCreated}}</td>
+            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.fname}} {{u.lname}}</td>
+            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.email}}</td>
           </tr>
         {% endfor %}
         </tbody>
@@ -124,19 +199,19 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th onclick='sort_table(task_table, 0, asc5); asc5 *= -1; asc6 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);'>Task ID</th>
-            <th onclick='sort_table(task_table, 1, asc6); asc6 *= -1; asc5 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);'>Date Assigned</th>
-            <th onclick='sort_table(task_table, 2, asc7); asc7 *= -1; asc5 =1;asc6 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);'>Title</th>
-            <th onclick='sort_table(task_table, 3, asc8); asc8 *= -1; asc5 =1;asc6 =1;asc7 = 1; unselect_row(last_row);unselect_row(row);'>Description</th>
+            <th onclick='sort_table(task_table, 0, asc5); asc5 *= -1; asc6 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_id").style.visibility="visible"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_id").src=(asc5==1)?"../static/img/up.png":"../static/img/down.png";' >Task ID<img id="task_id" style="height:1em;"></span></th>
+            <th onclick='sort_table(task_table, 1, asc6); asc6 *= -1; asc5 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_date").style.visibility="visible"; document.getElementById("task_id").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_date").src=(asc6==1)?"../static/img/up.png":"../static/img/down.png";' >Date Created<img id="task_date" style="height:1em;"></span></th>
+            <th onclick='sort_table(task_table, 2, asc7); asc7 *= -1; asc5 =1;asc6 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_title").style.visibility="visible"; document.getElementById("task_id").style.visibility="hidden"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_title").src=(asc7==1)?"../static/img/up.png":"../static/img/down.png";' >Title<img id="task_title" style="height:1em;"></span></th>
+            <th onclick='sort_table(task_table, 3, asc8); asc8 *= -1; asc5 =1;asc6 =1;asc7 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_description").style.visibility="visible"; document.getElementById("task_id").style.visibility="hidden"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").src=(asc8==1)?"../static/img/up.png":"../static/img/down.png";' >Description<img id="task_description" style="height:1em;"></span></th>
           </tr>
         </thead>
         <tbody id='task_table'>
            {% for t in task_list %}
-                  <tr id='task_{{t.taskID}}' >
-                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);'>{{t.taskID}}</td>
-                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);'>{{t.dateCreated}}</td>
-                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);'>{{t.title}}</td>
-                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);'>{{t.description}}</td>
+                  <tr id='task_{{t.taskID}}' ><!-- -->
+                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.taskID}}</td>
+                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.dateCreated}}</td>
+                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.title}}</td>
+                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.description}}</td>
                   </tr>
             {% endfor %}
         </tbody>

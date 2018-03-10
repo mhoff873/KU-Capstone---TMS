@@ -1,15 +1,13 @@
-
-
 {% extends 'baseLogin.html' %}
 {% block content %}
-
+<!--top of page heading of page-->
 <div id="login_top">
   <div class="jumbotron">
   <h1>Task Management System</h1>
-  <img src="http://unixweb.kutztown.edu/~csupp511/csc355/testing/images/tms2.png" class="img-rounded">
+  <img src="http://unixweb.kutztown.edu/~csupp511/csc355/testing/images/tms2.png" class="rounded-circle" alt= "TMS">
   </div>
 </div>
-
+<!-- everything is held within this container for responsiveness-->
 <div class="container">
   <div class="page_content">
 
@@ -31,8 +29,9 @@
         {{ form.password (class="form-control")}}
       </div>
         <br>
-        <br>
+                <br>
         {{ form.loginButton (class='btn btn-secondary btn-lg')}}
     </form>
 </div>
 {% endblock content %}
+

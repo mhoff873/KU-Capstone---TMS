@@ -37,6 +37,9 @@
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('library')}}">Library</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
+          </li>
         {% endif %}
         
         <!-- only an admin can assign users, manage surveys, and create tasks -->
@@ -46,6 +49,9 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/surveys">Survey Management</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
