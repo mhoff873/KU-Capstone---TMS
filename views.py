@@ -351,4 +351,8 @@ def create_task():
 @app.route("/user_account/", methods=["GET", "POST"])
 @login_required
 def user_account():
-    return render_template("userAccount.html")
+    eUser = EditUser()
+    if eUser.validate_on_submit():
+        UserMgmt.edit_user(eUser, current_user)
+        return dashboard()
+    return render_template("userAccount.html", EditUser=eUser)
