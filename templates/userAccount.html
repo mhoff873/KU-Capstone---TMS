@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="jumbotron text-center">
+    <h1>User Account</h1>
+</div>
+
+<div class="container">
+  <div class="page_content">
+
+  <!-- content goes in here, below. -->
+
+<div class= "text-center">
+
+
+
+
+  <!-- Edit user info -->
+  <form action="/user_account/{{ User }}" method="POST">
+      {{ EditUser.csrf_token }}
+      <br>
+      {{ EditUser.password.label }}
+      {{ EditUser.password (class="form-control") }}
+      <br>
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.phone.label }}
+      {{ EditUser.phone (class="form-control")}}
+      </div>
+      <br>
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.fname.label }}
+      {{ EditUser.fname (class="form-control")}}
+      </div>
+      <br>
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.mname.label }}
+      {{ EditUser.mname (class="form-control")}}
+      </div>
+      <br>
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.lname.label }}
+      {{ EditUser.lname (class="form-control")}}
+      </div>
+      <br>
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.gender.label }}
+      {{ EditUser.gender (class="form-control")}}
+      </div>
+      <br>
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.birthday.label }}
+      {{ EditUser.birthday (class="form-control")}}
+      </div>
+      <br>
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.affiliation.label }}
+      {{ EditUser.affiliation (class="form-control")}}
+      </div>
+      <br>
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.ethnicity.label }}
+      {{ EditUser.ethnicity (class="form-control")}}
+      </div>
+      <br>
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.picture.label }}
+      {{ EditUser.picture(class="form-control")}}
+      </div>
+      <br>
+      <br>
+      {{ EditUser.submit (class="btn btn-secondary btn-md")}}
+  </form>
+</div>
+
+
+
+
+  <!-- content goes here, above. -->
+
+  </div>
+</div><!-- /.container -->
+
+{% endblock content %}

@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block content %}
+<script>
+         // select a row by highlighting it and unhighlighting the previously selected row
+        function select_row(id,last){
+            try{
+                if(last==id){
+                    if (document.getElementById(last).bgColor=="lightblue")
+                         unselect_row(id);
+                    else
+                         document.getElementById(id).bgColor = "lightblue";
+                }else{
+                    document.getElementById(last).bgColor = "white";
+                    document.getElementById(id).bgColor = "lightblue";
+                    }
+            }catch(err){ // last has never been set before
+                document.getElementById(id).bgColor = "lightblue";
+            }
+        }
+
+        // unselect a row
+        function unselect_row(r){
+            if (r!=0)
+                document.getElementById(r).bgColor = "white";
+        }
+        }
+
+        // table sorting function
+        // tbody : table body to sort
+        // col : column to sort
+        // asc : 1 or -1 for ascending/descending
+        function sort_table(tbody, col, asc) {
+            var rows = tbody.rows,
+                rlen = rows.length,
+                arr = new Array(),
+                i, j, cells, clen;
+            // fill the array with values from the table
+            for (i = 0; i < rlen; i++) {
+                cells = rows[i].cells;
+                clen = cells.length;
+                arr[i] = new Array();
+                for (j = 0; j < clen; j++)
+                    arr[i][j] = cells[j].innerHTML;
+            }
+            // sort the array by the specified column number (col) and order (asc)
+            arr.sort(function (a, b) {
+                if(col == 0) // sorting integers require - operator to compare
+                    return (a[col] == b[col]) ? 0 : asc == 1 ? (a[col] - b[col]) : (b[col] - a[col]);
+                else // strings sort using the > operator
+                    return (a[col] == b[col]) ? 0 : ((a[col] > b[col]) ? asc : -1 * asc);
+            });
+            // update text within every td without altering the tags
+            for (i = 0; i < rlen; i++)
+                for (j = 0; j < clen; j++)
+                    rows[i].cells[j].textContent = arr[i][j];
+        }
+
+
+        var asc1=1;
+        var asc2=1;
+        var asc3=1;
+        var asc4=1;
+        var asc5=1;
+        var asc6=1;
+        var asc7=1;
+        var asc8=1;
+        var row = 0;
+        var last_row = 0;
+
+        // these variables were to distinish which table the row is in.
+        // i dont think they are necessary but they would allow different selection functionality
+        /*
+
+        var task_row = 0;
+        var last_task_row = 0;
+
+        */
+
+</script>
+<div class="jumbotron text-center">
+    <h1>Administration Dashboard</h1>
+</div>
+
+<div class="container">
+    <div class="page_content">
+        <!-- content goes in here, below. -->
+        <!--Two tables that will be populated with surveys-->
+        <div class="row">
+            <div class="table-responsive col-md-6">
+                <h2 class="sub-header text-center">Supervisors</h2>
+                <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>User ID</th>
+                        <th>Date Assigned</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                        <td>john@example.com</td>
+                      </tr>
+                      <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                        <td>mary@example.com</td>
+                      </tr>
+                      <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                        <td>july@example.com</td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive col-md-6">
+                <h2 class="sub-header text-center">Users</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <!--need to put a create button here -->
+                      <tr>
+                        <th>Task ID</th>
+                        <th>Date Assigned</th>
+                        <th>Description</th>
+                        <th>Progress</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                        <td>john@example.com</td>
+                      </tr>
+                      <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                        <td>john@example.com</td>
+                      </tr>
+                      <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                        <td>john@example.com</td>
+                      </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+ <!-- content goes here, above. -->
+
+    </div><!-- end of page content -->
+</div><!-- /. end of container -->
+
+
+{% endblock content %}

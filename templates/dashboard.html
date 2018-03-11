@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% block content %}
+<script>
+        /* stores the ordered state of columns */
+        var asc1=1;
+        var asc2=1;
+        var asc3=1;
+        var asc4=1;
+        var asc5=1;
+        var asc6=1;
+        var asc7=1;
+        var asc8=1;
+        var row = 0;
+        var last_row = 0;
+        /*var task_row = 0;
+        var last_task_row = 0;*/
+        
+         // highlight a row     
+        function select_row(id,last){
+            try{
+                if(last==id){
+                    if (document.getElementById(last).bgColor=="lightblue"){
+                         unselect_row(id);
+                         refresh_tasks();
+                         refresh_users();
+                         
+                    }else{
+                         document.getElementById(id).bgColor = "lightblue"; 
+                    }
+                }else{
+                    document.getElementById(last).bgColor = "white"; 
+                    document.getElementById(id).bgColor = "lightblue"; 
+                    //if the supervisor selects a user, refresh the user table
+                    if (document.getElementById(id).parentNode.id=="user_table"){
+                        refresh_users();
+                    }
+                    //if the admin selects a task, refresh the task table
+                    if (document.getElementById(id).parentNode.id=="task_table"){
+                        refresh_tasks();
+                    }
+                    }
+            }catch(err){
+                document.getElementById(id).bgColor = "lightblue"; 
+            }
+             
+        }
+        
+        // unselect a row     
+        function unselect_row(r){
+            if (r!=0)
+                document.getElementById(r).bgColor = "white";
+        }
+        
+        // refreshes the tasks table
+        function refresh_tasks(){
+                  trows = document.getElementById("task_table").rows,
+                  rlen = trows.length;
+                  
+                for (i = 0; i <  rlen; i++){
+                        if (trows[i].style.display === "none") {
+                                trows[i].style.display = "table-row";
+                        } 
+                }
+        }
+        // refreshes the users table
+        function refresh_users(){
+                  urows = document.getElementById("user_table").rows,
+                  rlen = urows.length;
+                  
+                for (i = 0; i <  rlen; i++){
+                        if (urows[i].style.display === "none") {
+                                urows[i].style.display = "table-row";
+                        } 
+                }
+        }
+
+        
+        // sorts a column of a tbody
+        function sort_table(tbody, col, asc) {
+            var rows = tbody.rows,
+                rlen = rows.length,
+                arr = new Array(),
+                i, j, cells, clen;
+                
+            //    valid_row_counter=0; // to store quantity of rows that are not hidden
+                
+
+                
+            // fill the array with values from the table
+            for (i = 0; i < rlen; i++) {
+                //console.log(rows[i].style.display=="none");
+                try{    
+                
+                        if(rows[i].style.display=="table-row"){
+                                console.log(rows[i])
+                                cells = rows[i].cells;
+                                clen = cells.length;
+                                arr[i] = new Array();
+                                for (j = 0; j < clen; j++)
+                                    arr[i][j] = cells[j].innerHTML;
+                        }
+                }catch(err){
+                        console.log("hidden row:"+err.message);
+                }
+            }
+            // sort the array by the specified column number (col) and order (asc)
+            arr.sort(function (a, b) {
+                if(col == 0) // sorting integers require - operator to compare
+                    return (a[col] == b[col]) ? 0 : asc == 1 ? (a[col] - b[col]) : (b[col] - a[col]);
+                else //strings sort using the > operator
+                    return (a[col] == b[col]) ? 0 : ((a[col] > b[col]) ? asc : -1 * asc);
+            });
+            // update text within every td without altering the tags
+            for (i = 0; i < rlen; i++)
+                for (j = 0; j < clen; j++)
+                    rows[i].cells[j].textContent = arr[i][j];
+        }
+        
+        // when you click on a task, this function hides all the users not assigned that task
+        function find_users(id,task_to_users,u_list){
+                if(task_to_users[id]){ // if the taskID is associated with a request
+                   for (i = 0; i < u_list.length; i++)
+                       if (u_list[i]!=id)
+                            document.getElementById("user_"+u_list[i]).style.display="none";
+                                
+                   for (i = 0; i < task_to_users[id].length; i++){ 
+                       for (j = 0; j < u_list.length; j++){ 
+                            if (u_list[j]==task_to_users[id][i]){ // if the supervisor's user is also assigned to a task under that supervisor
+                                document.getElementById("user_"+u_list[j]).style.display="table-row";
+                                moveRowUp(document.getElementById("user_"+u_list[j]));
+                                }}}
+                 }
+        }
+        
+        // when you click on a user, this function hides all the tasks not assigned to them
+        function find_tasks(id,user_to_tasks,t_list){
+                if(user_to_tasks[id]){ // if the user id is associated with a task
+                   // hides all task rows
+                   for (i = 0; i < t_list.length; i++)
+                       if (t_list[i]!=id)
+                            document.getElementById("task_"+t_list[i]).style.display="none";
+                   // displays only the rows corresponding to assigned tasks      
+                   for (i = 0; i < user_to_tasks[id].length; i++) {
+                       for (j = 0; j < t_list.length; j++){ 
+                            if (t_list[j]==user_to_tasks[id][i]){ // if the supervisor's user is also assigned to a task under that supervisor
+                                document.getElementById("task_"+t_list[j]).style.display="table-row";
+                                moveRowUp(document.getElementById("task_"+t_list[j]));
+                                }}}
+                 }
+        }
+        
+        
+        // moves a row to the top of the table
+        function moveRowUp(tasked_user) {
+                sibling = tasked_user.previousElementSibling;
+                parent = tasked_user.parentNode;
+                if (sibling!=null){
+                        parent.insertBefore(tasked_user, sibling);
+                        // YAY RECURSION! :D
+                        moveRowUp(tasked_user);
+                }
+        }
+        
+</script>
+
+<div class="jumbotron text-center">
+  <h1>Supervisor Dashboard</h1>
+</div>
+
+<div class="container">
+  <div class="page_content">
+
+<!--Two tables for users and tasks-->
+<div class="row">
+  <div class="table-responsive col-md-6">
+      <h2 class="sub-header text-center">Assigned Users</h2>
+      <table class="table table-hover">
+        <thead id='user_table_header'>
+          <tr>
+            <th onclick='sort_table(user_table, 0, asc1); asc1 *= -1; asc2 =1;asc3 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_id").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_email").style.visibility="hidden"; document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_id").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"' >User ID <img id="user_id" style="height:1em;"></span></th>
+            <th onclick='sort_table(user_table, 1, asc2); asc2 *= -1; asc1 =1;asc3 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_date").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_email").style.visibility="hidden"; document.getElementById("user_id").style.visibility="hidden"; document.getElementById("user_date").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"' >Date Assigned <img id="user_date" style="height:1em;"></span></th>
+            <th onclick='sort_table(user_table, 2, asc3); asc3 *= -1; asc1 =1;asc2 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_email").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_id").style.visibility="hidden"; document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_email").src=(asc3==1)?"../static/img/up.png":"../static/img/down.png"' >Email <img id="user_email" style="height:1em;"></span></th>
+            <th onclick='sort_table(user_table, 3, asc4); asc4 *= -1; asc1 =1;asc2 =1;asc3 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_name").style.visibility="visible"; document.getElementById("user_email").style.visibility="hidden"; document.getElementById("user_id").style.visibility="hidden";document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_name").src=(asc4==1)?"../static/img/up.png":"../static/img/down.png"' >Name <img id="user_name" style="height:1em;"></span></th>
+          </tr>
+        </thead>
+        <tbody id='user_table'>
+        {% for u in user_list %} 
+          <tr id='user_{{u.userID}}' >
+            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.userID}}</td>
+            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.dateCreated}}</td>
+            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.fname}} {{u.lname}}</td>
+            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.email}}</td>
+          </tr> 
+        {% endfor %}
+        </tbody>
+    </table>
+  </div>
+  <div class="table-responsive col-md-6">
+      <h2 class="sub-header text-center">Assigned Tasks</h2>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th onclick='sort_table(task_table, 0, asc5); asc5 *= -1; asc6 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_id").style.visibility="visible"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_id").src=(asc5==1)?"../static/img/up.png":"../static/img/down.png";' >Task ID<img id="task_id" style="height:1em;"></span></th>
+            <th onclick='sort_table(task_table, 1, asc6); asc6 *= -1; asc5 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_date").style.visibility="visible"; document.getElementById("task_id").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_date").src=(asc6==1)?"../static/img/up.png":"../static/img/down.png";' >Date Created<img id="task_date" style="height:1em;"></span></th>
+            <th onclick='sort_table(task_table, 2, asc7); asc7 *= -1; asc5 =1;asc6 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_title").style.visibility="visible"; document.getElementById("task_id").style.visibility="hidden"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_title").src=(asc7==1)?"../static/img/up.png":"../static/img/down.png";' >Title<img id="task_title" style="height:1em;"></span></th>
+            <th onclick='sort_table(task_table, 3, asc8); asc8 *= -1; asc5 =1;asc6 =1;asc7 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_description").style.visibility="visible"; document.getElementById("task_id").style.visibility="hidden"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").src=(asc8==1)?"../static/img/up.png":"../static/img/down.png";' >Description<img id="task_description" style="height:1em;"></span></th>
+          </tr>
+        </thead>
+        <tbody id='task_table'>
+           {% for t in task_list %} 
+                  <tr id='task_{{t.taskID}}' ><!-- -->
+                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.taskID}}</td>
+                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.dateCreated}}</td>
+                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.title}}</td>
+                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.description}}</td>
+                  </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
+
+</br>
+
+
+ <!-- content goes here, above. -->
+
+  </div>
+</div><!-- /.container -->
+
+{% endblock content %}
