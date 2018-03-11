@@ -175,11 +175,12 @@ def admin_dash():
 @app.route("/surveys/", methods=["GET", "POST"])
 def surveys():
 	form = CreateASurvey()
-	#db.session.add(SurveyForm("form 1",SurveyQuest("Take a shot of whisky","multiple choice",1)))
-	#db.session.commit()
+	questions = SurveyQuest.query.all()
+	for q in questions:
+	    print(q.questionText)
 	if form.validate_on_submit():
 	    return ("You have Submitted the Survey")
-	return render_template("surveysTemp.html", form=form)
+	return render_template("surveysTemp.html", form=form, form_questions = questions)
 
 # link to the logout page to log an account out
 @app.route('/logout', methods=['GET'])
