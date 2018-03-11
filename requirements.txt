@@ -1,3 +1,8 @@
 wtforms
 flask
 flask-wtf
+flask-sqlalchemy
+sqlalchemy
+flask-login
+flask-cors
+flask-mysqldb
