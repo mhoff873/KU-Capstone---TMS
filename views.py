@@ -10,7 +10,7 @@ from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQues
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('login')
+    return redirect("login", code=302)
 
 
 @app.route('/api/user/login', methods=['POST'])
