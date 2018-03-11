@@ -110,9 +110,18 @@ class CreateTaskForm(FlaskForm):
 # End Task Creation
 
 # Yocums create survey form 3/6/18 4:53pm
+
+class SurveyQuestion(FlaskForm):
+	stock_question = RadioField ("Did You Have Fun?", choices = [("1","1"),("2","2"),("3","3"),("4","4"),("5","5")])
+	delete_a_question = SubmitField("Delete Question")
+	rearrange_a_question = SubmitField("Rearrange Question")
+
 class CreateASurvey(FlaskForm):
-	stockQuestion = RadioField ("Did You Have Fun?", choices = [("1","1"),("2","2"),("3","3"),("4","4"),("5","5")])
 	save = SubmitField("Save")
-	delete = SubmitField("Delete")
+	delete = SubmitField("Delete")  
+	activate_a_survey = BooleanField("Activate")
+	assign_a_survey = BooleanField("Assign")
+	questions = FieldList(FormField(SurveyQuestion), min_entries=2)
+	add_question = SubmitField("Add a New Question")
         
         
