@@ -7,14 +7,36 @@
 <form method="POST">
 	{{form.csrf_token}}
 
-	{{form.stockQuestion.label}}
-	{{form.stockQuestion}}
+	{% for q in form_questions %}
+	<p>{{q.questionText}}</p>
+	{% endfor %}
+	
+<br>
+<br>
 	{{form.save}}
-	{{form.delete}}
+	{{form.delete}} 
+	{{form.activate_a_survey.label}} 
+	{{form.activate_a_survey}} 
+	{{form.assign_a_survey.label}} 
+	{{form.assign_a_survey}} 
+	<br>
+<br>
+	{{form.delete}} 
+	{% for q in form.questions %}
+	{{q.stock_question.label}}
+	{{q.stock_question}}
+	{{q.delete_a_question}}
+	{{q.rearrange_a_question}}
+	<br>
+	<br>
+    {% endfor %}
+	
+	{{form.add_question}}
+<br>
+<br>
+	
 </form>
-<h1>Betty Cooper </h1>
-<p>Veronica Lodge.</p>
-<p>Gal Gadot</p>
+
 
 
 {% endblock content %}
