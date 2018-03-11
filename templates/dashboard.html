@@ -30,6 +30,14 @@
                 }else{
                     document.getElementById(last).bgColor = "white"; 
                     document.getElementById(id).bgColor = "lightblue"; 
+                    //if the supervisor selects a user, refresh the user table
+                    if (document.getElementById(id).parentNode.id=="user_table"){
+                        refresh_users();
+                    }
+                    //if the admin selects a task, refresh the task table
+                    if (document.getElementById(id).parentNode.id=="task_table"){
+                        refresh_tasks();
+                    }
                     }
             }catch(err){
                 document.getElementById(id).bgColor = "lightblue"; 
@@ -37,58 +45,31 @@
              
         }
         
-                // unselect a row     
+        // unselect a row     
         function unselect_row(r){
             if (r!=0)
                 document.getElementById(r).bgColor = "white";
         }
         
-        function refresh_tables(){
-                //console.log(document.getElementById("task_table").parentNode.childNodes.length);
-                //console.log(document.getElementById("user_table").childNodes);
-                //console.log(task_list);
-                //c = document.getElementById("user_table").childNodes;
-                //console.log(c.getElementsByTagName('tr').length);
-                // c.style.visibility="visible"; 
-                
-                 var rows = document.getElementById("user_table").rows,
-                    rlen = rows.length;
-                    
-                //for (i = 0; i <  rlen; i++){
-                        //rows[i].style.color="yellow";
-                //}
-                for (i = 0; i <  rlen; i++){
-                        //console.log(document.getElementById(rows[i].id).style.visibility);
-                        //console.log("*****");
-                        //if (rows[i].style.display === "none") {
-                                rows[i].style.display = "block";
-                        //} 
-                        //rows[i].style.display="block";
-                        //console.log(document.getElementById(rows[i].id).style.visibility);
-                        //rows[i].style.visibility="visible";
-                }
-
-
-        }
-        
+        // refreshes the tasks table
         function refresh_tasks(){
                   trows = document.getElementById("task_table").rows,
                   rlen = trows.length;
                   
                 for (i = 0; i <  rlen; i++){
                         if (trows[i].style.display === "none") {
-                                trows[i].style.display = "block";
+                                trows[i].style.display = "table-row";
                         } 
                 }
         }
-        
+        // refreshes the users table
         function refresh_users(){
                   urows = document.getElementById("user_table").rows,
                   rlen = urows.length;
                   
                 for (i = 0; i <  rlen; i++){
                         if (urows[i].style.display === "none") {
-                                urows[i].style.display = "block";
+                                urows[i].style.display = "table-row";
                         } 
                 }
         }
@@ -100,13 +81,27 @@
                 rlen = rows.length,
                 arr = new Array(),
                 i, j, cells, clen;
+                
+            //    valid_row_counter=0; // to store quantity of rows that are not hidden
+                
+
+                
             // fill the array with values from the table
             for (i = 0; i < rlen; i++) {
-                cells = rows[i].cells;
-                clen = cells.length;
-                arr[i] = new Array();
-                for (j = 0; j < clen; j++)
-                    arr[i][j] = cells[j].innerHTML;
+                //console.log(rows[i].style.display=="none");
+                try{    
+                
+                        if(rows[i].style.display=="table-row"){
+                                console.log(rows[i])
+                                cells = rows[i].cells;
+                                clen = cells.length;
+                                arr[i] = new Array();
+                                for (j = 0; j < clen; j++)
+                                    arr[i][j] = cells[j].innerHTML;
+                        }
+                }catch(err){
+                        console.log("hidden row:"+err.message);
+                }
             }
             // sort the array by the specified column number (col) and order (asc)
             arr.sort(function (a, b) {
@@ -128,32 +123,35 @@
                        if (u_list[i]!=id)
                             document.getElementById("user_"+u_list[i]).style.display="none";
                                 
-                   for (i = 0; i < task_to_users[id].length; i++) 
-                       for (j = 0; j < u_list.length; j++) 
-                            if (u_list[j]==task_to_users[id][i]) // if the supervisor's user is also assigned to a task under that supervisor
-                                document.getElementById("user_"+u_list[j]).style.display="block";
-                                //moveRowUp(document.getElementById("user_"+u_list[j]));
+                   for (i = 0; i < task_to_users[id].length; i++){ 
+                       for (j = 0; j < u_list.length; j++){ 
+                            if (u_list[j]==task_to_users[id][i]){ // if the supervisor's user is also assigned to a task under that supervisor
+                                document.getElementById("user_"+u_list[j]).style.display="table-row";
+                                moveRowUp(document.getElementById("user_"+u_list[j]));
+                                }}}
                  }
         }
         
+        // when you click on a user, this function hides all the tasks not assigned to them
         function find_tasks(id,user_to_tasks,t_list){
-                if(user_to_tasks[id]){
+                if(user_to_tasks[id]){ // if the user id is associated with a task
+                   // hides all task rows
                    for (i = 0; i < t_list.length; i++)
                        if (t_list[i]!=id)
                             document.getElementById("task_"+t_list[i]).style.display="none";
-                                
-                   for (i = 0; i < user_to_tasks[id].length; i++) 
-                       for (j = 0; j < t_list.length; j++) 
-                            if (t_list[j]==user_to_tasks[id][i]) // if the supervisor's user is also assigned to a task under that supervisor
-                                document.getElementById("task_"+t_list[j]).style.display="block";
-                                //moveRowUp(document.getElementById("task_"+t_list[j]));
+                   // displays only the rows corresponding to assigned tasks      
+                   for (i = 0; i < user_to_tasks[id].length; i++) {
+                       for (j = 0; j < t_list.length; j++){ 
+                            if (t_list[j]==user_to_tasks[id][i]){ // if the supervisor's user is also assigned to a task under that supervisor
+                                document.getElementById("task_"+t_list[j]).style.display="table-row";
+                                moveRowUp(document.getElementById("task_"+t_list[j]));
+                                }}}
                  }
         }
         
         
         // moves a row to the top of the table
         function moveRowUp(tasked_user) {
-                tasked_user.style.visibility="visible";
                 sibling = tasked_user.previousElementSibling;
                 parent = tasked_user.parentNode;
                 if (sibling!=null){
