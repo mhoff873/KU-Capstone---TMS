@@ -14,7 +14,7 @@ def get_assignable_tasks(supervisorID=None):
     # if supervisorID is None:
     #     tasks = Task.query.filter_by(supervisorID=supervisorID, enabled=True).all()
     # return tasks
-    tasks = Task.query.filter_by(supervisorID=current_user.supervisorID, enabled=True).all()
+    tasks = Task.query.filter_by(supervisorID=current_user.supervisorID, activated=True).all()
     return tasks
 
 
