@@ -18,6 +18,7 @@
                     {% if assign %}
                         {% for task in tasks %}
                             {{ task.title }}
+                            {{form.assign (class='btn btn-secondary btn-sm')}}
                             <br>
                         {% endfor %}
                     {% endif %}

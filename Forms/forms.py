@@ -146,7 +146,9 @@ class CreateTaskForm(FlaskForm):
 class UserAssignmentForm(FlaskForm):
     add_task = SubmitField('Assign Task')
     show_history = SubmitField('View Assigned Tasks')
+    assign = SubmitField('Assign')
 
+    @staticmethod
     def process_data(data):
         return data
         
