@@ -14,12 +14,13 @@ def get_assignable_tasks(supervisorID=None):
     # if supervisorID is None:
     #     tasks = Task.query.filter_by(supervisorID=supervisorID, enabled=True).all()
     # return tasks
-    Task.query.filter_by(supervisorID=current_user.supervisorID, enabled=True).all()
-
-
-def get_assignable_tasks():
-    tasks = Task.query.filter_by(enabled=True).all()
+    tasks = Task.query.filter_by(supervisorID=current_user.supervisorID, enabled=True).all()
     return tasks
+
+
+# def get_assignable_tasks():
+    # tasks = Task.query.filter_by(enabled=True).all()
+    # return tasks
 
 
 def get_tasks_assigned(userID=None):
