@@ -2,8 +2,8 @@ from flask import render_template, request, jsonify, redirect
 
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
-    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm #need to get rid of CreateAccount
-from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper
+    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
+from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest
@@ -12,96 +12,63 @@ from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQues
 def index():
     return redirect("login", code=302)
 
-
 @app.route('/api/user/login', methods=['POST'])
-def user_login():
+def api_login():
     '''
         Function:   user_login
         Purpose:    Allows Front End to login
         Author:     Patrick Earl
     '''
-    user = request.form['username']
-    password = request.form['password']
-    print(password)
-    cur = mysql.connection.cursor()
-    # Since we are going to be using encryption, its better this way - Patrick
-    cur.execute('SELECT * FROM users WHERE email=%s', (user,))
-    results = cur.fetchone()
-    print(results)
-    if results is None:
+    user = request.form.get('username')
+    password = request.form.get('password')
+    success = Api.userLogin(user, password)
+    if success is False:
         return jsonify({'d': 'sign in failure'})
     else:
-        if results['password'] == password:
-            return jsonify({'d': "sign in success"})
-        else:
-            return jsonify({'d': 'sign in failure'})
-
+        return jsonify({'d': "sign in success"})
 
 @app.route('/api/user/GetByUser/<uname>', methods=['GET'])
-def getbyuser(uname):
-    '''
-        Function:       getbyuser
-        Purpose:        Gets the User's tasks assigned to them
-        Return:         json - A json object containing the tasks for the user
-        Author:         Tyler Lance
-    '''
-    # print("USERNAME LOGGED IN:" + uname)
-    # cursor documentation: http://initd.org/psycopg/docs/cursor.html
-    cur = mysql.connection.cursor()
-    # get the accounts userID
-    cur.execute('SELECT userID FROM users WHERE email=%s', [uname])
-    # pull the userId from the cursor
-    result = cur.fetchone()  # returns as ((#,),)
-    print(result)
-    # Invalid user
-    if result is None:
-        return jsonify([])
-
-    userID = result['userID']  # stores the first element which is the userid
-    # get the tasks assigned to the user
-    cur.execute(
-        'SELECT task.taskID, task.title FROM task, users, request WHERE users.userID=%s AND users.userID=request.userID AND request.taskID=task.taskID',
-        (userID,))
-    record = cur.fetchall()
-
-    # formatting of the api, has fixed values for the category name and id
-    # because they dont exist in the TMS database
-    result = {"$id": "1", "categoryName": "testing", "categoryId": 1}
-    lst = []  # list to append each task into
-    count = 2  # for the id of each element, as per the api
-    # build up the list
-
-    for index in record:
-        # Don't assign a keyword..
-        tsks = {}
-        if app.config['MYSQL_CURSORCLASS'] == 'DictCursor':
-            # create dictionary of the id, taskid and taskname
-            tsks = {"$id": str(count), "taskId": index['taskID'],
-                    "taskName": index['title']}
-        else:
-            tsks = {"id": str(count), "taskId": index[0], "taskName": index[1]}
-        # append the dictionary to the list
-        lst.append(tsks)
-        count += 1
-    # add the list to the dictionary with the key being tasks
-    result["tasks"] = lst
-    result = jsonify([result])
-
-    return result
+def api_getbyuser(uname):
+    r = Api.getByUser(uname)
+    return jsonify([r])
 
 
 # For sprint 2
-'''
-@app.route("/api/GetTaskDetails/<taskid>")
-def GetTaskDetails(taskid):
-    return
-@app.route("/api/GetAllCompletedSteps/<uname>/<taskid>")
-def GetAllCompletedSteps(uname, taskid):
-    return
-@app.route("/api/GetByUser/<uname>")
-def GetByUser(uname):
-    return
-'''
+
+@app.route("/api/user/GetTaskDetails/<taskid>", methods=['GET'])
+def getTaskDetails(taskid):
+    results = Api.getTaskDetails(taskid)
+    return jsonify(results)
+
+@app.route("/api/user/GetAllCompletedSteps/<uname>/<taskid>")
+def getAllCompletedSteps(uname, taskid):
+    results = Api.getAllCompletedSteps(uname, taskid)
+    return jsonify(results)
+
+@app.route("/api/user/PostMainStepCompleted", methods=['POST'])
+def postMainStepCompleted():
+    d = json.loads(request.data)
+    # print(d['MainStepName'])
+    results = Api.postMainStepCompleted(d['TaskID'],d['MainStepID'],d['AssignedUser'],d['TotalDetailedStepsUsed'],d['TotalTime'], request.remote_addr)
+    return jsonify(results)
+
+@app.route("/api/user/PostTaskCompleted", methods=['POST'])
+def postTaskCompleted():
+    d = json.loads(request.data)
+    # print(d['TaskID'], d['AssignedUser'])
+    results = Api.postTaskCompleted(d['TaskID'],d['AssignedUser'],d['TotalTime'],d['TotalDetailedStepsUsed'])
+    return jsonify(results)
+                
+@app.route("/api/user/GetAllCompletedTasksByUser/<uname>", methods=['GET'])
+def getAllCompletedTasksByUser(uname):
+    results = Api.getAllCompletedTasksByUser(uname)
+    return jsonify(results)
+
+# change to post then
+@app.route("/api/user/PostLoggedInIp/<data>", methods=['GET'])
+def postLoggedInIp(data):
+    results = Api.postLoggedInIp(data)
+    return jsonify(results)
 
 
 
@@ -336,9 +303,9 @@ def user_assignment():
         # else:
         tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
         return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
-    # if form.show_history.data:
+    #if form.show_history.data:
         # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
-    # if form.assign.data:
+    #if form.assign.data:
         # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
     #"""
     return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
