@@ -25,7 +25,7 @@ def get_assignable_tasks():
 def get_tasks_assigned(userID=None):
     requests = None
     if userID is not None:
-        requests = Request.query.filter_by(userID)
+        requests = query.filter_by(userID)
     return requests
 
 
