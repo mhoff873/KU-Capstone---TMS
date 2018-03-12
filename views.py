@@ -336,8 +336,10 @@ def user_assignment():
         # else:
         tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
         return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
-
-    # on show history button press, show task history
+    if form.show_history.data:
+        # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
+    if form.assign.data:
+        # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
     #"""
     return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
     
