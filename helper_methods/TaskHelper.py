@@ -20,13 +20,13 @@ def create_task(form):
         new_task = existing_task
     else:
         new_task = Task(form.title.data)
-    if current_user == Supervisor:
+    if current_user.role == "supervisor":
         new_task.supervisorID = current_user.supervisorID
-    elif current_user == Admin:
+    elif current_user.role == "admin":
         new_task.supervisorID = current_user.adminID
     # bug test
-    else:
-        new_task.supervisorID = 20
+    # else:
+    #    new_task.supervisorID = 20
     new_task.description = form.description.data
     new_task.image = form.image.data
     # 0 = false, 1 = true
