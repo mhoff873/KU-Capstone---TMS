@@ -13,11 +13,14 @@
 <div class= "text-center">
 
 
-
-
   <!-- Edit user info -->
   <form method="POST">
       {{ EditUser.csrf_token }}
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.password.label }}
+      {{ EditUser.password (class="form-control")}}
+      </div>
+      <br>
       <div style="display: inline-block; min-width: 13em">
       {{ EditUser.phone.label }}
       {{ EditUser.phone (class="form-control")}}
@@ -62,6 +65,11 @@
       {{ EditUser.picture.label }}
       {{ EditUser.picture(class="form-control")}}
       </div>
+      {% for field, errors in EditUser.errors.items() %}
+        <div class="alert alert-error">
+            {{ EditUser[field].label }}: {{ ", ".join(errors) }}
+        </div>
+      {% endfor %}
       <br>
       <br>
       {{ EditUser.submit (class="btn btn-secondary btn-md")}}

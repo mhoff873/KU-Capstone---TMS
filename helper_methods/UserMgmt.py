@@ -73,6 +73,7 @@ def edit_supervisor(form, current_user):
     :return: N/A
     """
     user = Supervisor.query.filter_by(email=current_user.email).first()
+    user.password = bcrypt.hashpw((form.password.data).encode("utf8"), bcrypt.gensalt())
     user.phone = form.phone.data
     user.fname = form.fname.data
     user.mname = form.mname.data
