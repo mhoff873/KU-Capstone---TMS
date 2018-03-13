@@ -24,6 +24,9 @@ def create_task(form):
         new_task.supervisorID = current_user.supervisorID
     elif current_user == Admin:
         new_task.supervisorID = current_user.adminID
+    # bug test
+    else:
+        new_task.supervisorID = 20
     new_task.description = form.description.data
     new_task.image = form.image.data
     # 0 = false, 1 = true
