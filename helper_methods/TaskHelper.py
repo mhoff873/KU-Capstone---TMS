@@ -53,12 +53,12 @@ def create_task(form):
         except Exception:
             db.session.commit()
         for j, detailed_step in enumerate(main_step.detailed_steps.entries):
+            new_detailed_step = DetailedStep(detailed_step.title.data)
+            # new_detailed_step.mainStepID = new_main_step.taskID
             """ """
             temp_main_step = MainStep.query.filter_by(mainStepID=new_main_step.taskID)
             new_detailed_step.mainStepID = temp_main_step.mainStepID
             """ """
-            new_detailed_step = DetailedStep(detailed_step.title.data)
-            new_detailed_step.mainStepID = new_main_step.taskID
             new_detailed_step.stepText = detailed_step.stepText.data
             new_detailed_step.listOrder = i+1
             new_detailed_step.image = detailed_step.image.data
