@@ -56,7 +56,7 @@ def create_task(form):
             new_detailed_step = DetailedStep(detailed_step.title.data)
             # new_detailed_step.mainStepID = new_main_step.taskID
             """ """
-            temp_main_step = MainStep.query.filter_by(mainStepID=new_main_step.taskID)
+            temp_main_step = MainStep.query.filter_by(taskID=new_main_step.taskID)
             new_detailed_step.mainStepID = temp_main_step.mainStepID
             """ """
             new_detailed_step.stepText = detailed_step.stepText.data
