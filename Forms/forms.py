@@ -99,6 +99,7 @@ class DetailedStep(FlaskForm):
     def process_data(data):
         return data
 
+
 class MainStep(FlaskForm):
     """
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
