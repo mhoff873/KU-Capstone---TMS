@@ -207,9 +207,13 @@ def update():
 def create_supervisor():
     form = CreateSupervisor()
     if form.validate_on_submit():
-        UserMgmt.create_supervisor(form)
-        return dashboard()
-    return render_template("createSupervisorTest.html", form=form)
+        # Check for duplicate entry in the db.
+        if Supervisor.query.filter_by(email=form.email.data).first() is None:
+            UserMgmt.create_supervisor(form)
+            return dashboard()
+        else:
+            return render_template("createSupervisorTest.html", form=form, errors="Duplicate account! Try another email!")
+    return render_template("createSupervisorTest.html", form=form, errors="")
 
 
 #create user page
@@ -218,10 +222,14 @@ def create_supervisor():
 def create_user():
     form = CreateUser()
     if form.validate_on_submit():
-        email = form.email.data
-        UserMgmt.create_user(form)
-        return user_account(email)
-    return render_template("createUser.html", form=form)
+        # Check if the user already is in db.
+        if User.query.filter_by(email=form.email.data).first() is None:
+            email = form.email.data
+            UserMgmt.create_user(form)
+            return user_account(email)
+        else:
+            return render_template("createUser.html", form=form, errors="Duplicate account! Try another email!")
+    return render_template("createUser.html", form=form, errors="")
 
 
 # library

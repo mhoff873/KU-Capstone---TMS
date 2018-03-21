@@ -17,6 +17,12 @@
 
       {{ form.csrf_token }}
       <div style="display: inline-block; min-width: 13em">
+          {% if errors != "" %}
+            {{ errors }}
+          {% endif %}
+      </div>
+      <br>
+      <div style="display: inline-block; min-width: 13em">
       {{ form.email.label }}
       {{ form.email (class="form-control")}}
       </div>
