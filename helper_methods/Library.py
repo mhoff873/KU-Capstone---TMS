@@ -46,19 +46,24 @@ def sort_key(task):
     return task.title
 
 
-def search(keyword):
+def search(argument):
     """
     Checks for matching keywords to all titles of each task in database.
     :param keyword: Some substring that can be found in a task title.
     :return: List of tasks that match the search criteria.
     """
     alltasks = get_tasks()
-    if keyword == "*":
+    if argument == "*":
         return alltasks
     tasks = []
-    for task in alltasks:
-        if keyword in (task.title).lower():
-            tasks.append(task)
+    if len(argument) == 1:
+        for task in alltasks:
+            if argument.lower() == (task.title).lower()[0]:
+                tasks.append(task)
+    else:
+        for task in alltasks:
+            if argument.lower() in (task.title).lower():
+                tasks.append(task)
     return tasks
 
 
@@ -66,7 +71,3 @@ def search(keyword):
 class SearchForm(FlaskForm):
     search = TextField("Library Search Bar")
     submit = SubmitField("Search")
-
-
-class TaskForm(FlaskForm):
-    submit = SubmitField("blah")
