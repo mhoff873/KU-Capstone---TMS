@@ -1,6 +1,5 @@
 from flask import render_template, request, jsonify, redirect
 
-from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
 from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api
@@ -280,22 +279,29 @@ def library(arguments=None):
 @app.route('/user_assignment/', methods=["GET", "POST"])
 @login_required
 def user_assignment():
+    """
+    Authors: Dylan Kramer, Aaraon Klinikowski, David Schaeffer
+    """
     form = UserAssignmentForm()
     #"""
     users = []
     tasks = []
     assign = False
     # not sure if this line works below
+    print(current_user)
+    print(current_user.role)
+    print(current_user.email)
+    print(current_user.role == 'supervisor')
     if current_user.role == "supervisor":
+        print('About to query users for supervisor.')
         users = UserMgmt.get_supervisor_users(current_user.email)
+        print('Done querying users for supervisor.')
     else:
+        print('Querying ALL users')
         users = User.query.all()
+        print('Done querying ALL users')
     # on add_task button press, show list of tasks
     if form.add_task.data:
-        # if current_user == Supervisor:
-            # tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-            # assign = True
-        # else:
         tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
         return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
     #if form.show_history.data:
