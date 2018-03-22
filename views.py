@@ -211,6 +211,36 @@ def library(supervisor_id=None):
     return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors)
 
 
+# user assignment
+@app.route('/user_assignment/', methods=["GET", "POST"])
+@login_required
+def user_assignment():
+    form = UserAssignmentForm()
+    #"""
+    users = []
+    tasks = []
+    assign = False
+    # not sure if this line works below
+    if current_user.role == "supervisor":
+        users = UserMgmt.get_supervisor_users(current_user.email)
+    else:
+        users = User.query.all()
+    # on add_task button press, show list of tasks
+    if form.add_task.data:
+        # if current_user == Supervisor:
+            # tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+            # assign = True
+        # else:
+        tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+        return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
+    #if form.show_history.data:
+        # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
+    #if form.assign.data:
+        # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
+    #"""
+return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
+
+
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
 @login_required

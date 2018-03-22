@@ -75,6 +75,7 @@ def toggle_enabled(form):
         task.activated = not task.activated
 
 
+
 # Req 22
 def toggle_published(form):
     """

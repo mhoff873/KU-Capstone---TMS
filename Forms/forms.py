@@ -8,7 +8,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateField, SubmitField, \
-    BooleanField, FieldList, FormField, FileField
+    BooleanField, FieldList, FormField, FileField, TextAreaField
 from wtforms.validators import InputRequired, EqualTo, Email, DataRequired
 
 
@@ -86,7 +86,7 @@ class DetailedStep(FlaskForm):
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     """
     title = StringField('Detailed Step Name:')
-    stepText = StringField('Detailed Step Description:')
+    stepText = TextAreaField('Detailed Step Description:')
     image = FileField('Upload Image for Detailed Step:')
 
     detailed_step_removal = SubmitField('- Detailed Step')
@@ -104,7 +104,7 @@ class MainStep(FlaskForm):
     """
     title = StringField('Main Step Title:')
     requiredItem = StringField('Required Items:')
-    stepText = StringField('Main Step Description:')
+    stepText = TextAreaField('Main Step Description:')
     audio = FileField('Upload Audio:')
     image = FileField('Upload Image:')
     video = FileField('Upload Video:')
@@ -125,7 +125,7 @@ class CreateTaskForm(FlaskForm):
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     """
     title = StringField('Task Name:', validators=[DataRequired()])
-    description = StringField('Description:')
+    description = TextAreaField('Description:')
     image = FileField('Upload image for Task:')
 
     main_steps = FieldList(FormField(MainStep), min_entries=0)

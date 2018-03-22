@@ -7,11 +7,8 @@
 
     <div class="container">
         <div class="page_content">
-
-
-            <!--<h1>Task Creation Test Page</h1>-->
-
-            <form action="{{ url_for('create_task') }}" method="POST">
+            <form action="{{ url_for('create_task') }}" method="POST"
+                style="margin-left: 20%">
                 {{ form.hidden_tag() }}
 
                 <!-- Title -->
@@ -19,7 +16,7 @@
                     {{ form.title.label }}
                 </div>
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.title (class="form-control") }}
+                    {{ form.title(class="form-control") }}
                 </div>
                 <a class="btn btn-secondary btn-md" href="#">
                     <i class="fas fa-microphone"></i>Voice</a>
@@ -27,11 +24,11 @@
                 <br>
 
                 <!-- Description -->
-                <div style="display: inline-block; min-width: 13em">
+                <div style="display: inline-block; min-width: 13em; vertical-align: top">
                     {{ form.description.label }}
                 </div>
-                <div style="display: inline-block; min-width: 13em">
-                    {{ form.description (class="form-control") }}
+                <div style="display: inline-block; min-width: 90%">
+                    {{ form.description(class="form-control", style="height: 100px, width:100%") }}
                 </div>
 
                 <br>
@@ -47,13 +44,13 @@
                 <hr>
 
                 <!-- Main Steps -->
-                <div style="display: inline-block">
+                <div style="display: inline-block; min-width: 90%">
                 {% for main_step in form.main_steps %}
                     {{ main_step.title.label }}{{ main_step.title (class="form-control") }}
                     <br>
                     {{ main_step.requiredItem.label }}{{ main_step.requiredItem }}
                     <br>
-                    {{ main_step.stepText.label }}{{ main_step.stepText }}
+                    {{ main_step.stepText.label }}{{ main_step.stepText(style="height: 100px; width:100%") }}
                     <br>
                     {{ main_step.audio.label }}{{ main_step.audio }}
                     <br>
@@ -63,35 +60,35 @@
                     <br>
 
                     <!-- Detailed Steps -->
-                    <div style="display: inline-block; margin-left:3em">
+                    <div style="display: inline-block; margin-left:3em; vertical-align: top">
                         {% for detailed_step in main_step.detailed_steps %}
                             {{ detailed_step.title.label }}{{ detailed_step.title }}
                             <br>
-                            {{ detailed_step.stepText.label }}{{ detailed_step.stepText }}
+                            {{ detailed_step.stepText.label }}{{ detailed_step.stepText(style="height: 100px; width:100%") }}
                             <br>
                             {{ detailed_step.image.label }}{{ detailed_step.image }}
                             <br>
-                            {{ detailed_step.detailed_step_removal (class='btn btn-secondary btn-md') }}
-                            {{ detailed_step.detailed_step_up (class='btn btn-secondary btn-md') }}
-                            {{ detailed_step.detailed_step_down (class='btn btn-secondary btn-md') }}
+                            {{ detailed_step.detailed_step_removal(class='btn btn-secondary btn-md') }}
+                            {{ detailed_step.detailed_step_up(class='btn btn-secondary btn-md') }}
+                            {{ detailed_step.detailed_step_down(class='btn btn-secondary btn-md') }}
                             <br><br>
                         {% endfor %}
-                        {{ main_step.add_detailed_step (class='btn btn-secondary btn-md') }}
+                        {{ main_step.add_detailed_step(class='btn btn-secondary btn-md') }}
                     </div>
                     <br><br>
-                    {{ main_step.main_step_removal (class='btn btn-secondary btn-md') }}
-                    {{ main_step.main_step_up (class='btn btn-secondary btn-md') }}
-                    {{ main_step.main_step_down (class='btn btn-secondary btn-md') }}
+                    {{ main_step.main_step_removal(class='btn btn-secondary btn-md') }}
+                    {{ main_step.main_step_up(class='btn btn-secondary btn-md') }}
+                    {{ main_step.main_step_down(class='btn btn-secondary btn-md') }}
                     <hr>
                 {% endfor %}
                 </div>
                 <br>
-                {{ form.add_main_step (class='btn btn-secondary btn-md') }}
+                {{ form.add_main_step(class='btn btn-secondary btn-md') }}
                 <br><br>
-                {{ form.save_as_draft (class='btn btn-secondary btn-md') }}&nbsp;
-                {{ form.publish (class='btn btn-secondary btn-md') }}
-                {{ form.toggle_enabled (class='btn btn-secondary btn.md') }}
-                {{ form.toggle_activation (class='btn btn-secondary btn.md') }}
+                {{ form.save_as_draft(class='btn btn-secondary btn-md') }}&nbsp;
+                {{ form.publish(class='btn btn-secondary btn-md') }}
+                {{ form.toggle_enabled(class='btn btn-secondary btn.md') }}
+                {{ form.toggle_activation(class='btn btn-secondary btn.md') }}
             </form>
 
 
