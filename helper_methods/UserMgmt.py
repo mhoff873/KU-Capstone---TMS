@@ -114,8 +114,10 @@ def get_supervisor_users(supervisor_email):
     :param supervisor_email: Email that is used to get the supervisor ID.
     :return: List of users that have the coordinating supervisor ID.
     """
+    print(supervisor_email)
     supervisorID = (Supervisor.query.filter_by(email=supervisor_email).first()).supervisorID
     users = User.query.filter_by(supervisorID=supervisorID).all()
+    print(users)
     return users
 
 
