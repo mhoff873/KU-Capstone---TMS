@@ -286,3 +286,110 @@ def getIdFromEmail(uname):
         return None
     userid = r[0]
     return int(userid['userID'])
+
+def postSurveyResults(SR,SQR):
+    """
+    Description: store the results of the survey
+    Parameters: SR - (dict) dictionary containing data for the surveyResults laid out as:
+                SR = {'userID':1,'formID':1,'name':"TylerLance",'timeSpent':45000,'email':"test.com",
+                'ipAddr':"123.123.123",'ageGroup':50,'results':"response",'date':"2018-01-25",'comments':""}
+                SQR - (list) list containing dictionaries for each completed question, laid out as:
+                SQR = [{'questID':1,'response':"sucked"},{'questID':2,'response':"still sucked"}]
+    Return Value: (bool) results if the data was able to be stored
+    Author: Tyler Lance
+    """
+    # hard coded data for testing and to understand the function parameters, remove when implementing
+    SR = {'userID':4,'formID':12,'name':"",'timeSpent':45000,'email':"test.com",'ipAddr':"123.123.123",'ageGroup':50,'results':"response",'comments':""}
+    SQR = [{'questID':1,'response':"sucked"},{'questID':2,'response':"still sucked"}]
+    
+    cur = mysql.connection.cursor()
+    # if name is empty get name from users table
+    if not SR['name']:
+        cur.execute('SELECT fname,lname FROM users WHERE userID=%d' % (int(SR['userID']),))
+        r = cur.fetchone()
+        SR['name'] = r['fname'] + ' ' + r['lname']
+    # if email is empty get name from users table
+    if not SR['email']:
+        cur.execute('SELECT email FROM users WHERE userID=%d' % (int(SR['userID']),))
+        SR['email'] = cur.fetchone()
+    # get the current date and time in the format needed in the database
+    SR['date'] = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    
+    # testing - to display query
+    #print('''INSERT INTO surveyResults (`userID`,`formID`,`name`,`timeSpent`,`email`,`ipAddr`,`ageGroup`,`results`,`date`,`comments`) 
+    #        values(%d,%d,"%s",%d,"%s","%s",%d,"%s","%s","%s")''' % (int(SR['userID']),int(SR['formID']),str(SR['name']),int(SR['timeSpent']),str(SR['email']),str(SR['ipAddr']),int(SR['ageGroup']),str(SR['results']),str(SR['date']),str(SR['comments']),))
+	
+    # insert into the surveyResults table
+    cur.execute('''INSERT INTO surveyResults (`userID`,`formID`,`name`,`timeSpent`,`email`,`ipAddr`,`ageGroup`,`results`,`date`,`comments`) 
+            values(%d,%d,"%s",%d,"%s","%s",%d,"%s","%s","%s")''' % (int(SR['userID']),int(SR['formID']),str(SR['name']),int(SR['timeSpent']),str(SR['email']),str(SR['ipAddr']),int(SR['ageGroup']),str(SR['results']),str(SR['date']),str(SR['comments']),))
+    # execute the query
+    mysql.connection.commit()
+    # get the auto increment value
+    cur.execute('SELECT LAST_INSERT_ID()')
+    id = cur.fetchone()
+    # iterate over the question response list
+    for r in SQR:
+    
+        # testing - to display query
+        #print('''INSERT INTO surveyQuestResults (`resultID`,`questID`,`response`)
+        #        values(%d,%d,"%s")''' %(int(id['LAST_INSERT_ID()']),int(r['questID']),str(r['response']),))
+        
+        cur.execute('''INSERT INTO surveyQuestResults (`resultID`,`questID`,`response`)
+                values(%d,%d,"%s")''' %(int(id['LAST_INSERT_ID()']),int(r['questID']),str(r['response']),))
+        # execute the query
+        mysql.connection.commit()
+    return 0
+    
+def postSurveyForm(SF,SQ):
+    """
+    Description: store the survey form and all of its questions
+    Parameters: SF - (dict) dictionary containing data for the form laid out as:
+                SF = {'supervisorID':4,'formTitle':"title example",'description':"form description",'isActive':1}
+                SQ - (list) list containing each question and multiple choice questions if necessary, laid out as:
+                SQ = [{'questType':"multiple choice",'questText':"How did it go?",'isActive':1,'questOrder':1,
+                'surveyMultQuest':[{'questText':"Excellent",'questOrder':1},{'questText':"Poor",'questOrder':2}]},
+                {'formID':1,'questType':"open ended",'questText':"How was the survey?",'isActive':1,
+                'questOrder':2,'surveyMultQuest':""}]
+    Return Value: (bool) results if the data was able to be stored
+    Author: Tyler Lance
+    """
+    # hard coded data for testing and to understand the function parameters, remove when implementing
+    # query will fail if the form record is not deleted because the formTitle is a secondary key
+    SF = {'supervisorID':4,'formTitle':"title example",'description':"form description",'isActive':1}
+    SQ = [{'questType':"multiple choice",'questText':"How did it go?",'isActive':1,'questOrder':1,'surveyMultQuest':[{'questText':"Excellent",'questOrder':1},{'questText':"Poor",'questOrder':2}]},{'formID':1,'questType':"open ended",'questText':"How was the survey?",'isActive':1,'questOrder':2,'surveyMultQuest':""}]
+    
+    # get the current date and time in the format needed in the database
+    SF['dateCreated'] = str(datetime.now().strftime('%Y-%m-%d'))
+    SF['dateModified'] = str(datetime.now().strftime('%Y-%m-%d'))
+    cur = mysql.connection.cursor()
+    # verify the survey form does not already exist
+    cur.execute('SELECT formID FROM surveyForm WHERE formTitle="%s"' % (str(SF['formTitle']),))
+    formid = cur.fetchone()
+    # if the form name already exists in the DB then return false
+    if formid:
+        # testing - print message that title already exists in db and survey could not be added
+        print("TITLE EXISTS IN DB - False was returned and the data was not inserted.")
+        return 1
+    # insert the record into the form table
+    cur.execute('''INSERT INTO surveyForm (`supervisorID`,`formTitle`,`description`,`dateCreated`,`dateModified`,`isActive`) 
+            values(%d,"%s","%s","%s","%s",%d)''' % (int(SF['supervisorID']),str(SF['formTitle']),str(SF['description']),str(SF['dateCreated']),str(SF['dateModified']),int(SF['isActive']),))
+    mysql.connection.commit()
+    # get the auto increment value
+    cur.execute('SELECT LAST_INSERT_ID()')
+    id = cur.fetchone()
+    # iterate over the question list
+    for r in SQ:
+        # insert the question for the form
+        cur.execute('''INSERT INTO surveyQuest (`formID`,`questType`,`questText`,`isActive`,`questOrder`)
+                values(%d,"%s","%s",%d,%d)''' %(int(id['LAST_INSERT_ID()']),str(r['questType']),str(r['questText']),int(r['isActive']),int(r['questOrder']),))
+        mysql.connection.commit()
+        # get the primary key from the survey question
+        cur.execute('SELECT LAST_INSERT_ID()')
+        questID = cur.fetchone()
+        # check if it has multiple questions
+        for m in r['surveyMultQuest']:
+            # insert the multiple choice responses for the question
+            cur.execute('''INSERT INTO surveyMultQuest (`questID`,`questText`,`questOrder`)
+                values(%d,"%s",%d)''' %(int(questID['LAST_INSERT_ID()']),str(m['questText']),int(m['questOrder']),))
+            mysql.connection.commit()
+    return 0
