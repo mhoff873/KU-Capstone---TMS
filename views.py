@@ -14,11 +14,6 @@ def index():
 
 @app.route('/api/user/login', methods=['POST'])
 def api_login():
-    '''
-        Function:   user_login
-        Purpose:    Allows Front End to login
-        Author:     Patrick Earl
-    '''
     user = request.form.get('username')
     password = request.form.get('password')
     success = Api.userLogin(user, password)
@@ -31,9 +26,6 @@ def api_login():
 def api_getbyuser(uname):
     r = Api.getByUser(uname)
     return jsonify([r])
-
-
-# For sprint 2
 
 @app.route("/api/user/GetTaskDetails/<taskid>", methods=['GET'])
 def getTaskDetails(taskid):
@@ -48,14 +40,12 @@ def getAllCompletedSteps(uname, taskid):
 @app.route("/api/user/PostMainStepCompleted", methods=['POST'])
 def postMainStepCompleted():
     d = json.loads(request.data)
-    # print(d['MainStepName'])
     results = Api.postMainStepCompleted(d['TaskID'],d['MainStepID'],d['AssignedUser'],d['TotalDetailedStepsUsed'],d['TotalTime'], request.remote_addr)
     return jsonify(results)
 
 @app.route("/api/user/PostTaskCompleted", methods=['POST'])
 def postTaskCompleted():
     d = json.loads(request.data)
-    # print(d['TaskID'], d['AssignedUser'])
     results = Api.postTaskCompleted(d['TaskID'],d['AssignedUser'],d['TotalTime'],d['TotalDetailedStepsUsed'])
     return jsonify(results)
                 
@@ -70,7 +60,27 @@ def postLoggedInIp(data):
     results = Api.postLoggedInIp(data)
     return jsonify(results)
 
-
+#http://tmst.kutztown.edu:5004/api/user/PostSurveyResults/test
+# this must be changed from get to post
+@app.route("/api/user/PostSurveyResults/<test>", methods=['GET'])
+def postSurveyResults(test):
+    SR = ""
+    SQR = ""
+    # created the required dictionary & lists and pass to function
+    results = Api.postSurveyResults(SR,SQR)
+    return test
+    
+#http://tmst.kutztown.edu:5004/api/user/PostSurveyForm/test
+# this must be changed from get to post
+@app.route("/api/user/PostSurveyForm/<test>", methods=['GET'])
+def postSurveyForm(test):
+    SF = ""
+    SQ = ""
+    # created the required dictionary & lists and pass to function
+    results = Api.postSurveyForm(SF,SQ)
+    return test
+# end API calls
+#Begin URL dispatching for TMS
 
 # supervisor dashboard
 @app.route('/dashboard', methods=['GET'])

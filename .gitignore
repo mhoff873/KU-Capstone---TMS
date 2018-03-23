@@ -1,3 +1,4 @@
 *.pyc
 *.pyo
 **/nohup.out
+__pyacache__
