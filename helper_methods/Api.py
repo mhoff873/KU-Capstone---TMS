@@ -13,7 +13,6 @@ from database import *
 from Forms.models import User
 from flask import jsonify
 
-# Taken from Mason
 def userLogin(email, password):
     """
     Description: Validate the user login from the database with encrypted passwords
@@ -25,15 +24,14 @@ def userLogin(email, password):
 
     if email is None or password is None:
         return False
-
     usr = getHash(email)
     if usr is not None:
         try: 
             if usr.password.encode('utf-8') == bcrypt.hashpw(password.encode('utf-8'), usr.password.encode('utf-8')):
                 return True 
         except ValueError:
-            #print(usr.password)
-            #print(password)
+            # Once bcrypt is enable on all passwords this can be removed, at the time of development
+            # clear text passwords still existed
             if usr.password.encode('utf-8') == password.encode('utf-8'):
                 return True
             return False

@@ -3,7 +3,7 @@ from flask import render_template, request, jsonify, redirect
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
-from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api
+from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api, Reports
 from database import *
 from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest
@@ -80,8 +80,8 @@ def postSurveyForm(test):
     results = Api.postSurveyForm(SF,SQ)
     return test
 # end API calls
-#Begin URL dispatching for TMS
 
+# Begin URL dispatching for TMS
 # supervisor dashboard
 @app.route('/dashboard', methods=['GET'])
 @login_required
@@ -406,3 +406,9 @@ def user_account(user):
         UserMgmt.edit_user(eUser, user)
         return dashboard()
     return render_template("userAccount.html", EditUser=eUser, User=user)
+
+# Reports Generation
+@app.route("/reports", methods=["GET"])
+@login_required
+def reports():
+    pass
