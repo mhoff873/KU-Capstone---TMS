@@ -1,3 +1,15 @@
+# ************************************************************/
+# Flask request routing to map URLs to code
+# Author: Patrick Earl, Tyler Lance, <devs add names here>
+# Created: 03/04/2018
+# Updated: 03/23/2017
+# Purpose: these @app.route map URLs called in the browser to code. each of these
+#          routes pulls data from the url (get) or the form (post) and calls the
+#          corresponding function in the Api.py file. then gets the results from
+#          the function and format the results into a json string object or form.
+# Version: Python Version 3.6
+# ************************************************************/
+
 from flask import render_template, request, jsonify, redirect
 
 from app import app
@@ -54,12 +66,16 @@ def getAllCompletedTasksByUser(uname):
     results = Api.getAllCompletedTasksByUser(uname)
     return jsonify(results)
 
-# change to post then
-@app.route("/api/user/PostLoggedInIp/<data>", methods=['GET'])
-def postLoggedInIp(data):
-    results = Api.postLoggedInIp(data)
+@app.route("/api/user/PostLoggedInIp", methods=['POST'])
+def postLoggedInIp():
+    ip = request.form.get('IpAddress')
+    signIn = request.form.get('SignedIn')
+    user = request.form.get('Username')
+    results = Api.postLoggedInIp(ip,user,signIn)
     return jsonify(results)
+# end URL dispatching for iPaws
 
+# begin URL dispatching for TMS
 #http://tmst.kutztown.edu:5004/api/user/PostSurveyResults/test
 # this must be changed from get to post
 @app.route("/api/user/PostSurveyResults/<test>", methods=['GET'])
@@ -79,6 +95,32 @@ def postSurveyForm(test):
     # created the required dictionary & lists and pass to function
     results = Api.postSurveyForm(SF,SQ)
     return test
+    
+#http://tmst.kutztown.edu:5004/api/user/GetAssignedUsers/4
+@app.route("/api/user/GetAssignedUsers/<superID>", methods=['GET'])
+def getAssignedUsers(superID):
+    # created the required dictionary & lists and pass to function
+    results = Api.getAssignedUsers(superID)
+    return jsonify(results)
+
+#http://tmst.kutztown.edu:5004/api/user/GetCompletedTasksByUsers/test
+# change to post once you are ready to call function
+@app.route("/api/user/GetCompletedTasksByUsers/<test>", methods=['GET'])
+def getCompletedTasksByUsers(test):
+    #d = json.loads(request.data)
+    date = "2018-03-15"
+    users = [1,4]
+    # created the required dictionary & lists and pass to function
+    results = Api.getCompletedTasksByUsers(date, users)
+    return jsonify(results)
+    
+#http://tmst.kutztown.edu:5004/api/user/GetCompletedTasksByID/test
+# change to post once you are ready to call function
+@app.route("/api/user/GetCompletedTasksByID/<date>/<ID>", methods=['GET'])
+def getCompletedTasksByID(date, ID):
+    # created the required dictionary & lists and pass to function
+    results = Api.getCompletedTasksByID(date, ID)
+    return jsonify(results)
 # end API calls
 
 # Begin URL dispatching for TMS

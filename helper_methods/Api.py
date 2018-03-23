@@ -2,7 +2,7 @@
 # API Functions
 # Author: Patrick Earl, Tyler Lance
 # Created: 03/04/2018
-# Updated: 03/08/2017
+# Updated: 03/23/2017
 # Purpose: Functions relating to the API allowing for iPaws to communicate with TMS Database
 # Version: Python Version 3.6
 # ************************************************************/
@@ -51,26 +51,22 @@ def getHash(email):
 
 def getByUser(uname):
     '''
-        Function:       getbyuser
-        Purpose:        Gets the User's tasks assigned to them
-        Return:         json - A json object containing the tasks for the user
-        Author:         Tyler Lance
+    Function: getbyuser
+    Purpose: Gets the User's tasks assigned to them
+    Parameters: uname - (string) username for the account
+    Return: result - (dict) A json object containing the tasks for the user
+    Author: Tyler Lance
     '''
     # cursor documentation: http://initd.org/psycopg/docs/cursor.html
     cur = mysql.connection.cursor()
-    
     # get the accounts userID
     userID = getIdFromEmail(uname)
-
     # Invalid user
     if userID is None:
         return None
-
-    # userID = result['userID']  # stores the first element which is the userid
     # get the tasks assigned to the user
-    cur.execute(
-        'SELECT task.taskID, task.title FROM task, users, request WHERE users.userID=%s AND users.userID=request.userID AND request.taskID=task.taskID',
-        (userID,))
+    cur.execute('''SELECT task.taskID, task.title FROM task, users, request 
+        WHERE users.userID=%s AND users.userID=request.userID AND request.taskID=task.taskID''', (userID,))
     record = cur.fetchall()
 
     # formatting of the api, has fixed values for the category name and id
@@ -105,37 +101,37 @@ def getTaskDetails(taskid):
     Author: Patrick Earl, Tyler Lance
     """
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT mainSteps.title, mainSteps.mainStepID, mainSteps.stepText, mainSteps.video, mainSteps.audio, mainSteps.requiredItem 
+    # query to gather the details about each step
+    cur.execute('''SELECT mainSteps.listOrder, mainSteps.title, mainSteps.mainStepID, mainSteps.stepText, mainSteps.video, mainSteps.audio, mainSteps.requiredItem 
         FROM mainSteps, task 
         WHERE task.taskID =mainSteps.taskID AND task.taskID = %d''' % (int(taskid), ))
-        
     step = cur.fetchall()
     lst = []
     count = 1
-    
+    # change the query results to a list and sort it by the order of the steps
+    step = sorted(list(step),key=lambda k: k['listOrder'])
+    # build the mapping for each main step
     for r in step:
         s = {"$id" : str(count), "mainStepName" : r['title'], "mainStepId": r['mainStepID'], 
             "mainStepText" : r['stepText'], "videoPath": r['video'], "audioPath": r['audio'],
             "requiredItems" : r['requiredItem'] }
-        
+        # gather details about the detailed steps
         cur.execute('''SELECT * 
                 FROM detailedSteps 
                 WHERE mainStepID = %d''' % (r['mainStepID'], ))
-        
         detail = cur.fetchall()
-        
+        # change the query results to a list and sort it by the order of the steps
+        detail = sorted(list(detail),key=lambda k: k['listOrder'])
         detailed_steps = []
-        
+        # add details for each detailed step
         for d in detail:
             count += 1
             d_step = {"$id": str(count), "detailedStepId" : d['detailedStepID'],
             "detailedStepName": d['title'], "imagePath": d['image'], "detailedStepText": d['stepText']}
             detailed_steps.append(d_step)
-        
         count += 1
         s['detailedStep'] = detailed_steps
         lst.append(s)
-        
     return lst    
     
 # Returns all the steps by a given user 
@@ -154,6 +150,7 @@ def getAllCompletedSteps(uname, taskid):
     r = cur.fetchall()
     count = 1
     lst = []
+    # iterate over each completed step and build the data structure
     for s in r:
         date_string = str(s["dateTimeCompleted"])
         spc = str(s["dateTimeCompleted"]).find(' ')
@@ -236,7 +233,6 @@ def postMainStepCompleted(taskID, stepID, user, numUsed, time, ip):
     # update the step in the table
     cur.execute('UPDATE completedSteps SET `detailedStepsUsed`=%d,`timeSpent`=%d,`dateTimeCompleted`="%s" WHERE `completedTaskID`=%d AND `mainStepID`=%d' % (int(numUsed),int(time),str(date),int(cTaskID),int(stepID),))
     mysql.connection.commit()
-    
     return 0
 
 # Posts a task step by adding it to the database
@@ -261,15 +257,30 @@ def postTaskCompleted(taskID, user, time, numUsed):
     mysql.connection.commit()
     return 0
 
-def postLoggedInIp(data):
+def postLoggedInIp(ip, uname, signIn):
     """
     Description: submit to the database the ip address for the active user
-    Parameters: data - (dict) containing the keys IpAddress, SignedIn, Username
-    Return Value:
-    NOTE: this is commented out on ipaws
-    TEST: http://tmst.kutztown.edu:5004/api/user/PostLoggedInIp/{"IpAddress":156.12.128.10,"SignedIn":true,"Username":"test.com"}
+    Parameters: ip - (string) ip address of the user connected
+                uname - (string) username for the account
+                signIn - (bool) T/F for setting the account login status
+    Return Value: 0 - possibly change to T/F if successful, have to check what ipaws can recieve
+    Author: Tyler Lance
     """
-    return data
+    cur = mysql.connection.cursor()
+    user = getIdFromEmail(uname)
+    # get the current date and time in the format needed in the database
+    date = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    if signIn =='true':
+        signIn = 1
+    elif signIn =='false':
+        signIn = 0
+    # send query to the database
+    cur.execute('''UPDATE `users`
+                SET `isLoggedIn`=%d, `lastActive`="%s"
+                WHERE `userID`=%d''' % (int(signIn),str(date),int(user),))
+    # set the isLoggedIn, lastActive
+    mysql.connection.commit()
+    return 0
     
 def getIdFromEmail(uname):
     """
@@ -281,10 +292,9 @@ def getIdFromEmail(uname):
     cur = mysql.connection.cursor()
     # get the userid of the user given the email
     cur.execute('SELECT userID FROM users WHERE email="%s"' % (uname,))
-    r = cur.fetchall()
-    if not r:
+    userid = cur.fetchone()
+    if not userid:
         return None
-    userid = r[0]
     return int(userid['userID'])
 
 def postSurveyResults(SR,SQR):
@@ -393,3 +403,89 @@ def postSurveyForm(SF,SQ):
                 values(%d,"%s",%d)''' %(int(questID['LAST_INSERT_ID()']),str(m['questText']),int(m['questOrder']),))
             mysql.connection.commit()
     return 0
+    
+def getAssignedUsers(superID):
+    """
+    Description: get data of the users assigned to the supervisor
+    Parameters: superID - (int) supervisor id
+    Return Value: (list) containing userId, first name and last name of the assigned users
+              ex:  [{'userID': 5, 'fname': 'Tom', 'lname': None}, {'userID': 11, 'fname': 'John', 'lname': 'last'}, {'userID': 18, 'fname': 'Hulk', 'lname': 'Hogan'}]
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # query the database for the a list of the assigned users in the request table
+    cur.execute('SELECT userID, fname, lname FROM users WHERE supervisorID="%s"' % (int(superID),))
+    userData = cur.fetchall()
+    return list(userData)
+    
+def getCompletedTasksByUsers(date, users):
+    """
+    Description: get data of the completed tasks of a user or users
+    Parameters: users - (list) list of userIDs to pull tasks for
+                date - (string) date to search for task completed from then till now, if null then find all
+                       ex: 2018-03-09
+    Return Value: lstUser - (list) contains completed tasks and the amount of time for each step
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    date = date + " 00:00:00"
+    lstUser = []  # list to append each user into
+    # iterate over the users list
+    for u in users:
+        # query the database to get the data on completed tasks that occur after the provided date
+        cur.execute('SELECT completedTasks.completedTaskID, task.title, completedTasks.totalTime, completedTasks.dateStarted, completedTasks.dateTimeCompleted, completedTasks.detailedStepsUsed, completedTasks.ipAddr FROM task, completedTasks WHERE completedTasks.taskId=task.taskID AND completedTasks.dateTimeCompleted>="%s" AND completedTasks.userID = %d' % (str(date),int(u),))
+        taskData = cur.fetchall()
+        lstTask = []
+        # iterate over the data to get the completed steps
+        for t in taskData:
+            taskDict = {'title':t['title'],'totalTime':t['totalTime'],'dateStarted':t['dateStarted'],'dateTimeCompleted':t['dateTimeCompleted'],'detailedStepsUsed':t['detailedStepsUsed'],'ipAddr':t['ipAddr']}
+            taskDict['detailedSteps'] = getCompletedStepsByID(t['completedTaskID'])
+            lstTask.append(taskDict)
+        # sort by date time completed
+        lstTask = sorted(lstTask,key=lambda k: k['dateTimeCompleted'], reverse=True)
+        userDict = {'userID':u,'completedTasks':lstTask}
+        lstUser.append(userDict)
+    return lstUser
+    
+def getCompletedTasksByID(date, ID):
+    """
+    Description: get data of the completed tasks
+    Parameters: ID - (int) ID of task to get data for
+                date - (string) date to search for task completed from then till now, if null then find all
+                       ex: 2018-03-09
+    Return Value: lstUser - (list) contains completed tasks and the amount of time for each step
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    date = date + " 00:00:00"
+    # query the database to get the data on completed tasks that occur after the provided date
+    cur.execute('SELECT users.fname, users.lname, completedTasks.completedTaskID, task.title, completedTasks.totalTime, completedTasks.dateStarted, completedTasks.dateTimeCompleted, completedTasks.detailedStepsUsed, completedTasks.ipAddr FROM users, task, completedTasks WHERE users.userID=completedTasks.userID AND completedTasks.taskId=task.taskID AND completedTasks.dateTimeCompleted>="%s" AND completedTasks.taskID = %d' % (str(date),int(ID),))
+    taskData = cur.fetchall()
+    lstTask = []
+    # iterate over the data to get the completed steps
+    for t in taskData:
+        taskDict = {'fname':t['fname'],'lname':t['lname'],'title':t['title'],'totalTime':t['totalTime'],'dateStarted':t['dateStarted'],'dateTimeCompleted':t['dateTimeCompleted'],'detailedStepsUsed':t['detailedStepsUsed'],'ipAddr':t['ipAddr']}
+        taskDict['detailedSteps'] = getCompletedStepsByID(t['completedTaskID'])
+        lstTask.append(taskDict)
+    # sort by date time completed
+    lstTask = sorted(lstTask,key=lambda k: k['dateTimeCompleted'], reverse=True)
+    return lstTask
+    
+def getCompletedStepsByID(ID):
+    """
+    Description: get data of the completed steps given a task id
+    Parameters: ID - (int) ID of task to get data for
+    Return Value: lstStep - (list) sorted and contains completed step and the amount of time for each
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # query the database to get the data on the completed steps
+    cur.execute('SELECT mainSteps.title, mainSteps.listOrder, completedSteps.detailedStepsUsed, completedSteps.timeSpent, completedSteps.dateTimeCompleted FROM mainSteps, completedSteps WHERE completedSteps.mainStepID=mainSteps.mainStepID AND completedSteps.completedTaskID = %d' % (int(ID),))
+    stepData = cur.fetchall()
+    lstStep = []
+    # iterate over the data to store the individual steps in a list
+    for s in stepData:
+        lstStep.append(s)
+    # sort the order by the list order of the steps, rather than the time they were completed
+    lstStep = sorted(list(lstStep),key=lambda k: k['listOrder'])
+    return lstStep
