@@ -144,10 +144,12 @@ class CreateTaskForm(FlaskForm):
     def process_data(data):
         return data
 
+
 class UserAssignmentForm(FlaskForm):
     add_task = SubmitField('Assign Task')
     show_history = SubmitField('View Assigned Tasks')
-    assign = SubmitField('Assign')
+    assign = list(SubmitField('Assign'))
+    remove = list(SubmitField('Remove'))
 
     @staticmethod
     def process_data(data):

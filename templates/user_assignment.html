@@ -15,10 +15,12 @@
                     <p> {{ user.fname }} {{ user.lname }} </p>
                     {{form.add_task (class='btn btn-secondary btn-sm')}}
                     {{form.show_history (class='btn btn-secondary btn-sm')}}
-                    {% for task in tasks %}
-                        {{ task.title }}
-                        {{form.assign (class='btn btn-secondary btn-sm')}}
-                        <br>
+                    {% if tasks %}
+                        {
+                        {% for task in tasks %}
+                            {{ task.title }}
+                            {{form.assign[i](class='btn btn-secondary btn-sm')}}
+                            <br>
                     {% endfor %}
                 {% endfor %}
                 <!-- -->

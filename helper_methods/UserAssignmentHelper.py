@@ -18,11 +18,6 @@ def get_assignable_tasks(supervisorID=None):
     return tasks
 
 
-# def get_assignable_tasks():
-    # tasks = Task.query.filter_by(enabled=True).all()
-    # return tasks
-
-
 def get_tasks_assigned(userID=None):
     requests = None
     if userID is not None:
@@ -33,9 +28,9 @@ def get_tasks_assigned(userID=None):
 def assign_task(userID=None,taskID=None,supervisorID=None):
     request = Request()
     request.isApproved = True
-    #request.taskID = task.taskID
-    #request.supervisorID = supervisor.supervisorID
-    #request.userID = user.userID
+    request.taskID = taskID
+    request.supervisorID = supervisorID
+    request.userID = userID
     try:
         db.session.add(request)
         db.session.commit()
