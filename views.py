@@ -260,6 +260,10 @@ def library(arguments=None):
                 tasks = Library.sort_alphabetically(Library.search(keyword))
             elif sort == "alpha-rev":
                 tasks = Library.sort_alphabetically(Library.search(keyword), reverse=True)
+            elif sort == "chrono":
+                tasks = Library.sort_chronologically(Library.search(keyword))
+            elif sort == "chrono-rev":
+                tasks = Library.sort_chronologically(Library.search(keyword), reverse=True)
         else:
             tasks = Library.sort_alphabetically(Library.search(keyword))
     else:
@@ -278,6 +282,10 @@ def library(arguments=None):
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
             if sort == "alpha-rev":
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id), reverse=True)
+            elif sort == "chrono":
+                tasks = Library.sort_chronologically(Library.get_tasks(supervisor_id))
+            elif sort == "chrono-rev":
+                tasks = Library.sort_chronologically(Library.get_tasks(supervisor_id), reverse=True)
             else: # Default option is to sort alphabetically
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
         else:
