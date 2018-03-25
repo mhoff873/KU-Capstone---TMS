@@ -20,6 +20,7 @@
                     {{ i = 0 }}
                     {% if form.add_task[j].data %}
                         {% for task in tasks %}
+                            <br>
                             {{ task.title }}
                             {{form.assign[i] (class='btn btn-secondary btn-sm')}}
                             <br>
