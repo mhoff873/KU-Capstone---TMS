@@ -301,8 +301,9 @@ def user_assignment():
         users = User.query.all()
         print('Done querying ALL users')
     # on add_task button press, show list of tasks
-    if form.add_task.data:
-        tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+    for add_tasks in form.addtask:
+        if add_tasks.data:
+            tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
         return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
     #if form.show_history.data:
         # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
