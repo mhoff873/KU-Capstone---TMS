@@ -285,8 +285,9 @@ def user_assignment():
     form = UserAssignmentForm()
     #"""
     users = []
-    tasks = []
-    assign = False
+    tasks = []  # i think this should be a 2d array, but how to make?
+    requests = []
+    assign = False  # why did I add this?
     # not sure if this line works below
     print(current_user)
     print(current_user.role)
@@ -304,12 +305,25 @@ def user_assignment():
     for add_tasks in form.addtask:
         if add_tasks.data:
             tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-        return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
-    #if form.show_history.data:
+            return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
+    i = 0
+    for show_histories in form.show_history:
+        if show_histories.data:
+            tasks = UserAssignmentHelper.get_tasks_assigned(users[i].userID)
+            return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
+        i += 1
+    j = 0
+    for user in users:
+        for task in tasks:
+            if form.assign[j].data:
+                UserAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
+            if form .remove[j].data:
+                UserAssignmentHelper.delete_request()
+    # if form.show_history.data:
         # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
-    #if form.assign.data:
+    # if form.assign.data:
         # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
-    #"""
+    # """
     return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
     
 
