@@ -53,7 +53,7 @@ def alpha_sort_key(task):
     :param task: Task that will be passed in to be sorted.
     :return: Title of each task passed into it.
     """
-    return task.title
+    return (task.title).lower()
 
 def chrono_sort_key(task):
     """
