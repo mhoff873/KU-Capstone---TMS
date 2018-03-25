@@ -146,8 +146,8 @@ class CreateTaskForm(FlaskForm):
 
 
 class UserAssignmentForm(FlaskForm):
-    add_task = SubmitField('Assign Task')
-    show_history = SubmitField('View Assigned Tasks')
+    add_task = FieldList(SubmitField('Assign Task'))
+    show_history = FieldList(SubmitField('View Assigned Tasks'))
     assign = FieldList(SubmitField('Assign'))
     remove = FieldList(SubmitField('Remove'))
     @staticmethod
