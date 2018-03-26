@@ -19,10 +19,10 @@ def get_assignable_tasks(supervisorID):
     # return tasks
 
 
-def get_tasks_assigned(userID=None):
+def get_tasks_assigned(userID,supervisorID):
     requests = None
     if userID is not None:
-        requests = Request.query.filter_by(userID).all()
+        requests = Request.query.filter_by(userID=userID, supervisorID=supervisorID).all()
     return requests
 
 
