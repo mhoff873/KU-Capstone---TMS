@@ -306,12 +306,12 @@ def user_assignment():
     for user in users:
         if form.add_task.data:
             tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-            return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
+            return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, requests=requests, form=form)
         # i = 0
     # for show_histories in form.show_history:
         if form.show_history.data:
-            tasks = UserAssignmentHelper.get_tasks_assigned(user.userID)
-            return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
+            requests = UserAssignmentHelper.get_tasks_assigned(user.userID)
+            return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, requests=requests, form=form)
         # i += 1
     # j = 0
     # for user in users:
@@ -325,7 +325,7 @@ def user_assignment():
     # if form.assign.data:
         # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
     # """
-    return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
+    return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, requests=requests, form=form)
     
 
 # create task

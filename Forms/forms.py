@@ -151,7 +151,8 @@ class UserAssignmentForm(FlaskForm):
     show_history = SubmitField('View Assigned Tasks')
     # assign = FieldList(SubmitField('Assign'))
     assign = SubmitField('Assign')
-    remove = FieldList(SubmitField('Remove'))
+    # remove = FieldList(SubmitField('Remove'))
+    remove = SubmitField('Remove')
 
     @staticmethod
     def process_data(data):
