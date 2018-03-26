@@ -316,8 +316,12 @@ def user_assignment():
     # j = 0
     # for user in users:
         for task in tasks:
+            print(task)
+            print(form.assign.data)
             if form.assign.data:
+                print('Calling assign_task')
                 UserAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
+                print('Assign_task called.')
             if form .remove.data:
                 UserAssignmentHelper.delete_request()
     # if form.show_history.data:

@@ -32,7 +32,7 @@ def assign_task(userID=None,taskID=None,supervisorID=None):
     request.isApproved = True
     print('Is Approved')
     request.taskID = taskID
-    print('Task ID =', taskID)
+    print('Task ID ={}'.format(taskID))
     request.supervisorID = supervisorID
     print('Supervisor ID =', supervisorID)
     request.userID = userID
