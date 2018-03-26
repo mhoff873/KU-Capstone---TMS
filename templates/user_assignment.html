@@ -26,12 +26,13 @@
                             <br>
 
                         {% endfor %}
+                    {% endif %}
+                    {% if form.show_history.data %}
                         {% for request in requests %}
                             <br>
                             {{ request.taskID }}
                             {{form.remove (class='btn btn-secondary btn-sm')}}
                             <br>
-
                         {% endfor %}
                     {% endif %}
 
