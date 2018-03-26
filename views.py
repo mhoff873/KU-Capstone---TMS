@@ -310,7 +310,7 @@ def user_assignment():
         # i = 0
     # for show_histories in form.show_history:
         if form.show_history.data:
-            requests = UserAssignmentHelper.get_tasks_assigned(user.userID)
+            requests = UserAssignmentHelper.get_tasks_assigned(user.userID, current_user.supervisorID)
             return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, requests=requests, form=form)
         # i += 1
     # j = 0
