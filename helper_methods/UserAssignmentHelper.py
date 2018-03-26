@@ -27,16 +27,23 @@ def get_tasks_assigned(userID,supervisorID):
 
 
 def assign_task(userID=None,taskID=None,supervisorID=None):
+    print('Making Request: ')
     request = Request()
     request.isApproved = True
-    #request.taskID = task.taskID
-    #request.supervisorID = supervisor.supervisorID
-    #request.userID = user.userID
+    print('Is Approved')
+    request.taskID = taskID
+    print('Task ID =', taskID)
+    request.supervisorID = supervisorID
+    print('Supervisor ID =', supervisorID)
+    request.userID = userID
+    print('User ID =', userID)
     try:
         db.session.add(request)
         db.session.commit()
+        print('Request Stored to DB successfully')
     except Exception:
         db.session.commit()
+        print('jk there was and error')
     return request
 
 
