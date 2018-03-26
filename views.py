@@ -282,6 +282,9 @@ def user_assignment():
     """
     Authors: Dylan Kramer, Aaraon Klinikowski, David Schaeffer
     """
+    tasks = []
+    assign = []
+    requests = []
     form = UserAssignmentForm()
     print(current_user)
     print(current_user.role)
