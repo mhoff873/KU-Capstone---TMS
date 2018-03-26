@@ -309,6 +309,7 @@ def user_assignment():
         # i += 1
     # j = 0
     # for user in users:
+        tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
         print('Tasks before "for task in tasks": {}'.format(tasks))
         for task in tasks:
             print(task)
