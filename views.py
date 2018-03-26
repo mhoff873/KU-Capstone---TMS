@@ -315,6 +315,7 @@ def user_assignment():
         # i += 1
     # j = 0
     # for user in users:
+        print('Tasks before "for task in tasks": {}'.format(tasks))
         for task in tasks:
             print(task)
             print(form.assign.data)
