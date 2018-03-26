@@ -283,12 +283,6 @@ def user_assignment():
     Authors: Dylan Kramer, Aaraon Klinikowski, David Schaeffer
     """
     form = UserAssignmentForm()
-    #"""
-    users = []
-    tasks = []  # i think this should be a 2d array, but how to make?
-    requests = []
-    assign = False  # why did I add this?
-    # not sure if this line works below
     print(current_user)
     print(current_user.role)
     print(current_user.email)
