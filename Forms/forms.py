@@ -8,7 +8,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateField, SubmitField, \
-    BooleanField, FieldList, FormField, FileField, RadioField
+    BooleanField, FieldList, FormField, FileField, RadioField, SelectField
 from wtforms.validators import InputRequired, EqualTo, Email, DataRequired
 
 
@@ -146,6 +146,7 @@ class CreateTaskForm(FlaskForm):
 
 
 class UserAssignmentForm(FlaskForm):
+    assigned_users = SelectField('Select user', choices=[])
     # add_task = FieldList(SubmitField('Assign Task'))
     add_task = SubmitField('Assign Task')
     show_history = SubmitField('View Assigned Tasks')
