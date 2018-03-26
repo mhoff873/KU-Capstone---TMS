@@ -302,7 +302,7 @@ def user_assignment():
         users = User.query.all()
         print('Done querying ALL users')
     # on add_task button press, show list of tasks
-    for add_tasks in form.addtask:
+    for add_tasks in form.add_task:
         if add_tasks.data:
             tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
             return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
