@@ -277,10 +277,12 @@ def library(arguments=None):
             if supervisor_id != "":
                 selected_id = supervisor_id
 
-            # Check sort options
-            if sort == "alpha":
+            if supervisor_id == "-1":
+                tasks = Library.sort_alphabetically(Library.search("*"))
+             # Check sort options
+            elif sort == "alpha":
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
-            if sort == "alpha-rev":
+            elif sort == "alpha-rev":
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id), reverse=True)
             elif sort == "chrono":
                 tasks = Library.sort_chronologically(Library.get_tasks(supervisor_id))
