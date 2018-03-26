@@ -146,14 +146,11 @@ class CreateTaskForm(FlaskForm):
 
 
 class UserAssignmentForm(FlaskForm):
-    assigned_users = SelectField('Select user', choices=[])
-    # add_task = FieldList(SubmitField('Assign Task'))
-    add_task = SubmitField('Assign Task')
-    show_history = SubmitField('View Assigned Tasks')
-    # assign = FieldList(SubmitField('Assign'))
-    assign = SubmitField('Assign')
-    # remove = FieldList(SubmitField('Remove'))
-    remove = SubmitField('Remove')
+    assigned_users = SelectField('Select user...', choices=[])
+    assign_task_button = SubmitField('Assign Task')
+    view_assigned_tasks_button = SubmitField('View Assigned Tasks')
+    assign_button = SubmitField('Assign')
+    remove_button = SubmitField('Remove')
 
     @staticmethod
     def process_data(data):
