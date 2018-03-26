@@ -27,9 +27,9 @@
                             {% endfor %}
                         {% endif %}
                         {% if form.show_history.data %}
-                            {% for request in requests %}
+                            {% for task in tasks %}
                                 <br>
-                                {{ request.taskID }}
+                                {{ task.title }}
                                 {{form.remove (class='btn btn-secondary btn-sm')}}
                                 <br>
                             {% endfor %}

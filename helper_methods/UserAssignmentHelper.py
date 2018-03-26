@@ -21,9 +21,13 @@ def get_assignable_tasks(supervisorID):
 
 def get_tasks_assigned(userID,supervisorID):
     requests = None
+    tasks = []
     if userID is not None:
         requests = Request.query.filter_by(userID=userID, supervisorID=supervisorID).all()
-    return requests
+    for request in requests:
+        task = Task.query.filter_by(taskID=request.taskID).first()
+        tasks.append(task)
+    return tasks
 
 
 def assign_task(userID=None,taskID=None,supervisorID=None):
