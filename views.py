@@ -319,10 +319,10 @@ def user_assignment():
             if form.assign_button.data:
                 print('Calling assign_task')
                 UserAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
-                return
+                return render_template("user_assignment.html", form=form)
             if form.remove_button.data:
                 UserAssignmentHelper.delete_request()
-                return
+                return render_template("user_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
         tasks = UserAssignmentHelper.get_tasks_assigned(users, current_user.supervisorID) # how to find which one?
     return render_template("user_assignment.html", form=form)
