@@ -331,6 +331,7 @@ def task_assignment():
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
+@app.route('/edit_task/', methods=['POST'])
 @login_required
 def create_task():
     """
