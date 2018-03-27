@@ -54,7 +54,7 @@ def assign_task(userID=None, taskID=None, supervisorID=None):
 def delete_request(userID, taskID):
     print('Deleting Request')
     requests = Request.query.filter_by(userID=userID).first()
-        for request in requests:
+    for request in requests:
         print('Supervisor ID ='.format(request.supervisorID))
         print('User ID ='.format(request.userID))
         print('Task ID ='.format(request.taskID))
