@@ -30,7 +30,7 @@ def get_tasks_assigned(userID,supervisorID):
     return tasks
 
 
-def assign_task(userID=None,taskID=None,supervisorID=None):
+def assign_task(userID=None, taskID=None, supervisorID=None):
     print('Making Request: ')
     request = Request()
     request.isApproved = True
@@ -53,14 +53,13 @@ def assign_task(userID=None,taskID=None,supervisorID=None):
 
 def delete_request(userID, taskID):
     print('Deleting Request')
-    request = Request()
-    request = Request.query.filter_by(userID=userID, taskID=taskID).first()
-    print('Supervisor ID ='.format(request.supervisorID))
-    print('User ID ='.format(request.userID))
-    print('Task ID ='.format(request.taskID))
-    try:
-        db.session.delete(request)
-        db.session.commit()
-    except Exception:
-        db.session.commit()
-    return request
+    requests = Request.query.filter_by(userID=userID, taskID=taskID).all()
+    for request in requests:
+        print('Supervisor ID ='.format(request.supervisorID))
+        print('User ID ='.format(request.userID))
+        print('Task ID ='.format(request.taskID))
+        try:
+            db.session.delete(request)
+            db.session.commit()
+        except Exception:
+            db.session.commit()

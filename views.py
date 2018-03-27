@@ -325,6 +325,7 @@ def user_assignment():
                 print('Calling delete request')
                 UserAssignmentHelper.delete_request(task.taskID, user.userID,)
                 print('Delete request called')
+
     # if form.show_history.data:
         # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
     # if form.assign.data:
