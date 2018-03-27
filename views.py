@@ -1,8 +1,8 @@
 from flask import render_template, request, jsonify, redirect
 
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
-    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
-from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api
+    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, TaskAssignmentForm
+from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, TaskAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest
@@ -278,14 +278,14 @@ def library(arguments=None):
 # user assignment
 @app.route('/user_assignment/', methods=["GET", "POST"])
 @login_required
-def user_assignment():
+def task_assignment():
     """
     Authors: Dylan Kramer, Aaraon Klinikowski, David Schaeffer
     """
     # tasks = []
     # assign = []
     # requests = []
-    form = UserAssignmentForm(request.form)
+    form = TaskAssignmentForm(request.form)
     # print(current_user)
     # print(current_user.role)
     # print(current_user.email)
@@ -305,33 +305,33 @@ def user_assignment():
     user_choices.append(('all_users', 'All Users'))
     form.assigned_users.choices = user_choices
     if form.assign_task_button.data:
-        tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-        return render_template("user_assignment.html", form=form, tasks=tasks)
+        tasks = TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+        return render_template("task_assignment.html", form=form, tasks=tasks)
     if form.view_assigned_tasks_button.data:
-        tasks = UserAssignmentHelper.get_tasks_assigned(form.assigned_users.data, current_user.supervisorID)
-        return render_template("user_assignment.html", form=form, tasks=tasks)
+        tasks = TaskAssignmentHelper.get_tasks_assigned(form.assigned_users.data, current_user.supervisorID)
+        return render_template("task_assignment.html", form=form, tasks=tasks)
     for user in users:
-        tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+        tasks = TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
         # print('Tasks before "for task in tasks": {}'.format(tasks))
         for task in tasks:
             # print(task)
             # print(form.assign_button.data)
             if form.assign_button.data:
                 print('Calling assign_task')
-                UserAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
-                return render_template("user_assignment.html", form=form)
+                TaskAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
+                return render_template("task_assignment.html", form=form)
             if form.remove_button.data:
                 print('Calling delete request')
-                UserAssignmentHelper.delete_request(user.userID, task.taskID)
-                return render_template("user_assignment.html", form=form)
+                TaskAssignmentHelper.delete_request(user.userID, task.taskID)
+                return render_template("task_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
-        tasks = UserAssignmentHelper.get_tasks_assigned(users, current_user.supervisorID) # how to find which one?
-    return render_template("user_assignment.html", form=form)
+        tasks = TaskAssignmentHelper.get_tasks_assigned(users, current_user.supervisorID) # how to find which one?
+    return render_template("task_assignment.html", form=form)
     
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def create_task():
     """
     Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
@@ -348,22 +348,10 @@ def create_task():
         """Add new main step."""
         form.main_steps.append_entry()
         return render_template('create_task.html', form=form)
-    if form.save_as_draft.data:
+    if form.save.data:
         """Save task as draft."""
         TaskHelper.create_task(form)
-        return render_template('create_task.html', form=form)
-    if form.publish.data:
-        """Save task as published."""
-        TaskHelper.create_task(form)
-        return render_template('index.html')
-    if form.toggle_enabled.data:
-        """Toggles task enabled or not."""
-        TaskHelper.toggle_enabled(form)
-        return render_template('create_task.html', form=form)
-    if form.toggle_activation.data:
-        """Toggles task published or not."""
-        TaskHelper.toggle_published(form)
-        return render_template('create_task.html', form=form)
+        return render_template('edit_task.html', form=form)
     for i, main_step in enumerate(form.main_steps):
         # Handling of main step deletion as well as detailed steps
         # addition and deletion which reside inside main steps
@@ -371,37 +359,12 @@ def create_task():
             """User removes a main step."""
             form.main_steps.entries.pop(i)
             return render_template('create_task.html', form=form)
-        # if main_step.main_step_up.data and len(form.main_steps) > 1 and i > 0:
-        #     """User moves a main step up.
-        #     We do nothing if there is only a single main step or they are
-        #     attempting to move the first step up."""
-        #     new_order = form.main_steps.entries
-        #     step_to_move = new_order.pop(i)
-        #     new_order.insert(i-1, step_to_move)
-        #     form.main_steps = new_order
-        #     return render_template('create_task_draft.html', form=form)
-        # if main_step.main_step_down.data and len(form.main_steps) > 1 \
-        #         and i < len(form.main_steps)-1:
-        #     """User moves a main step down.
-        #     We do nothing if there is only a single main step or they are
-        #     attempting to move the last step down."""
-        #     new_order = form.main_steps.entries
-        #     step_to_move = new_order.pop(i)
-        #     if i+1 == len(form.main_steps):
-        #         new_order.append(step_to_move)
-        #     else:
-        #         new_order.insert(i+1, step_to_move)
-        #     form.main_steps = new_order
-        #     return render_template('create_task_draft.html', form=form)
-        # Handling of detailed step addition, deletion, and moving
         if main_step.add_detailed_step.data:
             """User adds detailed step to a main step."""
             main_step.detailed_steps.append_entry()
             return render_template('create_task.html', form=form)
         for j, detailed_step in enumerate(main_step.detailed_steps):
             if detailed_step.detailed_step_removal.data:
-                """User removes a detailed step from a main step.
-                We don't care if they remove every detailed step."""
                 main_step.detailed_steps.entries.pop(j)
                 return render_template('create_task.html', form=form)
     return render_template('create_task.html', form=form)

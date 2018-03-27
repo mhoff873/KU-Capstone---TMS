@@ -121,6 +121,7 @@ class MainStep(FlaskForm):
     def process_data(data):
         return data
 
+
 class CreateTaskForm(FlaskForm):
     """
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
@@ -128,24 +129,18 @@ class CreateTaskForm(FlaskForm):
     title = StringField('Task Name:', validators=[DataRequired()])
     description = StringField('Description:')
     image = FileField('Upload image for Task:')
-
     main_steps = FieldList(FormField(MainStep), min_entries=0)
     add_main_step = SubmitField('+ Main Step')
-    # Displays in library only for self AND disabled
-    save_as_draft = SubmitField('Save to Library as Draft')
-    # Displays in library for everyone AND enables it for user assignment
-    publish = SubmitField('Save to Library and Publish')
-    # enable/disable button for user assignment
-    toggle_enabled = SubmitField('Enable/Disable Task')
-    # "Archive" button to re-hide it from everyone
-    toggle_activation = SubmitField('Activate/Deactivate Task')
+    save = SubmitField('Save')
+    activation = BooleanField('Activate task for personal use?', default=False)
+    publish = BooleanField('Publish task for use by everyone?', default=False)
 
     @staticmethod
     def process_data(data):
         return data
 
 
-class UserAssignmentForm(FlaskForm):
+class TaskAssignmentForm(FlaskForm):
     assigned_users = SelectField('Select user...', choices=[])
     assign_task_button = SubmitField('Assign Task')
     view_assigned_tasks_button = SubmitField('View Assigned Tasks')
