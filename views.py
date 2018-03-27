@@ -311,9 +311,9 @@ def user_assignment():
         tasks = UserAssignmentHelper.get_tasks_assigned(form.assigned_users.data, current_user.supervisorID)
         return render_template("user_assignment.html", form=form, tasks=tasks)
     for user in users:
-        tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+        tasks, requests = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
         # print('Tasks before "for task in tasks": {}'.format(tasks))
-        for task in tasks:
+        for i, task in enumerate(tasks):
             # print(task)
             # print(form.assign_button.data)
             if form.assign_button.data:
@@ -322,7 +322,7 @@ def user_assignment():
                 return render_template("user_assignment.html", form=form)
             if form.remove_button.data:
                 print('Calling delete request')
-                UserAssignmentHelper.delete_request(user.userID, task.taskID)
+                UserAssignmentHelper.delete_request(requests[i].requestID)
                 return render_template("user_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
         tasks = UserAssignmentHelper.get_tasks_assigned(users, current_user.supervisorID) # how to find which one?
