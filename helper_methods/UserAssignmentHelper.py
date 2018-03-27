@@ -10,6 +10,11 @@ from database import db
 
 
 def get_assignable_tasks(supervisorID=None):
+    """
+    Determines what tasks are available to assign by supervisor
+    :param supervisorID: int to identify supervisor in DB table
+    :return: list of assignable tasks
+    """
     tasks = []
     # if supervisorID is None:
     #     tasks = Task.query.filter_by(supervisorID=supervisorID, enabled=True).all()
@@ -23,19 +28,31 @@ def get_assignable_tasks(supervisorID=None):
     # return tasks
 
 
-def get_tasks_assigned(userID=None):
+def get_tasks_assigned(user_id=None):
+    """
+    Determines what tasks are assigned to given user
+    :param user_id: int to identify user in DB table
+    :return: list of tasks already assigned
+    """
     requests = None
-    if userID is not None:
-        requests = Request.query.filter_by(userID)
+    if user_id is not None:
+        requests = Request.query.filter_by(user_id)
     return requests
 
 
-def assign_task(userID=None,taskID=None,supervisorID=None):
+def assign_task(userID=None, taskID=None, supervisorID=None):
+    """
+    # TODO function unused?
+    :param userID: int to identify user in DB table
+    :param taskID: int to identify task in DB table
+    :param supervisorID: int to identify supervisor in DB table
+    :return: request: entry in request table
+    """
     request = Request()
     request.isApproved = True
-    #request.taskID = task.taskID
-    #request.supervisorID = supervisor.supervisorID
-    #request.userID = user.userID
+    # request.taskID = task.taskID
+    # request.supervisorID = supervisor.supervisorID
+    # request.userID = user.userID
     try:
         db.session.add(request)
         db.session.commit()
@@ -45,6 +62,11 @@ def assign_task(userID=None,taskID=None,supervisorID=None):
 
 
 def delete_request(request=None):
+    """
+    # TODO function unused?
+    :param request: request object to be deleted
+    :return: request: deleted object?
+    """
     try:
         db.session.delete(request)
         db.session.commit()

@@ -276,20 +276,28 @@ def library(arguments=None):
             tasks = Library.sort_alphabetically(Library.get_tasks(current_user.supervisorID))
     return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors, selectedID=selected_id)
 
-# user assignment
+
 @app.route('/user_assignment/', methods=["GET", "POST"])
 @login_required
 def user_assignment():
+
+    """
+    Handles logic and rendering of user_assignment page
+    :return: rendered user_assignment page
+    """
+    # Variable Initiations
     form = UserAssignmentForm()
     #"""
     users = []
     tasks = []
     assign = False
+
     # not sure if this line works below
     if current_user.role == "supervisor":
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
         users = User.query.all()
+
     # on add_task button press, show list of tasks
     if form.add_task.data:
         # if current_user == Supervisor:
@@ -298,15 +306,16 @@ def user_assignment():
         # else:
         tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
         return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
-    #if form.show_history.data:
+    # if form.show_history.data:
         # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
-    #if form.assign.data:
+    # if form.assign.data:
         # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
-    #"""
+    # """
+    # End add_task
+
     return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
     
 
-# create task
 @app.route('/create_task/', methods=['GET', 'POST'])
 @login_required
 def create_task():
@@ -315,6 +324,8 @@ def create_task():
     Called when a supervisor wishes to create a new task from scratch.
     :return: the rendered task creation page
     """
+
+    # Handles a GET request for first access of the page
     if request.method == 'GET':
         form = CreateTaskForm()
         return render_template('create_task.html', form=form)
@@ -325,22 +336,27 @@ def create_task():
         """Add new main step."""
         form.main_steps.append_entry()
         return render_template('create_task.html', form=form)
+
     if form.save_as_draft.data:
         """Save task as draft."""
         TaskHelper.create_task(form)
         return render_template('create_task.html', form=form)
+
     if form.publish.data:
         """Save task as published."""
         TaskHelper.create_task(form)
         return render_template('index.html')
+
     if form.toggle_enabled.data:
         """Toggles task enabled or not."""
         TaskHelper.toggle_enabled(form)
         return render_template('create_task.html', form=form)
+
     if form.toggle_activation.data:
         """Toggles task published or not."""
         TaskHelper.toggle_published(form)
         return render_template('create_task.html', form=form)
+
     for i, main_step in enumerate(form.main_steps):
         # Handling of main step deletion as well as detailed steps
         # addition and deletion which reside inside main steps
@@ -375,12 +391,15 @@ def create_task():
             """User adds detailed step to a main step."""
             main_step.detailed_steps.append_entry()
             return render_template('create_task.html', form=form)
+
         for j, detailed_step in enumerate(main_step.detailed_steps):
             if detailed_step.detailed_step_removal.data:
                 """User removes a detailed step from a main step.
                 We don't care if they remove every detailed step."""
                 main_step.detailed_steps.entries.pop(j)
                 return render_template('create_task.html', form=form)
+
+    # Default POST rendering
     return render_template('create_task.html', form=form)
 
 
