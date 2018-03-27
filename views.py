@@ -321,7 +321,7 @@ def user_assignment():
                 UserAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
                 return render_template("user_assignment.html", form=form)
             if form.remove_button.data:
-                UserAssignmentHelper.delete_request()
+                UserAssignmentHelper.delete_request(user.userID, task.taskID)
                 return render_template("user_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
         tasks = UserAssignmentHelper.get_tasks_assigned(users, current_user.supervisorID) # how to find which one?
