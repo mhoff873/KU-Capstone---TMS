@@ -331,7 +331,7 @@ def task_assignment():
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def create_task():
     """
     Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
