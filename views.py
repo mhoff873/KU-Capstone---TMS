@@ -321,7 +321,7 @@ def user_assignment():
                 print('Calling assign_task')
                 UserAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
                 print('Assign_task called.')
-            if form .remove.data:
+            if form.remove.data:
                 UserAssignmentHelper.delete_request()
     # if form.show_history.data:
         # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
