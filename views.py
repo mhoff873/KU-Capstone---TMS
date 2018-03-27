@@ -329,7 +329,7 @@ def user_assignment():
     # # if form.assign.data:
     #     # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
     # # """
-    return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
+    return render_template("user_assignment.html", form=form)
     
 
 # create task
