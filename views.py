@@ -310,29 +310,22 @@ def user_assignment():
     if form.view_assigned_tasks_button.data:
         tasks = UserAssignmentHelper.get_tasks_assigned(form.assigned_users.data, current_user.supervisorID)
         return render_template("user_assignment.html", form=form, tasks=tasks)
-    #     # i = 0
-    # # for show_histories in form.show_history:
-    #     if form.show_history.data:
-    #
-    #     # i += 1
-    # # j = 0
-    # # for user in users:
-    #     tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-    #     print('Tasks before "for task in tasks": {}'.format(tasks))
-    #     for task in tasks:
-    #         print(task)
-    #         print(form.assign.data)
-    #         if form.assign.data:
-    #             print('Calling assign_task')
-    #             UserAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
-    #             print('Assign_task called.')
-    #         if form .remove.data:
-    #             UserAssignmentHelper.delete_request()
-    # # if form.show_history.data:
-    #     # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
-    # # if form.assign.data:
-    #     # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
-    # # """
+    for user in users:
+        tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+        print('Tasks before "for task in tasks": {}'.format(tasks))
+        for task in tasks:
+            print(task)
+            print(form.assign.data)
+            if form.assign.data:
+                print('Calling assign_task')
+                UserAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
+                print('Assign_task called.')
+            if form .remove.data:
+                UserAssignmentHelper.delete_request()
+    if form.view_assigned_tasks_button.data:
+        tasks = UserAssignmentHelper.get_tasks_assigned(users, current_user.supervisorID) # how to find which one?
+    if form.assign_button.data:
+        UserAssignmentHelper.assign_task(form.assigned_users.data, task, current_user.supervisorID) # need to find user, task, and super
     return render_template("user_assignment.html", form=form)
     
 
