@@ -302,7 +302,7 @@ def user_assignment():
     # such as, say, the user was entered for testing purposes,
     # the concatenation of their first name and last name will crash the app.
     print([(user.userID, user.fname + ' ' + user.lname) for user in users])
-    form.assigned_users.choices = [(user.userID, user.fname + ' ' + user.lname) for user in users]
+    form.assigned_users.choices = [(user.userID, user.fname + ' ' + user.lname) for user in users].append(('all_users', 'All Users'))
     if form.assign_task_button.data:
         tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
         return render_template("user_assignment.html", form=form, tasks=tasks)
