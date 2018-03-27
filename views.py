@@ -301,7 +301,7 @@ def user_assignment():
     # WARNING: If the user doesn't have a first name and a last name in the DB,
     # such as, say, the user was entered for testing purposes,
     # the concatenation of their first name and last name will crash the app.
-    print([(user.userID, user.fname + ' ' + user.lname) for user in users]).append(('all_users', 'All Users'))
+    print([(user.userID, user.fname + ' ' + user.lname) for user in users].append(('all_users', 'All Users')))
     form.assigned_users.choices = [(user.userID, user.fname + ' ' + user.lname) for user in users].append(('all_users', 'All Users'))
     if form.assign_task_button.data:
         tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
