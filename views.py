@@ -286,10 +286,10 @@ def user_assignment():
     # assign = []
     # requests = []
     form = UserAssignmentForm(request.form)
-    print(current_user)
-    print(current_user.role)
-    print(current_user.email)
-    print(current_user.role == 'supervisor')
+    # print(current_user)
+    # print(current_user.role)
+    # print(current_user.email)
+    # print(current_user.role == 'supervisor')
     if current_user.role == "supervisor":
         print('About to query users for supervisor.')
         users = UserMgmt.get_supervisor_users(current_user.email)
@@ -312,15 +312,16 @@ def user_assignment():
         return render_template("user_assignment.html", form=form, tasks=tasks)
     for user in users:
         tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-        print('Tasks before "for task in tasks": {}'.format(tasks))
+        # print('Tasks before "for task in tasks": {}'.format(tasks))
         for task in tasks:
-            print(task)
-            print(form.assign_button.data)
+            # print(task)
+            # print(form.assign_button.data)
             if form.assign_button.data:
                 print('Calling assign_task')
                 UserAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
                 return render_template("user_assignment.html", form=form)
             if form.remove_button.data:
+                print('Calling delete request')
                 UserAssignmentHelper.delete_request(user.userID, task.taskID)
                 return render_template("user_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
