@@ -164,7 +164,9 @@ def supervisor_account():
     if eUser.validate_on_submit():
         UserMgmt.edit_supervisor(eUser, current_user)
         return dashboard()
-    return render_template('supervisor_account.html',EditUser=eUser)
+    aUser = AddUser()
+    assUser = AssignUser()
+    return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
 
 
 # login page
@@ -208,7 +210,10 @@ def create_supervisor():
     form = CreateSupervisor()
     if form.validate_on_submit():
         UserMgmt.create_supervisor(form)
-        return dashboard()
+        eUser = EditUser()
+        aUser = AddUser()
+        assUser = AssignUser()
+        return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
     return render_template("createSupervisorTest.html", form=form)
 
 
