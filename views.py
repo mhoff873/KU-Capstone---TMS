@@ -331,13 +331,52 @@ def task_assignment():
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
-@app.route('/edit_task/', methods=['POST'])
 @login_required
 def create_task():
     """
     Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
     Called when a supervisor wishes to create a new task from scratch.
     :return: the rendered task creation page
+    """
+    if request.method == 'GET':
+        form = CreateTaskForm()
+        return render_template('create_task.html', form=form)
+    # Below code runs on POST requests.
+    form = CreateTaskForm(request.form)
+
+    if form.add_main_step.data:
+        """Add new main step."""
+        form.main_steps.append_entry()
+        return render_template('create_task.html', form=form)
+    if form.save.data:
+        """Save task as draft."""
+        TaskHelper.create_task(form)
+        return render_template('edit_task.html', form=form)
+    for i, main_step in enumerate(form.main_steps):
+        # Handling of main step deletion as well as detailed steps
+        # addition and deletion which reside inside main steps
+        if main_step.main_step_removal.data:
+            """User removes a main step."""
+            form.main_steps.entries.pop(i)
+            return render_template('create_task.html', form=form)
+        if main_step.add_detailed_step.data:
+            """User adds detailed step to a main step."""
+            main_step.detailed_steps.append_entry()
+            return render_template('create_task.html', form=form)
+        for j, detailed_step in enumerate(main_step.detailed_steps):
+            if detailed_step.detailed_step_removal.data:
+                main_step.detailed_steps.entries.pop(j)
+                return render_template('create_task.html', form=form)
+    return render_template('create_task.html', form=form)
+
+
+@app.route('/edit_task/', methods=['GET', 'POST'])
+@login_required
+def edit_task():
+    """
+    Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
+    Called when a supervisor wishes to edit an existing task.
+    :return: the rendered task editing page
     """
     if request.method == 'GET':
         form = CreateTaskForm()
