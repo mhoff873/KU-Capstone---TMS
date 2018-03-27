@@ -35,7 +35,11 @@ def create_task(form):
     except Exception:
         db.session.commit()
     for i, main_step in enumerate(form.main_steps.entries):
-        new_main_step = MainStep(main_step.title.data)
+        existing_main_step = MainStep.query.filter_by(title=main_step.title.data).first()
+        if existing_main_step is not None:
+            new_main_step = existing_main_step
+        else:
+            new_main_step = MainStep(main_step.title.data)
         new_main_step.taskID = new_task.taskID
         new_main_step.stepText = main_step.stepText.data
         new_main_step.listOrder = i+1
@@ -46,7 +50,11 @@ def create_task(form):
         except Exception:
             db.session.commit()
         for j, detailed_step in enumerate(main_step.detailed_steps.entries):
-            new_detailed_step = DetailedStep(detailed_step.title.data)
+            existing_detailed_step = DetailedStep.query.filter_by(title=detailed_step.title.data).first()
+            if existing_detailed_step is not None:
+                new_detailed_step = existing_detailed_step
+            else:
+                new_detailed_step = DetailedStep(detailed_step.title.data)
             new_detailed_step.mainStepID = new_main_step.taskID
             new_detailed_step.stepText = detailed_step.stepText.data
             new_detailed_step.listOrder = i+1
