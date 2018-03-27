@@ -18,10 +18,9 @@
   <!-- Edit user info -->
   <form action="/user_account/{{ User }}" method="POST">
       {{ EditUser.csrf_token }}
-      <div style="display: inline-block; min-width: 13emp">
+      <br>
       {{ EditUser.password.label }}
       {{ EditUser.password (class="form-control") }}
-      </div>
       <br>
       <div style="display: inline-block; min-width: 13em">
       {{ EditUser.phone.label }}

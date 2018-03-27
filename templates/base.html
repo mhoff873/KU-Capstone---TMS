@@ -54,6 +54,8 @@
         <li class="nav-item">
           <a class="nav-link" href="/surveys">Survey Management</a>
         </li>
+
+
           <!--
         <li class="nav-item">
             <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
@@ -78,7 +80,7 @@
             
             <!-- only admins can create users and supervisors -->
             {% if current_user.role=="admin" %}
-            <a class="dropdown-item" href="#">Reports</a>
+            <a class="dropdown-item" href="{{url_for('reports')}}">Reports</a>
             <a class="dropdown-item" href="{{url_for('create_user')}}">Create User</a>
             <a class="dropdown-item" href="{{url_for('create_supervisor')}}">Create Supervisor</a>
             {% endif %}
