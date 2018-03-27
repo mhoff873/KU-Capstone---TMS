@@ -315,7 +315,7 @@ def user_assignment():
         print('Tasks before "for task in tasks": {}'.format(tasks))
         for task in tasks:
             print(task)
-            print(form.assign.data)
+            print(form.assign_button.data)
             if form.assign_button.data:
                 print('Calling assign_task')
                 UserAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
