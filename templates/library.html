@@ -17,14 +17,17 @@
                             Supervisor
                         </button>
                         <div class="dropdown-menu force-scroll">
+                            <a class="dropdown-item" href="/library/alpha:-1">
+                                ALL
+                            </a>
                             {% for supervisor in supervisors %}
                             <a class="dropdown-item" href="/library/alpha:{{ supervisor.supervisorID }}">
                                 {{ supervisor.fname }} {{ supervisor.lname }}
                             </a> {% endfor %}
                         </div>
                     </div>
-                    <!-- END Supervisor Dropdown -->
 					<br>
+                    <!-- END Supervisor Dropdown -->
                     <!-- Sort dropdown -->
                     <div class="dropdown">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
@@ -36,6 +39,12 @@
                             </a>
                             <a class="dropdown-item" href="/library/alpha-rev:{{ selectedID }}">
                                 Alphabetical (Reverse)
+                            </a>
+                            <a class="dropdown-item" href="/library/chrono:{{ selectedID }}">
+                                Chronological
+                           </a>
+                            <a class="dropdown-item" href="/library/chrono-rev:{{ selectedID }}">
+                                Chronological (Reverse)
                             </a>
                         </div>
                     </div>
@@ -51,7 +60,7 @@
                                     {{ search.search }}
                                     <!--</div>-->
                                     <!--<div class="col-sm">-->
-                                    {{ search.submit (class='btn btn-secondary btn-sm') }}
+                                    {{ search.submit }}
                                     <!--</div>-->
                                     <!---<div class="col-sm">-->
                                     <!--{{ search.submit }}-->

@@ -23,7 +23,6 @@
             if (r!=0)
                 document.getElementById(r).bgColor = "white";
         }
-        }
 
         // table sorting function
         // tbody : table body to sort
@@ -81,78 +80,56 @@
     <h1>Administration Dashboard</h1>
 </div>
 
-<div class="container">
+<div class="container" style="font-size: 1.5em;">
     <div class="page_content">
         <!-- content goes in here, below. -->
         <!--Two tables that will be populated with surveys-->
         <div class="row">
-            <div class="table-responsive col-md-6">
+            <div class="table-responsive col-md-12">
                 <h2 class="sub-header text-center">Supervisors</h2>
-                <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>User ID</th>
-                        <th>Date Assigned</th>
-                        <th>Email</th>
-                        <th>Name</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>John</td>
-                        <td>Doe</td>
-                        <td>john@example.com</td>
-                        <td>john@example.com</td>
-                      </tr>
-                      <tr>
-                        <td>Mary</td>
-                        <td>Moe</td>
-                        <td>mary@example.com</td>
-                        <td>mary@example.com</td>
-                      </tr>
-                      <tr>
-                        <td>July</td>
-                        <td>Dooley</td>
-                        <td>july@example.com</td>
-                        <td>july@example.com</td>
-                      </tr>
-                    </tbody>
-                </table>
+                      <table class="table table-hover table-bordered">
+                        <thead id='supervisor_table_header'>
+                          <tr>
+                            <th onclick='sort_table(supervisor_table, 0, asc5); asc5 *= -1; asc6 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("supervisor_id").style.display="block"; document.getElementById("supervisor_name").style.display="none"; document.getElementById("supervisor_email").style.display="none"; document.getElementById("supervisor_date").style.display="none"; document.getElementById("supervisor_id").src=(asc5==1)?"../static/img/up.png":"../static/img/down.png"' >ID<img id="supervisor_id" style="height:1em;"></span></th>
+                            <th onclick='sort_table(supervisor_table, 1, asc6); asc6 *= -1; asc5 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("supervisor_date").style.display="block"; document.getElementById("supervisor_name").style.display="none"; document.getElementById("supervisor_email").style.display="none"; document.getElementById("supervisor_id").style.display="none"; document.getElementById("supervisor_date").src=(asc6==1)?"../static/img/up.png":"../static/img/down.png"' >Created<img id="supervisor_date" style="height:1em;"></span></th>
+                            <th onclick='sort_table(supervisor_table, 2, asc7); asc7 *= -1; asc5 =1;asc6 =1;asc8 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("supervisor_email").style.display="block"; document.getElementById("supervisor_name").style.display="none"; document.getElementById("supervisor_id").style.display="none"; document.getElementById("supervisor_date").style.display="none"; document.getElementById("supervisor_email").src=(asc7==1)?"../static/img/up.png":"../static/img/down.png"' >Name<img id="supervisor_email" style="height:1em;"></span></th>
+                            <th onclick='sort_table(supervisor_table, 3, asc8); asc8 *= -1; asc5 =1;asc6 =1;asc7 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("supervisor_name").style.display="block"; document.getElementById("supervisor_email").style.display="none"; document.getElementById("supervisor_id").style.display="none";document.getElementById("supervisor_date").style.display="none"; document.getElementById("supervisorname").src=(asc8==1)?"../static/img/up.png":"../static/img/down.png"' >Email <img id="supervisor_name" style="height:1em;"></span></th>
+                          </tr>
+                        </thead>
+                        <tbody id='supervisor_table'>
+                        {% for s in supervisor_list %} 
+                          <tr id='supervisor_{{s.supervisorID}}' >
+                            <td onclick='last_row=(row==0)?"supervisor_{{s.supervisorID}}":row; row="supervisor_{{s.supervisorID}}"; select_row(row,last_row);'>{{s.supervisorID}}</td>
+                            <td onclick='last_row=(row==0)?"supervisor_{{s.supervisorID}}":row; row="supervisor_{{s.supervisorID}}"; select_row(row,last_row);'>{{s.dateCreated}}</td>
+                            <td onclick='last_row=(row==0)?"supervisor_{{s.supervisorID}}":row; row="supervisor_{{s.supervisorID}}"; select_row(row,last_row);'>{{s.fname}} {{s.lname}}</td>
+                            <td onclick='last_row=(row==0)?"supervisor_{{s.supervisorID}}":row; row="supervisor_{{s.supervisorID}}"; select_row(row,last_row);'>{{s.email}}</td>
+                          </tr> 
+                        {% endfor %}
+                        </tbody>
+                    </table>
             </div>
-            <div class="table-responsive col-md-6">
+            <div class="table-responsive col-md-12">
                 <h2 class="sub-header text-center">Users</h2>
-                <table class="table table-hover">
-                    <thead>
-                        <!--need to put a create button here -->
-                      <tr>
-                        <th>Task ID</th>
-                        <th>Date Assigned</th>
-                        <th>Description</th>
-                        <th>Progress</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>John</td>
-                        <td>Doe</td>
-                        <td>john@example.com</td>
-                        <td>john@example.com</td>
-                      </tr>
-                      <tr>
-                        <td>Mary</td>
-                        <td>Moe</td>
-                        <td>mary@example.com</td>
-                        <td>john@example.com</td>
-                      </tr>
-                      <tr>
-                        <td>July</td>
-                        <td>Dooley</td>
-                        <td>july@example.com</td>
-                        <td>john@example.com</td>
-                      </tr>
-
-                    </tbody>
-                </table>
+                      <table class="table table-hover table-bordered">
+                        <thead id='user_table_header'>
+                          <tr>
+                            <th onclick='sort_table(user_table, 0, asc1); asc1 *= -1; asc2 =1;asc3 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_id").style.display="block"; document.getElementById("user_name").style.display="none"; document.getElementById("user_email").style.display="none"; document.getElementById("user_date").style.display="none"; document.getElementById("user_id").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"' >ID <img id="user_id" style="height:1em;"></span></th>
+                            <th onclick='sort_table(user_table, 1, asc2); asc2 *= -1; asc1 =1;asc3 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_date").style.display="block"; document.getElementById("user_name").style.display="none"; document.getElementById("user_email").style.display="none"; document.getElementById("user_id").style.display="none"; document.getElementById("user_date").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"' >Created<img id="user_date" style="height:1em;"></span></th>
+                            <th onclick='sort_table(user_table, 2, asc3); asc3 *= -1; asc1 =1;asc2 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_email").style.display="block"; document.getElementById("user_name").style.display="none"; document.getElementById("user_id").style.display="none"; document.getElementById("user_date").style.display="none"; document.getElementById("user_email").src=(asc3==1)?"../static/img/up.png":"../static/img/down.png"' >Name<img id="user_email" style="height:1em;"></span></th>
+                            <th onclick='sort_table(user_table, 3, asc4); asc4 *= -1; asc1 =1;asc2 =1;asc3 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_name").style.display="block"; document.getElementById("user_email").style.display="none"; document.getElementById("user_id").style.display="none";document.getElementById("user_date").style.display="none"; document.getElementById("user_name").src=(asc4==1)?"../static/img/up.png":"../static/img/down.png"' >Email<img id="user_name" style="height:1em;"></span></th>
+                          </tr>
+                        </thead>
+                        <tbody id='user_table'>
+                        {% for u in user_list %} 
+                          <tr id='user_{{u.userID}}' >
+                            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.userID}}</td>
+                            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.dateCreated}}</td>
+                            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.fname}} {{u.lname}}</td>
+                            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);'>{{u.email}}</td>
+                          </tr> 
+                        {% endfor %}
+                        </tbody>
+                    </table>
             </div>
         </div>
 

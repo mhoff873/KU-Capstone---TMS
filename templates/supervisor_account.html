@@ -50,8 +50,8 @@
       <br>
 	  <!--birthday field-->
       <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.birthday.label }}
-      {{ EditUser.birthday (class="form-control")}}
+      {{ EditUser.birthday.label (label="test")}}
+	  {{ EditUser.birthday (class="form-control")}}
       </div>
       <br>
 	  <!-- affiliation field-->
@@ -93,3 +93,4 @@
 </div><!-- /.container -->
 
 {% endblock content %}
+
