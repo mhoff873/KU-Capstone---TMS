@@ -7,6 +7,7 @@ Created 3/9/2018
 from flask_login import current_user
 from Forms.models import User, Supervisor, Request, Task
 from database import db
+from datetime import datetime
 
 
 def get_assignable_tasks(supervisorID):
@@ -41,6 +42,8 @@ def assign_task(userID=None, taskID=None, supervisorID=None):
     print('Supervisor ID =', supervisorID)
     request.userID = userID
     print('User ID =', userID)
+    request.dateRequested = datetime.utcnow()
+    print('Date Assigned = '.format(request.dateRequested))
     try:
         db.session.add(request)
         db.session.commit()
