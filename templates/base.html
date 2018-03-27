@@ -41,7 +41,7 @@
             <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/user_assignment">User Assignment</a>
+            <a class="nav-link" href="{{url_for('user_assignment')}}">User Assignment</a>
           </li>
         {% endif %}
         
@@ -52,7 +52,7 @@
           <a class="nav-link" href="/user_assignment">User Assignment</a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link" href="/surveys">Survey Management</a>
+          <a class="nav-link" href="{{url_for('surveys')}}">Survey Management</a>
         </li>
           <!--
         <li class="nav-item">
@@ -84,7 +84,7 @@
             {% endif %}
             
             <!-- everybody may log out but only a few will return -->
-            <a class="dropdown-item" href="/logout">Logout</a>
+            <a class="dropdown-item" href="{{url_for('logout')}}">Logout</a>
             
 
           </div>
