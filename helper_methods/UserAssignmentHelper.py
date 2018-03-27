@@ -52,7 +52,8 @@ def assign_task(userID=None,taskID=None,supervisorID=None):
 
 
 def delete_request(userID, taskID):
-    request = Request.query.filter_by(taskID=taskID,userID=userID).last()
+    print('Deleting Request')
+    request = Request.query.filter_by(taskID=taskID,userID=userID).first()
     try:
         db.session.delete(request)
         db.session.commit()
