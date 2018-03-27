@@ -12,8 +12,8 @@
                 <form method="POST">
                     {{ form.csrf_token() }}
                     {{ form.assigned_users }}
-                    {{ form.add_task (class='btn btn-secondary btn-sm') }}
-                    {{ form.show_history (class='btn btn-secondary btn-sm') }}
+                    {{ form.assign_task_button (class='btn btn-secondary btn-sm') }}
+                    {{ form.view_assigned_tasks_button (class='btn btn-secondary btn-sm') }}
                     <br>
 
 {#                        {% if form.add_task.data %}#}
