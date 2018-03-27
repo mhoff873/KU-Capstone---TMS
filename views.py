@@ -298,7 +298,7 @@ def user_assignment():
         print('Querying ALL users')
         users = User.query.all()
         print('Done querying ALL users')
-    print([(user.userID, user.fname + user.lname) for user in users])
+    print([(user.userID, str(user.fname) + str(user.lname)) for user in users])
     form.assigned_users.process_data([(user.userID, user.fname + user.lname) for user in users])
     if form.assign_task_button.data:
         tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
