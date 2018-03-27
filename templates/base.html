@@ -41,7 +41,7 @@
             <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/user_assignment">User Assignment</a>
+            <a class="nav-link" href="{{url_for('user_assignment')}}">User Assignment</a>
           </li>
         {% endif %}
         
@@ -74,11 +74,11 @@
             <!-- only supervisors have an account page -->
             {% if current_user.role=="supervisor" %}
             <a class="dropdown-item" href="{{url_for('supervisor_account')}}">Account</a>
+            <a class="dropdown-item" href="{{url_for('reports')}}">Reports</a>
             {% endif %}
             
             <!-- only admins can create users and supervisors -->
             {% if current_user.role=="admin" %}
-            <a class="dropdown-item" href="#">Reports</a>
             <a class="dropdown-item" href="{{url_for('create_user')}}">Create User</a>
             <a class="dropdown-item" href="{{url_for('create_supervisor')}}">Create Supervisor</a>
             {% endif %}

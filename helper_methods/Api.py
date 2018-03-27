@@ -297,6 +297,21 @@ def getIdFromEmail(uname):
         return None
     return int(userid['userID'])
 
+def getNameFromID(userID):
+    """
+    Description: get the first and last name given userID
+    Parameters: userID - (int) id of the user
+    Return Value: (string) first and last name of the user
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the first and last name given the userid
+    cur.execute('SELECT fname, lname FROM users WHERE userID=%d' % (int(userID),))
+    data = cur.fetchone()
+    if not data:
+        return None
+    return str(data['fname'] + ' ' + data['lname'])
+    
 def postSurveyResults(SR,SQR):
     """
     Description: store the results of the survey
