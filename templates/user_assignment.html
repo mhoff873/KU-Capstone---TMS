@@ -11,7 +11,7 @@
                 <!-- -->
                 <form method="POST">
                     {{ form.csrf_token() }}
-                    {{ form.assigned_users }}
+                    {{ form.assigned_users }}<br>
                     {{ form.assign_task_button (class='btn btn-secondary btn-sm') }}
                     {{ form.view_assigned_tasks_button (class='btn btn-secondary btn-sm') }}
                     <br>
