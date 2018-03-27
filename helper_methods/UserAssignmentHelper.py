@@ -48,7 +48,7 @@ def assign_task(userID=None,taskID=None,supervisorID=None):
     except Exception:
         db.session.commit()
         print('jk there was and error')
-    return request
+    return
 
 
 def delete_request(request=None):
