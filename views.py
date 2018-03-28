@@ -309,12 +309,12 @@ def task_assignment():
         return render_template("task_assignment.html", form=form)
     if form.assign_button.data:
         if form.assigned_users.data == 'all_users':
-            pass
+            return TaskAssignmentHelper.assign_to_all_users(current_user.supervisorID, form.tasks.data)
         TaskAssignmentHelper.assign_task(form.assigned_users.data, form.tasks.data, current_user.supervisorID)
         return render_template("task_assignment.html", form=form)
     if form.remove_button.data:
         if form.assigned_users.data == 'all_users':
-            pass
+            return TaskAssignmentHelper.remove_from_all_users(current_user.supervisorID, form.tasks.data)
         TaskAssignmentHelper.delete_request(form.assigned_users.data, form.tasks.data)
         return render_template("task_assignment.html", form=form)
     return render_template("task_assignment.html", form=form)
