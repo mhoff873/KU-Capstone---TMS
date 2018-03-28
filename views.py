@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, redirect
+from flask import render_template, request, jsonify, redirect, flash
 
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, TaskAssignmentForm
@@ -344,14 +344,15 @@ def create_task():
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
 
+    if form.save.data:
+        """Save task."""
+        TaskHelper.create_task(form)
+        flash('Your task was successfully created!')
+        return render_template('edit_task.html', form=form)
     if form.add_main_step.data:
         """Add new main step."""
         form.main_steps.append_entry()
         return render_template('create_task.html', form=form)
-    if form.save.data:
-        """Save task as draft."""
-        TaskHelper.create_task(form)
-        return render_template('edit_task.html', form=form)
     for i, main_step in enumerate(form.main_steps):
         # Handling of main step deletion as well as detailed steps
         # addition and deletion which reside inside main steps
