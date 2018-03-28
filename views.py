@@ -362,9 +362,9 @@ def create_task():
     return render_template('create_task.html', form=form)
 
 
-@app.route('/edit_task/<int:task_id>/', methods=['GET', 'POST'])
+@app.route('/edit_task/<int:task_id>/', defaults={'task_id': None}, methods=['GET', 'POST'])
 @login_required
-def edit_task(task_id=None):
+def edit_task(task_id):
     """
     Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
     Called when a supervisor wishes to edit an existing task.
