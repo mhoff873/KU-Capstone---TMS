@@ -33,7 +33,8 @@ def create_task(form):
     try:  # try/excepts to catch IntegrityErrors, if it exists, we update.
         db.session.add(new_task)
         db.session.commit()
-    except Exception:
+    except Exception as e:
+        print(e)
         db.session.commit()
     for i, main_step in enumerate(form.main_steps.entries):
         existing_main_step = MainStep.query.filter_by(title=main_step.title.data).first()
@@ -48,7 +49,8 @@ def create_task(form):
         try:
             db.session.add(new_main_step)
             db.session.commit()
-        except Exception:
+        except Exception as e:
+            print(e)
             db.session.commit()
         for j, detailed_step in enumerate(main_step.detailed_steps.entries):
             existing_detailed_step = DetailedStep.query.filter_by(title=detailed_step.title.data).first()
@@ -63,7 +65,8 @@ def create_task(form):
             try:
                 db.session.add(new_detailed_step)
                 db.session.commit()
-            except Exception:
+            except Exception as e:
+                print(e)
                 db.session.commit()
     return new_task
 
