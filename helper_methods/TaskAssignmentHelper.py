@@ -32,37 +32,22 @@ def get_tasks_assigned(userID,supervisorID):
 
 
 def assign_task(userID=None, taskID=None, supervisorID=None):
-    print('Making Request: ')
     request = Request()
     request.isApproved = True
-    print('Is Approved')
     request.taskID = taskID
-    print('Task ID ={}'.format(taskID))
     request.supervisorID = supervisorID
-    print('Supervisor ID =', supervisorID)
     request.userID = userID
-    print('User ID =', userID)
     request.dateRequested = datetime.utcnow()
-    print('Date Assigned = '.format(request.dateRequested))
-    try:
-        db.session.add(request)
-        db.session.commit()
-        print('Request Stored to DB successfully')
-    except Exception:
-        db.session.commit()
-        print('jk there was and error')
-    return request
+    db.session.add(request)
+    db.session.commit()
+    print('Request Stored to DB successfully')
 
 
 def delete_request(userID, taskID):
     print('Deleting Request')
-    requests = Request.query.filter_by(userID=userID).all()
-    for request in requests:
-        print('Supervisor ID ='.format(request.supervisorID))
-        print('User ID ='.format(request.userID))
-        print('Task ID ='.format(request.taskID))
-        try:
-            db.session.delete(request)
-            db.session.commit()
-        except Exception:
-            db.session.commit()
+    request = Request.query.filter_by(userID=userID, taskID=taskID).first()
+    print('Supervisor ID ='.format(request.supervisorID))
+    print('User ID ='.format(request.userID))
+    print('Task ID ='.format(request.taskID))
+    db.session.delete(request)
+    db.session.commit()
