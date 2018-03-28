@@ -3,6 +3,7 @@ Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
 """
 from flask_login import current_user
 
+from Forms.forms import CreateTaskForm
 from Forms.models import Task, MainStep, DetailedStep, Supervisor, Admin
 from database import db
 
@@ -65,3 +66,15 @@ def create_task(form):
             except Exception:
                 db.session.commit()
     return new_task
+
+
+def get_task(task_id: int):
+    """
+    Author: David Schaeffer, April 2018 <dscha959@live.kutztown.edu>
+    :param task_id: ID of task we will be displaying
+    :return: A completed task form to be edited by user
+    """
+    task = Task.query.filter_by(taskID=task_id).first()
+    form = CreateTaskForm(task)
+    print(form)
+    return form

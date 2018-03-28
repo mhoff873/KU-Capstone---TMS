@@ -280,16 +280,10 @@ def library(arguments=None):
 @login_required
 def task_assignment():
     """
-    Authors: Dylan Kramer, Aaraon Klinikowski, David Schaeffer
+    Authors: David Schaeffer, Dylan Kramer, Aaron Klinikowski
     """
-    # tasks = []
-    # assign = []
-    # requests = []
     form = TaskAssignmentForm(request.form)
-    # print(current_user)
-    # print(current_user.role)
-    # print(current_user.email)
-    # print(current_user.role == 'supervisor')
+
     if current_user.role == "supervisor":
         print('About to query users for supervisor.')
         users = UserMgmt.get_supervisor_users(current_user.email)
@@ -312,10 +306,7 @@ def task_assignment():
         return render_template("task_assignment.html", form=form, tasks=tasks)
     for user in users:
         tasks = TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-        # print('Tasks before "for task in tasks": {}'.format(tasks))
         for task in tasks:
-            # print(task)
-            # print(form.assign_button.data)
             if form.assign_button.data:
                 print('Calling assign_task')
                 TaskAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
@@ -371,14 +362,18 @@ def create_task():
     return render_template('create_task.html', form=form)
 
 
-@app.route('/edit_task/', methods=['GET', 'POST'])
+@app.route('/get_task/', methods=['GET', 'POST'])
 @login_required
-def edit_task():
+def edit_task(task_id=None):
     """
     Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
     Called when a supervisor wishes to edit an existing task.
     :return: the rendered task editing page
     """
+    task_id = 654730  # TODO: THIS LINE MUST BE REMOVED BEFORE PUSHING TO PROD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if task_id is not None:
+        form = TaskHelper.get_task(task_id)
+        return render_template('edit_task.html', form=form)
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
 
