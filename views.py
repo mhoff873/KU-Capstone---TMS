@@ -286,13 +286,9 @@ def task_assignment():
     form = TaskAssignmentForm(request.form)
 
     if current_user.role == "supervisor":
-        print('About to query users for supervisor.')
         users = UserMgmt.get_supervisor_users(current_user.email)
-        print('Done querying users for supervisor.')
     else:
-        print('Querying ALL users')
         users = User.query.all()
-        print('Done querying ALL users')
     # WARNING: If the user doesn't have a first name and a last name in the DB,
     # such as, say, the user was entered for testing purposes,
     # the concatenation of their first name and last name will crash the app.
@@ -304,13 +300,12 @@ def task_assignment():
         form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
-        print(form.assigned_users.data)
         if form.assigned_users.data == 'all_users':
             # Do nothing, because there's no real way to display a list of
             # tasks that happen to assigned to every single one of the users
             # under the supervisor without making a ton of calls.
             pass
-        task_choices = [(task.taskID, task.title) for task in TaskAssignmentHelper.get_tasks_assigned(form.assigned_users.data, current_user.supervisorID)]
+        task_choices = [(task.taskID, task.title) for task in TaskAssignmentHelper.get_tasks_assigned_to_user(form.assigned_users.data, current_user.supervisorID)]
         form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
     if form.assign_button.data:

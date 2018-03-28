@@ -15,35 +15,7 @@ def get_assignable_tasks(supervisorID):
     return tasks
 
 
-# def get_assignable_tasks():
-    # tasks = Task.query.filter_by(enabled=True).all()
-    # return tasks
-
-def assign_to_all_users(supervisor_id, task_id):
-    """
-    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
-    :param supervisor_id: self-explanatory
-    :param task_id: self-explanatory
-    :return: None
-    """
-    users = User.query.filter_by(supervisorID=supervisor_id).all()
-    for user in users:
-        assign_task(user.userID, task_id, supervisor_id)
-
-
-def remove_from_all_users(supervisor_id, task_id):
-    """
-    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
-    :param supervisor_id: self-explanatory
-    :param task_id: self-explanatory
-    :return: None
-    """
-    users = User.query.filter_by(supervisorID=supervisor_id).all()
-    for user in users:
-        delete_request(user.userID, task_id)
-
-
-def get_tasks_assigned(userID,supervisorID):
+def get_tasks_assigned_to_user(userID, supervisorID):
     requests = None
     tasks = []
     if userID is not None:
@@ -54,8 +26,10 @@ def get_tasks_assigned(userID,supervisorID):
     return tasks
 
 
-def assign_task(userID=None, taskID=None, supervisorID=None):
+def assign_task(userID, taskID, supervisorID):
+    print('Assigning task to user.')
     existing_request = Request.query.filter_by(userID=userID, supervisorID=supervisorID, taskID=taskID)
+    print('Request exists? ', existing_request)
     if existing_request is not None:
         # No more assigning duplicate tasks! BAD!
         return
@@ -73,8 +47,31 @@ def assign_task(userID=None, taskID=None, supervisorID=None):
 def delete_request(userID, taskID):
     print('Deleting Request')
     request = Request.query.filter_by(userID=userID, taskID=taskID).first()
-    print('Supervisor ID ='.format(request.supervisorID))
-    print('User ID ='.format(request.userID))
-    print('Task ID ='.format(request.taskID))
     db.session.delete(request)
     db.session.commit()
+
+
+def assign_to_all_users(supervisor_id, task_id):
+    """
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    :param supervisor_id: self-explanatory
+    :param task_id: self-explanatory
+    :return: None
+    """
+    print('Assigning to all users.')
+    users = User.query.filter_by(supervisorID=supervisor_id).all()
+    for user in users:
+        assign_task(user.userID, task_id, supervisor_id)
+
+
+def remove_from_all_users(supervisor_id, task_id):
+    """
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    :param supervisor_id: self-explanatory
+    :param task_id: self-explanatory
+    :return: None
+    """
+    print('Removing from all users.')
+    users = User.query.filter_by(supervisorID=supervisor_id).all()
+    for user in users:
+        delete_request(user.userID, task_id)
