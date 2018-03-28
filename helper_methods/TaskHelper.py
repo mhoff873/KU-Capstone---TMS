@@ -76,5 +76,11 @@ def get_task(task_id: int):
     """
     task = Task.query.filter_by(taskID=task_id).first()
     form = CreateTaskForm(obj=task)
+    main_steps = MainStep.query.filter_by(taskID=task_id).all()
+    for i, main_step in enumerate(main_steps):
+        form.main_steps.append_entry(main_step)
+        detailed_steps = DetailedStep.query.filter_by(mainStepID=main_step.mainStepID).all()
+        for detailed_step in detailed_steps:
+            form.main_steps[i].detailed_steps.append_entry(detailed_step)
     print(form.data)
     return form
