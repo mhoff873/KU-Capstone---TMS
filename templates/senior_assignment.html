@@ -10,15 +10,20 @@
             <div class= "text-center">
                 <form method="POST">
 
-                    <!-- -->
-
+                    <!--
+                    {{ request.url }}
+                    {{ request.path }}
+                    -->
+                    {% if errors is not none %}
+                        {{ errors }}
+                    {% endif %}
     				<div class="container">
     					<div class="row">
     						<div class="col-sm">
     					        <!-- Supervisor Dropdown -->
         						<div class="dropdown">
         							<button type="button" class="btn btn-secondary btn-lg btn-block dropdown-toggle" data-toggle="dropdown">
-                                        {% if superID is not none %}
+                                        {% if superID is not none and superID != -1 %}
                                             {% for supervisor in supervisors if supervisor.supervisorID == superID %}
                                                 {{ supervisor.fname }} {{ supervisor.lname }}
                                             {% endfor %}
@@ -53,10 +58,16 @@
         									<form class="#">
         										<input type="search" class="form-control" id="#" placeholder="Search" autofocus="autofocus">
         									</form>
-                                            {% for user in users %}
-                                                <a class="dropdown-item" href="{{url_for('senior_assignment')}}{{superID}}:{{user.userID}}">
-                                                    {{ user.fname }} {{ user.lname }}
-                                                </a>
+                                            {% for user in users if user.userID != userID %}
+                                                {% if superID is none %}
+                                                    <a class="dropdown-item" href="{{url_for('senior_assignment')}}-1:{{user.userID}}">
+                                                        {{ user.fname }} {{ user.lname }}
+                                                    </a>
+                                                {% else %}
+                                                    <a class="dropdown-item" href="{{url_for('senior_assignment')}}{{superID}}:{{user.userID}}">
+                                                        {{ user.fname }} {{ user.lname }}
+                                                    </a>
+                                                {% endif %}
                                             {% endfor %}
         							</div>
         						</div>

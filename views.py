@@ -337,8 +337,11 @@ def senior_assignment(arguments=None):
 
     if arguments is not None:
         superID, userID = [int(x) for x in arguments.split(':')]
-        return render_template("senior_assignment.html", supervisors=supervisors, superID=superID, users=users)
-    return render_template("senior_assignment.html", supervisors=supervisors, superID=None, users=users)
+        errors = None
+        if superID != -1 and userID != -1:
+            errors = UserMgmt.assign_user(superID, userID)
+        return render_template("senior_assignment.html", supervisors=supervisors, superID=superID, userID=userID, users=users, errors=errors)
+    return render_template("senior_assignment.html", supervisors=supervisors, superID=None, userID=-1, users=users, errors=None)
 
 
 

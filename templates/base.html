@@ -27,11 +27,11 @@
     <a class="navbar-brand" href="#">TMS</a>
     <div class="collapse navbar-collapse" id="navbarToggler">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      
+
         <li class="nav-item active">
           <a class="nav-link" href="{{url_for('dashboard')}}">Dashboard <span class="sr-only">(current)</span></a>
         </li>
-        
+
         <!-- only a supervisor can visit the library -->
         {% if current_user.role=="supervisor" %}
           <li class="nav-item">
@@ -43,17 +43,17 @@
           <li class="nav-item">
             <a class="nav-link" href="/user_assignment">User Assignment</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('senior_assignment') }}">Senior Assignment</a>
-          </li>
         {% endif %}
-        
+
         <!-- only an admin can assign users, manage surveys, and create tasks -->
         {% if current_user.role=="admin" %}
           <!--
           <li class="nav-item">
           <a class="nav-link" href="/user_assignment">User Assignment</a>
         </li> -->
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('senior_assignment') }}">Senior Assignment</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="/surveys">Survey Management</a>
         </li>
@@ -65,7 +65,7 @@
           <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
         </li>-->
         {% endif %}
-        
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{current_user.username if current_user.role=="admin" else current_user.email}}</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -73,22 +73,22 @@
               Notificatitons
               <span class="badge badge-pill bg-light align-text-bottom">79</span>
             </a> -->
-            
+
             <!-- only supervisors have an account page -->
             {% if current_user.role=="supervisor" %}
             <a class="dropdown-item" href="{{url_for('supervisor_account')}}">Account</a>
             {% endif %}
-            
+
             <!-- only admins can create users and supervisors -->
             {% if current_user.role=="admin" %}
             <a class="dropdown-item" href="#">Reports</a>
             <a class="dropdown-item" href="{{url_for('create_user')}}">Create User</a>
             <a class="dropdown-item" href="{{url_for('create_supervisor')}}">Create Supervisor</a>
             {% endif %}
-            
+
             <!-- everybody may log out but only a few will return -->
             <a class="dropdown-item" href="/logout">Logout</a>
-            
+
 
           </div>
         </li>
