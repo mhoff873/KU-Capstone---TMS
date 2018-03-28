@@ -134,6 +134,7 @@ class CreateTaskForm(FlaskForm):
     save = SubmitField('Save')
     activation = BooleanField('Activate task for personal use?', default=False)
     publish = BooleanField('Publish task for use by everyone?', default=False)
+    keywords = StringField('Keywords:')
 
     @staticmethod
     def process_data(data):
