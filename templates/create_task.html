@@ -37,7 +37,7 @@
                     {{ form.description.label }}
                 </div>
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.description (class="form-control") }}
+                    {{ form.description (class="form-control", style="height: 100px, width:100%") }}
                 </div>
 
                 <br>
@@ -53,13 +53,13 @@
                 <hr>
 
                 <!-- Main Steps -->
-                <div style="display: inline-block">
+                <div style="display: inline-block; min-width: 90%">
                 {% for main_step in form.main_steps %}
                     {{ main_step.title.label }}{{ main_step.title (class="form-control") }}
                     <br>
                     {{ main_step.requiredItem.label }}{{ main_step.requiredItem }}
                     <br>
-                    {{ main_step.stepText.label }}{{ main_step.stepText }}
+                    {{ main_step.stepText.label }}{{ main_step.stepText(style="height: 100px; width:100%") }}
                     <br>
                     {{ main_step.audio.label }}{{ main_step.audio }}
                     <br>
@@ -73,7 +73,7 @@
                         {% for detailed_step in main_step.detailed_steps %}
                             {{ detailed_step.title.label }}{{ detailed_step.title }}
                             <br>
-                            {{ detailed_step.stepText.label }}{{ detailed_step.stepText }}
+                            {{ detailed_step.stepText.label }}{{ detailed_step.stepText(style="height: 100px; width:100%") }}
                             <br>
                             {{ detailed_step.image.label }}{{ detailed_step.image }}
                             <br>
@@ -93,6 +93,8 @@
                 {{ form.activation }}&nbsp;{{ form.activation.label }}
                 <br>
                 {{ form.publish }}&nbsp;{{ form.publish.label }}
+                <br>
+                {{ form.keywords.label }} {{ form.keywords(style="height: 100px; width:100%") }}
                 <br>
                 {{ form.save (class='btn btn-secondary btn-md') }}&nbsp;
             </form>
