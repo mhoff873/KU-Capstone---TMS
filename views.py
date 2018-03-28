@@ -2,7 +2,7 @@
 # Flask request routing to map URLs to code
 # Author: Patrick Earl, Tyler Lance, <devs add names here>
 # Created: 03/04/2018
-# Updated: 03/23/2017
+# Updated: 03/27/2017
 # Purpose: these @app.route map URLs called in the browser to code. each of these
 #          routes pulls data from the url (get) or the form (post) and calls the
 #          corresponding function in the Api.py file. then gets the results from
@@ -11,7 +11,6 @@
 # ************************************************************/
 
 from flask import render_template, request, jsonify, redirect, json
-
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
@@ -20,6 +19,7 @@ from database import *
 from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest
 from datetime import datetime, timedelta
+from flask_weasyprint import HTML, render_pdf
 
 @app.route('/', methods=['GET'])
 def index():
@@ -225,6 +225,7 @@ def reports(arguments=None):
     Author: Tyler Lance
     """
     # Chose which supervisor the report is being generated for
+    #supervisorID = current_user.supervisorID
     supervisorID = current_user.supervisorID
     # pull the list of assigned users to the supervisor
     users =  Api.getAssignedUsers(supervisorID)
@@ -269,8 +270,79 @@ def reports(arguments=None):
             lstTask.append(dictTask)
     # sort the list by date so that the newest entries appear first
     lstTask = sorted(lstTask,key=lambda k: k['dateTimeCompleted'], reverse=True)
-    return render_template('reports.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy)
+    return render_template('reports.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy,  arguments=arguments)
 
+@app.route('/pdf', methods=['GET'])
+@app.route('/pdf/<arguments>', methods=['GET'])
+@login_required
+def pdf(arguments=None):
+    """
+    Description: Generates a report for all users assigned to the supervisor or for a specifed user
+    Parameters: none
+    Return Value: 
+    Author: Patrick Earl
+    """
+    # Get the supervisor ID
+    supervisorID = current_user.supervisorID
+    # pull the list of assigned users to the supervisor
+    users =  Api.getAssignedUsers(supervisorID)
+    # default date for the data if no date is passed
+    date = "2000-01-01"
+    # what the data is sorted by
+    sortedBy = "Showing all entries by date"
+    # pull userIDs from the user data
+    lstUserIDs = [li['userID'] for li in users]
+    # check if arguments were passed to the url
+    if arguments is not None:
+        sort = arguments.split(':')[0]
+        data = arguments.split(':')[1]
+        # check if userID was passed via url and that it wasnt all
+        if sort == 'userid' and data != 'A':
+            # empties the list of userids and adds in the passed one
+            lstUserIDs = []
+            lstUserIDs.append(int(data))
+            sortedBy = "Showing entries for user: " + Api.getNameFromID(int(data))
+        # check if date specified was passed to url
+        elif sort == 'date':
+            if data == 'M':
+                date = str((datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
+                sortedBy = "Showing entries for the last 30 days"
+            elif data == 'W':
+                date = str((datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
+                sortedBy = "Showing entries for the last 7 days"
+            elif data == 'D':
+                date = str((datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d'))
+                sortedBy = "Showing entries for the last day"
+    # get completed tasks by passing the list and date
+    tasks = Api.getCompletedTasksByUsers(date, lstUserIDs)
+    lstTask = []
+    # create list containing dictionaries for each table row
+    for li in tasks:
+        for li2 in li["completedTasks"]:
+            dictTask = {}
+            dictTask["userID"]=Api.getNameFromID(li["userID"])
+            dictTask["title"]=li2["title"]
+            dictTask["totalTime"]=li2["totalTime"]
+            dictTask["dateTimeCompleted"]=li2["dateTimeCompleted"]
+            lstTask.append(dictTask)
+    # sort the list by date so that the newest entries appear first
+    lstTask = sorted(lstTask,key=lambda k: k['dateTimeCompleted'], reverse=True)
+
+    html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy)
+    return render_pdf(HTML(string=html))
+   
+
+@app.route('/email', methods=['GET'])
+def email(arguments=None):
+    """
+    Description: 
+    Parameters: none
+    Return Value: 
+    Author: 
+    """
+    pass
+
+    
 # supervisor account
 @app.route('/supervisor_account', methods=['GET', "POST"])
 @login_required

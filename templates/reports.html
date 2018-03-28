@@ -25,15 +25,19 @@
   <div class="row">
     <div class="col-sm-4">
 	<!-- second row left button -->
-		<button type="button" class="btn btn-secondary">Graph</button>
+		<a href="#" role="button" class="btn btn-secondary btn-lg btn-block">Graph</a>
     </div>
     <div class="col-sm-4">
 	<!-- second row middle button -->
-		<button type="button" class="btn btn-secondary">Email</button>
+		<a href="{{url_for('email')}}" role="button" class="btn btn-secondary btn-lg btn-block">Email</a>
     </div>
 	<div class="col-sm-4">
-	<!-- second row right button -->
-		<button type="button" class="btn btn-secondary">Print</button>
+  <!-- second row right button -->
+  {% if arguments is none %}
+    <a href="{{url_for('pdf')}}" role="button" class="btn btn-secondary btn-lg btn-block">PDF</a>
+  {% else %}
+    <a href="{{url_for('pdf') + "/" + arguments}}" role="button" class="btn btn-secondary btn-lg btn-block">PDF</a>
+  {% endif %}
     </div>
   </div>
   </div>
@@ -43,7 +47,7 @@
 <!-- text to be populated by querying database "......"-->
 <div class = "container">
 	<div class = "text-center">
-	<h3>User Overview for: {{current_user.fname + " " + current_user.lname}}</h3>
+	<h3>Supervisor Overview for: {{current_user.fname + " " + current_user.lname}}</h3>
 	<h4>{{ constraint }}</h4>
 	</div>
 </div>
@@ -51,19 +55,18 @@
 
 <!-- dropdown to be populated with senior names from database-->
 <div class = "container">
- <div class="row">
-
+ <div class="row text-center">
   <div class="col-sm-3">
 	  <div class="dropdown">
 	    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
 	      Senior Names
 	    </button>
             <div class="dropdown-menu force-scroll">
-              <a class="dropdown-item" href="/reports/userid:A">
+              <a class="dropdown-item" href="{{url_for('reports') + '/userid:A'}}">
 		   All
 	        </a>
 	      {% for i in user %}
-              <a class="dropdown-item" href="/reports/userid:{{ i["userID"] }}">
+              <a class="dropdown-item" href="{{url_for('reports') + '/userid:' + i['userID']|string}}">
 		   {{ i["fname"] }} {{ i["lname"] }}
 	      </a>
 	      {% endfor %}
@@ -78,10 +81,10 @@
           Constraints
       </button>
     <div class="dropdown-menu force-scroll">
-      <a class="dropdown-item" href="/reports/date:A">All</a>
-      <a class="dropdown-item" href="/reports/date:M">Monthly</a>
-      <a class="dropdown-item" href="/reports/date:W">Weekly</a>
-      <a class="dropdown-item" href="/reports/date:D">Daily</a>
+      <a class="dropdown-item" href="{{url_for('reports') + '/date:A'}}">All</a>
+      <a class="dropdown-item" href="{{url_for('reports') + '/date:M'}}">Monthly</a>
+      <a class="dropdown-item" href="{{url_for('reports') + '/date:W'}}">Weekly</a>
+      <a class="dropdown-item" href="{{url_for('reports') + '/date:A'}}">Daily</a>
     </div>
       
     </div>
