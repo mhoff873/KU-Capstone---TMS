@@ -362,7 +362,7 @@ def create_task():
     return render_template('create_task.html', form=form)
 
 
-@app.route('/get_task/', methods=['GET', 'POST'])
+@app.route('/edit_task/', methods=['GET', 'POST'])
 @login_required
 def edit_task(task_id=None):
     """
