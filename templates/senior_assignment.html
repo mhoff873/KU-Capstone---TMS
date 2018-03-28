@@ -18,15 +18,23 @@
 					<!-- Supervisor Dropdown -->
 						<div class="dropdown">
 							<button type="button" class="btn btn-secondary btn-lg btn-block dropdown-toggle" data-toggle="dropdown">
-								Supervisor
+                                {% if superID is not none %}
+                                    {% for supervisor in supervisors if supervisor.supervisorID == superID %}
+                                        {{ supervisor.fname }} {{ supervisor.lname }}
+                                    {% endfor %}
+                                {% else %}
+    								Supervisor
+                                {% endif %}
 							</button>
 							<div class="dropdown-menu col-sm-12 force-scroll">
 							        <form class="#">
 										<input type="search" class="form-control" id="#" placeholder="Search" autofocus="autofocus">
 									</form>
-								<a class="dropdown-item" href="#"></a>
-								<a class="dropdown-item" href="#"></a>
-
+                                    {% for supervisor in supervisors %}
+                                    <a class="dropdown-item" href="{{url_for('senior_assignment')}}{{supervisor.supervisorID}}">
+                                            {{ supervisor.fname }} {{ supervisor.lname }}
+                                        </a>
+                                    {% endfor %}
 							</div>
 						</div>
 
