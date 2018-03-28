@@ -275,6 +275,7 @@ def library(arguments=None):
             tasks = Library.sort_alphabetically(Library.get_tasks(current_user.supervisorID))
     return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors, selectedID=selected_id)
 
+
 # user assignment
 @app.route('/user_assignment/', methods=["GET", "POST"])
 @login_required

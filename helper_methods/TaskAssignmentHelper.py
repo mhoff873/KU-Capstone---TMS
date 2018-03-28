@@ -28,7 +28,7 @@ def get_tasks_assigned_to_user(userID, supervisorID):
 
 def assign_task(userID, taskID, supervisorID):
     print('Assigning task to user.')
-    existing_request = Request.query.filter_by(userID=userID, supervisorID=supervisorID, taskID=taskID)
+    existing_request = Request.query.filter_by(userID=userID, supervisorID=supervisorID, taskID=taskID).first()
     print('Request exists? ', existing_request)
     if existing_request is not None:
         # No more assigning duplicate tasks! BAD!
