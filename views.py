@@ -280,7 +280,8 @@ def library(arguments=None):
 @login_required
 def task_assignment():
     """
-    Authors: David Schaeffer, Dylan Kramer, Aaron Klinikowski
+    Authors: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>,
+             Dylan Kramer, Aaron Klinikowski
     """
     form = TaskAssignmentForm(request.form)
 
@@ -307,9 +308,13 @@ def task_assignment():
         form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
     if form.assign_button.data:
+        if form.assigned_users.data == 'all_users':
+            pass
         TaskAssignmentHelper.assign_task(form.assigned_users.data, form.tasks.data, current_user.supervisorID)
         return render_template("task_assignment.html", form=form)
     if form.remove_button.data:
+        if form.assigned_users.data == 'all_users':
+            pass
         TaskAssignmentHelper.delete_request(form.assigned_users.data, form.tasks.data)
         return render_template("task_assignment.html", form=form)
     return render_template("task_assignment.html", form=form)

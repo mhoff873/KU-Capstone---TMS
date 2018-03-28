@@ -19,6 +19,29 @@ def get_assignable_tasks(supervisorID):
     # tasks = Task.query.filter_by(enabled=True).all()
     # return tasks
 
+def assign_to_all_users(supervisor_id, task_id):
+    """
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    :param supervisor_id: self-explanatory
+    :param task_id: self-explanatory
+    :return: None
+    """
+    users = User.query.filter_by(supervisorID=supervisor_id).all()
+    for user in users:
+        assign_task(user.userID, task_id, supervisor_id)
+
+
+def remove_from_all_users(supervisor_id, task_id):
+    """
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    :param supervisor_id: self-explanatory
+    :param task_id: self-explanatory
+    :return: None
+    """
+    users = User.query.filter_by(supervisorID=supervisor_id).all()
+    for user in users:
+        delete_request(user.userID, task_id)
+
 
 def get_tasks_assigned(userID,supervisorID):
     requests = None

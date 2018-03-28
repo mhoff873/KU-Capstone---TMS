@@ -141,6 +141,9 @@ class CreateTaskForm(FlaskForm):
 
 
 class TaskAssignmentForm(FlaskForm):
+    """
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    """
     assigned_users = SelectField('Select user...', choices=[])
     assign_task_button = SubmitField('Assign Task')
     view_assigned_tasks_button = SubmitField('View Assigned Tasks')
