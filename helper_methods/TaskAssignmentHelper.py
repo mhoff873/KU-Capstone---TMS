@@ -55,6 +55,10 @@ def get_tasks_assigned(userID,supervisorID):
 
 
 def assign_task(userID=None, taskID=None, supervisorID=None):
+    existing_request = Request.query.filter_by(userID=userID, supervisorID=supervisorID, taskID=taskID)
+    if existing_request is not None:
+        # No more assigning duplicate tasks! BAD!
+        return
     request = Request()
     request.isApproved = True
     request.taskID = taskID
