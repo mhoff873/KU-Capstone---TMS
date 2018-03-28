@@ -71,6 +71,10 @@ def create_task(form):
                 db.session.commit()
     keywords = form.keywords.data.split(',')
     print('Keywords: ', keywords)
+    for keyword in keywords:
+        new_keyword = Keyword(keyword, new_task.taskID)
+        db.session.add(new_keyword)
+    db.session.commit()
     return new_task
 
 
@@ -88,5 +92,10 @@ def get_task(task_id: int):
         detailed_steps = DetailedStep.query.filter_by(mainStepID=main_step.mainStepID).all()
         for detailed_step in detailed_steps:
             form.main_steps[i].detailed_steps.append_entry(detailed_step)
+    keywords_for_task = Keyword.query.filter_by(taskID=task_id).all()
+    keywords_string = ''
+    for word in keywords_for_task:
+        keywords_string += word.word + ', '
+    form.keywords.process_data(keywords_string)
     print(form.data)
     return form

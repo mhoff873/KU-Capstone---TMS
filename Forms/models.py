@@ -192,6 +192,10 @@ class Keyword(db.Model):
     taskID = Column('taskID', Integer)
     word = Column(String(255))
 
+    def __init__(self, task_id, word):
+        self.taskID = task_id
+        self.word = word
+
 
 class SurveyForm(db.Model):
 	__tablename__ = 'surveyForm'
