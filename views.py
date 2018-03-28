@@ -304,6 +304,11 @@ def task_assignment():
         form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
+        if form.assigned_users.data == 'all_users':
+            # Do nothing, because there's no real way to display a list of
+            # tasks that happen to assigned to every single one of the users
+            # under the supervisor without making a ton of calls.
+            pass
         task_choices = [(task.taskID, task.title) for task in TaskAssignmentHelper.get_tasks_assigned(form.assigned_users.data, current_user.supervisorID)]
         form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
