@@ -306,7 +306,10 @@ def task_assignment():
         task_choices = [(task.taskID, task.title) for task in TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)]
         form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
-
+    if form.assign_button.data:
+        print(form.assigned_users.data)
+        print(form.tasks.data)
+        # TaskAssignmentHelper.assign_task(form.assigned_users.data, form.tasks.data)
     return render_template("task_assignment.html", form=form)
     
 

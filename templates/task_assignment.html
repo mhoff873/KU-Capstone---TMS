@@ -24,9 +24,10 @@
                     {{ form.assign_task_button (class='btn btn-secondary btn-sm') }}
                     {{ form.view_assigned_tasks_button (class='btn btn-secondary btn-sm') }}
                     <br>
+                    <br>
+                    <br>
                     {% if form.assign_task_button.data %}
                         {{ form.tasks }}&nbsp;{{ form.assign_button(class='btn btn-secondary btn-sm') }}
-
                     {% endif %}
                     {% if form.view_assigned_tasks_button.data %}
                         {{ form.tasks }}&nbsp;{{ form.remove_button(class='btn btn-secondary btn-sm') }}
