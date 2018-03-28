@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="jumbotron text-center">
-        <h1>Task Editor</h1>
+        <h1>User Assignment</h1>
     </div>
 
     <div class="container">
@@ -11,6 +11,64 @@
                 <form method="POST">
 
                 <!-- -->
+
+				<div class="container">
+					<div class="row">
+						<div class="col-sm">
+					<!-- Supervisor Dropdown -->
+						<div class="dropdown">
+							<button type="button" class="btn btn-secondary btn-lg btn-block dropdown-toggle" data-toggle="dropdown">
+								Supervisor
+							</button>
+							<div class="dropdown-menu col-sm-12 force-scroll">
+							        <form class="#">
+										<input type="search" class="form-control" id="#" placeholder="Search" autofocus="autofocus">
+									</form>
+								<a class="dropdown-item" href="#"></a>
+								<a class="dropdown-item" href="#"></a>
+
+							</div>
+						</div>
+
+							
+						</div>
+						
+						<div class="col-sm-2"></div>
+						
+						<div class="col-sm">
+						<!-- Supervisor Dropdown -->
+						<div class="dropdown">
+							<button type="button" class="btn btn-secondary btn-lg btn-block dropdown-toggle" data-toggle="dropdown">
+								Assign Seniors
+							</button>
+							<div class="dropdown-menu col-sm-12 force-scroll">
+									<form class="#">
+										<input type="search" class="form-control" id="#" placeholder="Search" autofocus="autofocus">
+									</form>
+								<a class="dropdown-item" href="#"></a>
+								<a class="dropdown-item" href="#"></a>
+
+							</div>
+						</div>
+						</div>
+					</div>
+				</div>
+				
+				
+				
+				
+				
+				
+                <!-- -->
+                </form>
+            </div>
+
+        </div>
+    </div><!-- /.container -->
+{% endblock content %}
+
+
+<!--
                 {% for user in users %}
                     <p> {{ user.fname }} {{ user.lname }} </p>
                     {{form.add_task (class='btn btn-secondary btn-sm')}}
@@ -21,10 +79,5 @@
                         <br>
                     {% endfor %}
                 {% endfor %}
-                <!-- -->
-                </form>
-            </div>
-
-        </div>
-    </div><!-- /.container -->
-{% endblock content %}
+-->	
+			
