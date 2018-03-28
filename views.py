@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, redirect, flash
+from flask import render_template, request, jsonify, redirect, flash, url_for
 
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, TaskAssignmentForm
@@ -339,7 +339,7 @@ def create_task():
         """Save task."""
         new_task = TaskHelper.create_task(form)
         flash('Your task was successfully saved!', 'info')
-        return render_template('edit_task.html', form=form, task_id=new_task.taskID)
+        return redirect(url_for('edit_task', task_id=new_task.taskID))
     if form.add_main_step.data:
         """Add new main step."""
         form.main_steps.append_entry()
