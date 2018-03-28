@@ -75,6 +75,6 @@ def get_task(task_id: int):
     :return: A completed task form to be edited by user
     """
     task = Task.query.filter_by(taskID=task_id).first()
-    form = CreateTaskForm(task)
-    print(form)
+    form = CreateTaskForm(obj=task)
+    print(form.data)
     return form
