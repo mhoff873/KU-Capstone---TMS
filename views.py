@@ -299,25 +299,12 @@ def task_assignment():
     user_choices.append(('all_users', 'All Users'))
     form.assigned_users.choices = user_choices
     if form.assign_task_button.data:
-        tasks = TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-        return render_template("task_assignment.html", form=form, tasks=tasks)
+        form.tasks.choices = TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+        return render_template("task_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
-        tasks = TaskAssignmentHelper.get_tasks_assigned(form.assigned_users.data, current_user.supervisorID)
-        return render_template("task_assignment.html", form=form, tasks=tasks)
-    for user in users:
-        tasks = TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-        for task in tasks:
-            print('Task ID: {} - Task Name: {}'.format(task.taskID, task.title))
-            if form.assign_button.data:
-                print('Calling assign_task')
-                TaskAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
-                return render_template("task_assignment.html", form=form)
-            if form.remove_button.data:
-                print('Calling delete request')
-                TaskAssignmentHelper.delete_request(user.userID, task.taskID)
-                return render_template("task_assignment.html", form=form)
-    if form.view_assigned_tasks_button.data:
-        tasks = TaskAssignmentHelper.get_tasks_assigned(users, current_user.supervisorID) # how to find which one?
+        form.tasks.choices = TaskAssignmentHelper.get_tasks_assigned(form.assigned_users.data, current_user.supervisorID)
+        return render_template("task_assignment.html", form=form)
+    
     return render_template("task_assignment.html", form=form)
     
 

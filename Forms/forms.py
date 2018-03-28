@@ -144,6 +144,7 @@ class TaskAssignmentForm(FlaskForm):
     assigned_users = SelectField('Select user...', choices=[])
     assign_task_button = SubmitField('Assign Task')
     view_assigned_tasks_button = SubmitField('View Assigned Tasks')
+    tasks = SelectField('Select task...', choices=[])
     assign_button = SubmitField('Assign')
     remove_button = SubmitField('Remove')
 
