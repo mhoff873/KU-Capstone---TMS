@@ -362,17 +362,17 @@ def create_task():
     return render_template('create_task.html', form=form)
 
 
-@app.route('/edit_task/', methods=['GET', 'POST'])
-@app.route('/edit_task/<int:task_id>/', defaults={'task_id': None}, methods=['GET', 'POST'])
+@app.route('/edit_task', methods=['GET', 'POST'])
+@app.route('/edit_task/<int:task_id>/', methods=['GET', 'POST'])
 @login_required
-def edit_task(task_id):
+def edit_task(task_id=None):
     """
     Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
     Called when a supervisor wishes to edit an existing task.
     :return: the rendered task editing page
     """
-    print('TASK ID: ', task_id)
     if task_id is not None:
+        print('TASK ID: ', task_id)
         form = TaskHelper.get_task(task_id)
         return render_template('edit_task.html', form=form)
     # Below code runs on POST requests.
