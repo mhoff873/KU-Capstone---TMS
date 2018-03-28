@@ -4,7 +4,8 @@ Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
 from flask_login import current_user
 
 from Forms.forms import CreateTaskForm
-from Forms.models import Task, MainStep, DetailedStep, Supervisor, Admin
+from Forms.models import Task, MainStep, DetailedStep, Supervisor, Admin, \
+    Keyword
 from database import db
 
 
@@ -68,6 +69,8 @@ def create_task(form):
             except Exception as e:
                 print(e)
                 db.session.commit()
+    keywords = form.keywords.data.split(',')
+    print('Keywords: ', keywords)
     return new_task
 
 
