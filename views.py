@@ -2,7 +2,7 @@ from flask import render_template, request, jsonify, redirect
 
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
-    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
+    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm
 from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
@@ -58,7 +58,7 @@ def postTaskCompleted():
     # print(d['TaskID'], d['AssignedUser'])
     results = Api.postTaskCompleted(d['TaskID'],d['AssignedUser'],d['TotalTime'],d['TotalDetailedStepsUsed'])
     return jsonify(results)
-                
+
 @app.route("/api/user/GetAllCompletedTasksByUser/<uname>", methods=['GET'])
 def getAllCompletedTasksByUser(uname):
     results = Api.getAllCompletedTasksByUser(uname)
@@ -81,25 +81,25 @@ def dashboard():
         tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
         users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
         requests = Request.query.filter_by(supervisorID=current_user.supervisorID).all()
-        
+
         # form some data dictionaries for use later
         # supervisor_to_users={}
         # user_to_supervisor{}
-        
+
         # mapping of user
         user_2_tasks={}
         task_2_users={}
-        
+
         # a plain array of user and tasks IDs assigned to the Supervisor
         userIDs=[]
         taskIDs=[]
-        
+
         for t in tasks:
             taskIDs.append(t.taskID)
-            
+
         for u in users:
             userIDs.append(u.userID)
-            
+
         if requests:
             for r in requests:
                 # structuring ddata
@@ -116,7 +116,7 @@ def dashboard():
                     task_2_users[r.taskID]=[r.userID]
         else:
             print("did not find any requests")
-            
+
         #print(user_to_tasks)
         #print(task_to_users)
             # need a structure that is indexable by userID for the Request object
@@ -332,12 +332,15 @@ def senior_assignment(arguments=None):
     # Get all supervisors
     supervisors = Supervisor.query.all()
 
-    if arguments is not None:
-        superID = int(arguments)
-        return render_template("senior_assignment.html", supervisors=supervisors, superID=superID)
-    return render_template("senior_assignment.html", supervisors=supervisors, superID=None)
+    # Get all unassigned users
+    users = UserMgmt.get_unassigned()
 
-    
+    if arguments is not None:
+        superID, userID = [int(x) for x in arguments.split(':')]
+        return render_template("senior_assignment.html", supervisors=supervisors, superID=superID, users=users)
+    return render_template("senior_assignment.html", supervisors=supervisors, superID=None, users=users)
+
+
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
