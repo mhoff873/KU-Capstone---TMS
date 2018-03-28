@@ -347,7 +347,7 @@ def create_task():
     if form.save.data:
         """Save task."""
         TaskHelper.create_task(form)
-        flash('Your task was successfully created!')
+        flash('Your task was successfully saved!')
         return render_template('edit_task.html', form=form)
     if form.add_main_step.data:
         """Add new main step."""
@@ -382,13 +382,14 @@ def edit_task():
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
 
-    if form.add_main_step.data:
-        """Add new main step."""
-        form.main_steps.append_entry()
-        return render_template('edit_task.html', form=form)
     if form.save.data:
         """Save task as draft."""
         TaskHelper.create_task(form)
+        flash('Your task was successfully saved!')
+        return render_template('edit_task.html', form=form)
+    if form.add_main_step.data:
+        """Add new main step."""
+        form.main_steps.append_entry()
         return render_template('edit_task.html', form=form)
     for i, main_step in enumerate(form.main_steps):
         # Handling of main step deletion as well as detailed steps

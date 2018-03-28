@@ -2,14 +2,20 @@
 
 {% block content %}
     <div class="jumbotron text-center">
-        <h1>Edit Editor</h1>
+        <h1>Edit Task</h1>
     </div>
 
     <div class="container">
         <div class="page_content">
-
-
-            <!--<h1>Task Creation Test Page</h1>-->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul class=flashes>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
 
             <form action="{{ url_for('edit_task') }}" method="POST">
                 {{ form.hidden_tag() }}
