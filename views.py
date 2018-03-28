@@ -307,6 +307,7 @@ def task_assignment():
     for user in users:
         tasks = TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
         for task in tasks:
+            print('Task ID: {} - Task Name: {}'.format(task.taskID, task.title))
             if form.assign_button.data:
                 print('Calling assign_task')
                 TaskAssignmentHelper.assign_task(user.userID, task.taskID, current_user.supervisorID)
