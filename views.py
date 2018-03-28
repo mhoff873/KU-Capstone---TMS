@@ -299,12 +299,14 @@ def task_assignment():
     user_choices.append(('all_users', 'All Users'))
     form.assigned_users.choices = user_choices
     if form.assign_task_button.data:
-        form.tasks.choices = TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+        task_choices = [(task.taskID, task.title) for task in TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)]
+        form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
-        form.tasks.choices = TaskAssignmentHelper.get_tasks_assigned(form.assigned_users.data, current_user.supervisorID)
+        task_choices = [(task.taskID, task.title) for task in TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)]
+        form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
-    
+
     return render_template("task_assignment.html", form=form)
     
 
