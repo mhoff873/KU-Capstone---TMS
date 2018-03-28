@@ -8,7 +8,7 @@
     <div class="container">
         <div class="page_content">
             <div class= "text-center">
-                {% with messages = get_flashed_messages() %}
+                {% with messages = get_flashed_messages(category_filter=['info']) %}
                     {% if messages %}
                         <ul class=flashes>
                             {% for message in messages %}

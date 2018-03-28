@@ -338,7 +338,7 @@ def create_task():
     if form.save.data:
         """Save task."""
         TaskHelper.create_task(form)
-        flash('Your task was successfully saved!')
+        flash('Your task was successfully saved!', 'info')
         return render_template('edit_task.html', form=form)
     if form.add_main_step.data:
         """Add new main step."""
@@ -370,7 +370,6 @@ def edit_task(task_id=None):
     Called when a supervisor wishes to edit an existing task.
     :return: the rendered task editing page
     """
-    task_id = 654730  # TODO: THIS LINE MUST BE REMOVED BEFORE PUSHING TO PROD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if task_id is not None:
         form = TaskHelper.get_task(task_id)
         return render_template('edit_task.html', form=form)
@@ -380,7 +379,7 @@ def edit_task(task_id=None):
     if form.save.data:
         """Save task as draft."""
         TaskHelper.create_task(form)
-        flash('Your task was successfully saved!')
+        flash('Your task was successfully saved!', 'info')
         return render_template('edit_task.html', form=form)
     if form.add_main_step.data:
         """Add new main step."""
