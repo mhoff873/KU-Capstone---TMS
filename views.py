@@ -1,3 +1,5 @@
+import speech_recognition
+
 from flask import render_template, request, jsonify, redirect, flash, url_for
 
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
@@ -281,11 +283,9 @@ def library(arguments=None):
 @login_required
 def task_assignment():
     """
-    Authors: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>,
-             Dylan Kramer, Aaron Klinikowski
+    Authors: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     """
     form = TaskAssignmentForm(request.form)
-
     if current_user.role == "supervisor":
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
@@ -339,6 +339,21 @@ def create_task():
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
 
+    # HERE BE SPEECH THINGS!
+    if form.voice_button_title.data:
+        recognizer = speech_recognition.Recognizer
+        with speech_recognition.Microphone() as source:
+            audio = recognizer.listen(source)
+        try:
+            text = recognizer.recognize_google(audio)
+            print('You tried to say: ', text)
+            form.title.process_data(text)
+            return render_template('create_task.html', form=form)
+        except speech_recognition.UnknownValueError:
+            print("Google Speech Recognition could not understand audio")
+        except speech_recognition.RequestError as e:
+            print("Could not request results from Google Speech Recognition service; {0}".format(e))
+    # Now on to the boring stuff
     if form.save.data:
         """Save task."""
         new_task = TaskHelper.create_task(form)

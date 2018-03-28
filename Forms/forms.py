@@ -89,12 +89,13 @@ class DetailedStep(FlaskForm):
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     """
     title = StringField('Detailed Step Name:')
+    voice_button_title = SubmitField('SPEECH')
     stepText = TextAreaField('Detailed Step Description:')
+    voice_button_stepText = SubmitField('SPEECH')
     image = FileField('Upload Image for Detailed Step:')
-
     detailed_step_removal = SubmitField('- Detailed Step')
-    detailed_step_up = SubmitField('↑')
-    detailed_step_down = SubmitField('↓')
+    # detailed_step_up = SubmitField('↑')
+    # detailed_step_down = SubmitField('↓')
 
     @staticmethod
     def process_data(data):
@@ -106,17 +107,21 @@ class MainStep(FlaskForm):
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     """
     title = StringField('Main Step Title:')
+    voice_button_title = SubmitField('SPEECH')
     requiredItem = StringField('Required Items:')
+    voice_button_requiredItem = SubmitField('SPEECH')
     stepText = TextAreaField('Main Step Description:')
+    voice_button_stepText = SubmitField('SPEECH')
     audio = FileField('Upload Audio:')
     image = FileField('Upload Image:')
     video = FileField('Upload Video:')
 
     detailed_steps = FieldList(FormField(DetailedStep), min_entries=0)
+
     add_detailed_step = SubmitField('+ Detailed Step')
     main_step_removal = SubmitField('- Main Step')
-    main_step_up = SubmitField('Move Main Step ↑')
-    main_step_down = SubmitField('Move Main Step ↓')
+    # main_step_up = SubmitField('Move Main Step ↑')
+    # main_step_down = SubmitField('Move Main Step ↓')
 
     @staticmethod
     def process_data(data):
@@ -128,9 +133,13 @@ class CreateTaskForm(FlaskForm):
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     """
     title = StringField('Task Name:', validators=[DataRequired()])
+    voice_button_title = SubmitField('SPEECH')
     description = TextAreaField('Description:')
+    voice_button_description = SubmitField('SPEECH')
     image = FileField('Upload image for Task:')
+
     main_steps = FieldList(FormField(MainStep), min_entries=0)
+
     add_main_step = SubmitField('+ Main Step')
     save = SubmitField('Save')
     activation = BooleanField('Activate task for personal use?', default=False)

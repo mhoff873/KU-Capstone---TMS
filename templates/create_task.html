@@ -27,8 +27,7 @@
                 <div style="display: inline-block; min-width: 13em">
                     {{ form.title (class="form-control") }}
                 </div>
-                <a class="btn btn-secondary btn-md" href="#">
-                    <i class="fas fa-microphone"></i>Voice</a>
+                {{ form.voice_button_title }}
 
                 <br>
 
@@ -39,6 +38,7 @@
                 <div style="display: inline-block; min-width: 13em">
                     {{ form.description (class="form-control", style="height: 100px, width:100%") }}
                 </div>
+                {{ form.voice_button_description }}
 
                 <br>
 
