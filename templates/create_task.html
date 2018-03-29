@@ -4,6 +4,7 @@
     <script>
         function startDictation(input_id) {
             console.log('startDictation called');
+            console.log(window.hasOwnProperty('webkitSpeechRecognition'));
             if (window.hasOwnProperty('webkitSpeechRecognition')) {
 
                 var recognition = new webkitSpeechRecognition();
