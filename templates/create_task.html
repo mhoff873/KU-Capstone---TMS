@@ -1,10 +1,6 @@
 {% extends "base.html" %}
-<form id="labnol" method="get" action="https://www.google.com/search">
-  <div class="speech">
-    <input type="text" name="q" id="transcript" placeholder="Speak" />
-    <img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif" />
-  </div>
-</form>
+
+
 
 <!-- HTML5 Speech Recognition API -->
 <script>
@@ -34,10 +30,18 @@
     }
   }
 </script>
+
 {% block content %}
     <div class="jumbotron text-center">
         <h1>Task Editor</h1>
     </div>
+
+    <form id="labnol" method="get" action="https://www.google.com/search">
+        <div class="speech">
+            <input type="text" name="q" id="transcript" placeholder="Speak" />
+        <img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif" />
+        </div>
+    </form>
 
     <div class="container">
         <div class="page_content">
