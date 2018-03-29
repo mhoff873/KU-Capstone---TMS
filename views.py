@@ -295,7 +295,9 @@ def task_assignment():
     user_choices.append(('all_users', 'All Users'))
     form.assigned_users.choices = user_choices
     if form.assign_task_button.data:
-        task_choices = [(task.taskID, task.title) for task in TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)]
+        task_choices = [(task.taskID, task.title) for task
+                        in TaskAssignmentHelper.get_assignable_tasks(
+                        current_user.supervisorID)]
         form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
@@ -304,24 +306,31 @@ def task_assignment():
             # tasks that happen to assigned to every single one of the users
             # under the supervisor without making a ton of calls.
             pass
-        task_choices = [(task.taskID, task.title) for task in TaskAssignmentHelper.get_tasks_assigned_to_user(form.assigned_users.data, current_user.supervisorID)]
+        task_choices = [(task.taskID, task.title) for task
+                        in TaskAssignmentHelper.get_tasks_assigned_to_user(
+                        form.assigned_users.data, current_user.supervisorID)]
         form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
     if form.assign_button.data:
         if form.assigned_users.data == 'all_users':
-            TaskAssignmentHelper.assign_to_all_users(current_user.supervisorID, form.tasks.data)
+            TaskAssignmentHelper.assign_to_all_users(current_user.supervisorID,
+                                                     form.tasks.data)
             flash('Task has been assigned to all users.', 'info')
             return render_template("task_assignment.html", form=form)
-        TaskAssignmentHelper.assign_task(form.assigned_users.data, form.tasks.data, current_user.supervisorID)
+        TaskAssignmentHelper.assign_task(form.assigned_users.data,
+                                         form.tasks.data,
+                                         current_user.supervisorID)
         flash('Task has been assigned to user.', 'info')
         return render_template("task_assignment.html", form=form)
     if form.remove_button.data:
         if form.assigned_users.data == 'all_users':
             flash('Task has been removed from all users.', 'info')
-            TaskAssignmentHelper.remove_from_all_users(current_user.supervisorID, form.tasks.data)
+            TaskAssignmentHelper.remove_from_all_users(current_user.supervisorID,
+                                                       form.tasks.data)
             return render_template("task_assignment.html", form=form)
         flash('Task has been removed from user.', 'info')
-        TaskAssignmentHelper.delete_request(form.assigned_users.data, form.tasks.data)
+        TaskAssignmentHelper.delete_request(form.assigned_users.data,
+                                            form.tasks.data)
         return render_template("task_assignment.html", form=form)
     return render_template("task_assignment.html", form=form)
     
