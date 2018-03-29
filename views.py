@@ -14,12 +14,13 @@ from flask import render_template, request, jsonify, redirect, json
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
-from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api, Reports
+from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest
 from datetime import datetime, timedelta
 from flask_weasyprint import HTML, render_pdf
+import pygal
 
 @app.route('/', methods=['GET'])
 def index():
@@ -110,7 +111,7 @@ def getAssignedUsers(superID):
 def getCompletedTasksByUsers(test):
     #d = json.loads(request.data)
     date = "2018-03-15"
-    users = [1,4]
+    users = [10]
     # created the required dictionary & lists and pass to function
     results = Api.getCompletedTasksByUsers(date, users)
     return jsonify(results)
@@ -265,7 +266,7 @@ def reports(arguments=None):
             dictTask = {}
             dictTask["userID"]=Api.getNameFromID(li["userID"])
             dictTask["title"]=li2["title"]
-            dictTask["totalTime"]=li2["totalTime"]
+            dictTask["totalTime"]=str(int(li2["totalTime"]/1000)) + " seconds"
             dictTask["dateTimeCompleted"]=li2["dateTimeCompleted"]
             lstTask.append(dictTask)
     # sort the list by date so that the newest entries appear first
@@ -278,9 +279,9 @@ def reports(arguments=None):
 def pdf(arguments=None):
     """
     Description: Generates a report for all users assigned to the supervisor or for a specifed user
-    Parameters: none
-    Return Value: 
-    Author: Patrick Earl
+    Parameters: None
+    Return Value: None
+    Author: Patrick Earl, taken from Tyler Lance
     """
     # Get the supervisor ID
     supervisorID = current_user.supervisorID
@@ -314,24 +315,118 @@ def pdf(arguments=None):
                 date = str((datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d'))
                 sortedBy = "Showing entries for the last day"
     # get completed tasks by passing the list and date
-    tasks = Api.getCompletedTasksByUsers(date, lstUserIDs)
-    lstTask = []
-    # create list containing dictionaries for each table row
-    for li in tasks:
-        for li2 in li["completedTasks"]:
-            dictTask = {}
-            dictTask["userID"]=Api.getNameFromID(li["userID"])
-            dictTask["title"]=li2["title"]
-            dictTask["totalTime"]=li2["totalTime"]
-            dictTask["dateTimeCompleted"]=li2["dateTimeCompleted"]
-            lstTask.append(dictTask)
+    lstTask = Api.getCompletedTasksByUsers(date, lstUserIDs)
+    # create list containing dictionaries for each table row, adding the first and last names for each user
+    for li in lstTask:
+        li["userID"]=Api.getNameFromID(li["userID"])
+        # sort the list by date so that the newest entries appear first
+        li["completedTasks"] = sorted(li["completedTasks"],key=lambda k: k['dateTimeCompleted'], reverse=True)
     # sort the list by date so that the newest entries appear first
-    lstTask = sorted(lstTask,key=lambda k: k['dateTimeCompleted'], reverse=True)
-
     html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy)
     return render_pdf(HTML(string=html))
    
-
+@app.route('/graph', methods=['GET'])
+@app.route('/graph/<arguments>', methods=['GET'])
+@login_required
+def graph(arguments=None):
+    """
+    Description: generate the graphs for the reports
+    Parameters: none
+    Return Value: none
+    Author: Tyler Lance
+    """
+    chart = pygal.HorizontalBar()
+    # Get the supervisor ID
+    supervisorID = current_user.supervisorID
+    # get users assigned to the supervisor
+    users =  Api.getAssignedUsers(supervisorID)
+    # get list of tasks created by the supervisor
+    tasks = Api.getTasksCreatedByID(supervisorID)
+    tasks = sorted(tasks,key=lambda k: k['title'])
+    # check if arguments were passed to the url
+    if arguments is not None:
+        # pull the relevant data to determine what graph to display
+        date = arguments.split('&')[0]
+        date = date.split('=')[1]
+        task = arguments.split('&')[1]
+        task = task.split('=')[1]
+        user = arguments.split('&')[2]
+        user = user.split('=')[1]
+        submit = arguments.split('&')[3]
+        submit = submit.split('=')[1]
+        if submit == 'T':
+            # determine the time frame for the data to be pulled by
+            if date == 'M':
+                curDate = str((datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
+                sortedBy = " For The Last 30 Days"
+            elif date == 'W':
+                curDate = str((datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
+                sortedBy = " For The Last 7 Days"
+            elif date == 'D':
+                curDate = str((datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d'))
+                sortedBy = " For The Last Day"
+            elif date == 'A':
+                curDate = "2000-01-01"
+                sortedBy = " For All Entries"
+            # if a graph needs to be displayed - generates the task graph
+            if submit == 'T' and task != 'None':
+                # get the task name given the id
+                chart.title = "Everyones Average Completion Time For " + Api.getTaskFromID(task) + sortedBy
+                # get the necessary data for all completed entries for the specified task
+                task = Api.getCompletedTasksByID(curDate, task)
+                lstTask = []
+                for t in task:
+                    # if the userid already exists then update the values
+                    if any(d['userID'] == t["userID"] for d in lstTask):
+                        for i in lstTask:
+                            if i["userID"] == t["userID"]:
+                                i["totalTime"] = t["totalTime"] + i["totalTime"]
+                                i["total"] += 1
+                    # otherwise add those values into the dictionary
+                    else:
+                        dictTask = {}
+                        dictTask["userID"] = t["userID"]
+                        dictTask["totalTime"] = t["totalTime"]
+                        dictTask["total"] = 1
+                        lstTask.append(dictTask)
+                # iterate over the list to calculate the averages for each user and add it to the chart
+                for t in lstTask:
+                    chart.add(Api.getNameFromID(t['userID']), int((t['totalTime']/t['total'])/1000))
+            # to generate the user graph
+            elif submit == 'T' and user != 'None':
+                # get the name of the user
+                name = Api.getNameFromID(int(user))
+                # generate title for the graph
+                chart.title = name + 's Average Task Completion ' + sortedBy
+                # get the necessary data for all completed entries for the specified user
+                task = Api.getCompletedTasksByUsers(curDate,[user])
+                completedTasks = []
+                # pull the list of task ids
+                for t in task:
+                    if t['userID'] == user:
+                        completedTasks = t['completedTasks']
+                lstTask = []
+                for t in completedTasks:
+                    # if the task id already exists then update the values
+                    if any(d['taskID'] == t["taskID"] for d in lstTask):
+                        for i in lstTask:
+                            if i["taskID"] == t["taskID"]:
+                                i["totalTime"] = t["totalTime"] + i["totalTime"]
+                                i["total"] += 1
+                    # otherwise add those values into the dictionary
+                    else:
+                        dictTask = {}
+                        dictTask["taskID"] = t["taskID"]
+                        dictTask["totalTime"] = t["totalTime"]
+                        dictTask["total"] = 1
+                        lstTask.append(dictTask)
+                # iterate over the list to calculate the averages for each task and add it to the chart
+                for t in lstTask:
+                    chart.add(Api.getTaskFromID(t['taskID']), int((t['totalTime']/t['total'])/1000))
+    chart = chart.render_data_uri()
+    return render_template('graph.html', supervisor=supervisorID, user=users, task=tasks, chart=chart)
+   
+   
 @app.route('/email', methods=['GET'])
 def email(arguments=None):
     """

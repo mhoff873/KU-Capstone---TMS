@@ -9,39 +9,66 @@
 <!-- text to be populated by querying database "......"-->
 <div class = "container">
 	<div class = "text-center">
-	<h3>User Overview for: {{current_user.fname + " " + current_user.lname}}</h3>
+	<h3>Supervisor Overview for: {{current_user.fname + " " + current_user.lname}}</h3>
 	</div>
 </div>
 <!-- end of text -->
 
-<br>
+{% for u in tasks %}
+
+<h5>Name: {{ u["userID"] }}</h5>
+
+{% for t in u["completedTasks"] %}
+
 <!-- table to be populated -->
 <div class="container">
 	<div class="text-center">
 	<table class="table table-hover table-bordered">
     <thead>
       <tr>
-        <th>User</th>
         <th>Task Name</th>
-        <th>Time Spent on Task</th>
-        <th>Date / Time</th>
+        <th>Time Spent</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+	<th>Detailed Steps Used</th>
       </tr>
     </thead>
     <tbody>
-      {% for t in tasks %}
       <tr>
-        <td>{{ t["userID"] }}</td>
         <td>{{ t["title"] }}</td>
-        <td>{{ t["totalTime"] }}</td>
+        <td>{{ t["totalTime"]/1000 }} seconds</td>
+        <td>{{ t["dateStarted"] }}</td>
         <td>{{ t["dateTimeCompleted"] }}</td>
+	<td>{{ t["detailedStepsUsed"] }}</td>
       </tr>
       <tr>
-	{% endfor %}
     </tbody>
-  </table>
+    <thead>
+      <tr>
+	<!-- Note we need to use colspan here http://jsfiddle.net/CBWJf/ -->
+	<th colspan="2">Step Name</th>
+	<th>Time Spent</th>
+	<th>Date/TimeCompleted</th>
+	<th>Detailed Steps Used</th>
+      </tr>
+    </thead>
+    {% for s in t["detailedSteps"] %}
+    <tbody>
+      <tr>
+	<td colspan="2">{{ s["title"] }}</td>
+	<td>{{ s["timeSpent"]/1000 }} seconds</td>
+	<td>{{ s["dateTimeCompleted"] }}</td>
+	<td>{{ s["detailedStepsUsed"] }}</td>
+      </tr>
+      <tr>
+    </tbody>
+    {% endfor %}
+   </table>
  </div>
 </div>
+{% endfor %}
 <!-- end of table -->
+{% endfor %}
 <br>
   
 

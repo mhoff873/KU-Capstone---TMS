@@ -296,6 +296,21 @@ def getIdFromEmail(uname):
     if not userid:
         return None
     return int(userid['userID'])
+    
+def getTaskFromID(taskID):
+    """
+    Description: get the task name given the task if
+    Parameters: taskID - (int) id of the task
+    Return Value: (string) name of the task
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT task.title FROM task WHERE taskID=%d' % (int(taskID),))
+    task = cur.fetchone()
+    if not task:
+        return None
+    return str(task["title"])
 
 def getNameFromID(userID):
     """
@@ -448,12 +463,12 @@ def getCompletedTasksByUsers(date, users):
     # iterate over the users list
     for u in users:
         # query the database to get the data on completed tasks that occur after the provided date
-        cur.execute('SELECT completedTasks.completedTaskID, task.title, completedTasks.totalTime, completedTasks.dateStarted, completedTasks.dateTimeCompleted, completedTasks.detailedStepsUsed, completedTasks.ipAddr FROM task, completedTasks WHERE completedTasks.taskId=task.taskID AND completedTasks.dateTimeCompleted>="%s" AND completedTasks.userID = %d' % (str(date),int(u),))
+        cur.execute('SELECT completedTasks.completedTaskID, task.taskID, task.title, completedTasks.totalTime, completedTasks.dateStarted, completedTasks.dateTimeCompleted, completedTasks.detailedStepsUsed, completedTasks.ipAddr FROM task, completedTasks WHERE completedTasks.taskId=task.taskID AND completedTasks.dateTimeCompleted>="%s" AND completedTasks.userID = %d' % (str(date),int(u),))
         taskData = cur.fetchall()
         lstTask = []
         # iterate over the data to get the completed steps
         for t in taskData:
-            taskDict = {'title':t['title'],'totalTime':t['totalTime'],'dateStarted':t['dateStarted'],'dateTimeCompleted':t['dateTimeCompleted'],'detailedStepsUsed':t['detailedStepsUsed'],'ipAddr':t['ipAddr']}
+            taskDict = {'taskID':t['taskID'],'title':t['title'],'totalTime':t['totalTime'],'dateStarted':t['dateStarted'],'dateTimeCompleted':t['dateTimeCompleted'],'detailedStepsUsed':t['detailedStepsUsed'],'ipAddr':t['ipAddr']}
             taskDict['detailedSteps'] = getCompletedStepsByID(t['completedTaskID'])
             lstTask.append(taskDict)
         # sort by date time completed
@@ -474,12 +489,12 @@ def getCompletedTasksByID(date, ID):
     cur = mysql.connection.cursor()
     date = date + " 00:00:00"
     # query the database to get the data on completed tasks that occur after the provided date
-    cur.execute('SELECT users.fname, users.lname, completedTasks.completedTaskID, task.title, completedTasks.totalTime, completedTasks.dateStarted, completedTasks.dateTimeCompleted, completedTasks.detailedStepsUsed, completedTasks.ipAddr FROM users, task, completedTasks WHERE users.userID=completedTasks.userID AND completedTasks.taskId=task.taskID AND completedTasks.dateTimeCompleted>="%s" AND completedTasks.taskID = %d' % (str(date),int(ID),))
+    cur.execute('SELECT users.userID, users.fname, users.lname, completedTasks.completedTaskID, task.title, completedTasks.totalTime, completedTasks.dateStarted, completedTasks.dateTimeCompleted, completedTasks.detailedStepsUsed, completedTasks.ipAddr FROM users, task, completedTasks WHERE users.userID=completedTasks.userID AND completedTasks.taskId=task.taskID AND completedTasks.dateTimeCompleted>="%s" AND completedTasks.taskID = %d' % (str(date),int(ID),))
     taskData = cur.fetchall()
     lstTask = []
     # iterate over the data to get the completed steps
     for t in taskData:
-        taskDict = {'fname':t['fname'],'lname':t['lname'],'title':t['title'],'totalTime':t['totalTime'],'dateStarted':t['dateStarted'],'dateTimeCompleted':t['dateTimeCompleted'],'detailedStepsUsed':t['detailedStepsUsed'],'ipAddr':t['ipAddr']}
+        taskDict = {'userID':t['userID'],'fname':t['fname'],'lname':t['lname'],'title':t['title'],'totalTime':t['totalTime'],'dateStarted':t['dateStarted'],'dateTimeCompleted':t['dateTimeCompleted'],'detailedStepsUsed':t['detailedStepsUsed'],'ipAddr':t['ipAddr']}
         taskDict['detailedSteps'] = getCompletedStepsByID(t['completedTaskID'])
         lstTask.append(taskDict)
     # sort by date time completed
@@ -504,3 +519,23 @@ def getCompletedStepsByID(ID):
     # sort the order by the list order of the steps, rather than the time they were completed
     lstStep = sorted(list(lstStep),key=lambda k: k['listOrder'])
     return lstStep
+
+def getTasksCreatedByID(superID):
+    """
+    Description: get all tasks created by the supervisor
+    Parameters: superID - (int) supervisor id
+    Return Value: lstTasks - (list) list of dictionaries containing the task id and the task name
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # query the database to get the data on the completed steps
+    cur.execute('SELECT task.title, task.taskID FROM task WHERE task.published=1 AND task.activated=1 AND task.supervisorID = %d' % (int(superID),))
+    tasks = cur.fetchall()
+    lstTasks = []
+    # iterate over the data to store the task data
+    for t in tasks:
+        dictTask = {}
+        dictTask["title"]=t["title"]
+        dictTask["taskID"]=t["taskID"]
+        lstTasks.append(dictTask)
+    return lstTasks

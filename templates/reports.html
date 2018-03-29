@@ -25,7 +25,7 @@
   <div class="row">
     <div class="col-sm-4">
 	<!-- second row left button -->
-		<a href="#" role="button" class="btn btn-secondary btn-lg btn-block">Graph</a>
+		<a href="{{url_for('graph')}}" role="button" class="btn btn-secondary btn-lg btn-block">Graph</a>
     </div>
     <div class="col-sm-4">
 	<!-- second row middle button -->
@@ -84,7 +84,7 @@
       <a class="dropdown-item" href="{{url_for('reports') + '/date:A'}}">All</a>
       <a class="dropdown-item" href="{{url_for('reports') + '/date:M'}}">Monthly</a>
       <a class="dropdown-item" href="{{url_for('reports') + '/date:W'}}">Weekly</a>
-      <a class="dropdown-item" href="{{url_for('reports') + '/date:A'}}">Daily</a>
+      <a class="dropdown-item" href="{{url_for('reports') + '/date:D'}}">Daily</a>
     </div>
       
     </div>
