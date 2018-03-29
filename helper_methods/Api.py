@@ -550,7 +550,7 @@ def getUncompletedTaskByID(userID, taskID):
     """
     cur = mysql.connection.cursor()
     # query the database to get the data on the completed steps
-    cur.execute('SELECT count(completedTasks.taskID) FROM completedTasks WHERE completedTasks.dateTimeCompleted=null AND completedTasks.userID = %d AND completedTasks.taskID=%d' % (int(userID),int(taskID),))
+    cur.execute('SELECT count(completedTasks.taskID) FROM completedTasks WHERE completedTasks.dateTimeCompleted IS NULL AND completedTasks.userID = %d AND completedTasks.taskID=%d' % (int(userID),int(taskID),))
     data = cur.fetchone()
     if not data:
         return None
