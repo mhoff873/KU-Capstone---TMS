@@ -1,3 +1,4 @@
+import speech_recognition as speech_rec
 from flask import render_template, request, jsonify, redirect, flash, url_for
 
 from Forms.forms import CreateAccount, CreateSupervisor, EditUser, AddUser, \
@@ -389,6 +390,21 @@ def create_task():
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
 
+    # HERE BE SPEECH!
+    if form.voice_button_title.data:
+        recognizer = speech_rec.Recognizer()
+        with speech_rec.Microphone() as source:
+            print('Recording audio')
+            audio = recognizer.listen(source)
+        try:
+            transcript = recognizer.recognize_google(audio)
+            print('Google thinks you said: ', transcript)
+            form.title.process_data(transcript)
+            return render_template('create_task.html', form=form)
+        except speech_rec.UnknownValueError:
+            print('Could not understand you.')
+        except speech_rec.RequestError as e:
+            print('Could not get results from Google: ', e)
     # Now on to the boring stuff
     if form.save.data:
         """Save task."""
