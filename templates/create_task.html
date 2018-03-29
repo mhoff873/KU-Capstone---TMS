@@ -1,78 +1,62 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div>
-        <a href="#" id="start_button"
-           onclick="startDictation(event)">Dictate</a>
-    </div>
+    <!-- CSS Styles -->
+    <style>
+        .speech {
+            border: 1px solid #DDD;
+            width: 300px;
+            padding: 0;
+            margin: 0
+        }
 
-    <div id="results">
-        <span id="final_span" class="final"></span>
-        <span id="interim_span" class="interim"></span>
-    </div>
+        .speech input {
+            border: 0;
+            width: 240px;
+            display: inline-block;
+            height: 30px;
+        }
 
-    <script type="text/javascript">
-        var final_transcript = '';
-        var recognizing = false;
+        .speech img {
+            float: right;
+            width: 40px
+        }
+    </style>
 
-        if ('webkitSpeechRecognition' in window) {
+    <!-- Search Form -->
+    <form id="labnol" method="get" action="https://www.google.com/search">
+        <div class="speech">
+            <input type="text" name="q" id="transcript" placeholder="Speak"/>
+            <img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif"/>
+        </div>
+    </form>
 
-            var recognition = new webkitSpeechRecognition();
+    <!-- HTML5 Speech Recognition API -->
+    <script>
+        function startDictation() {
 
-            recognition.continuous = true;
-            recognition.interimResults = true;
+            if (window.hasOwnProperty('webkitSpeechRecognition')) {
 
-            recognition.onstart = function () {
-                recognizing = true;
-            };
+                var recognition = new webkitSpeechRecognition();
 
-            recognition.onerror = function (event) {
-                console.log(event.error);
-            };
+                recognition.continuous = false;
+                recognition.interimResults = false;
 
-            recognition.onend = function () {
-                recognizing = false;
-            };
+                recognition.lang = "en-US";
+                recognition.start();
 
-            recognition.onresult = function (event) {
-                var interim_transcript = '';
-                for (var i = event.resultIndex; i < event.results.length; ++i) {
-                    if (event.results[i].isFinal) {
-                        final_transcript += event.results[i][0].transcript;
-                    } else {
-                        interim_transcript += event.results[i][0].transcript;
-                    }
+                recognition.onresult = function (e) {
+                    document.getElementById('transcript').value
+                        = e.results[0][0].transcript;
+                    recognition.stop();
+                    document.getElementById('labnol').submit();
+                };
+
+                recognition.onerror = function (e) {
+                    recognition.stop();
                 }
-                final_transcript = capitalize(final_transcript);
-                final_span.innerHTML = linebreak(final_transcript);
-                interim_span.innerHTML = linebreak(interim_transcript);
 
-            };
-        }
-
-        var two_line = /\n\n/g;
-        var one_line = /\n/g;
-
-        function linebreak(s) {
-            return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
-        }
-
-        function capitalize(s) {
-            return s.replace(s.substr(0, 1), function (m) {
-                return m.toUpperCase();
-            });
-        }
-
-        function startDictation(event) {
-            if (recognizing) {
-                recognition.stop();
-                return;
             }
-            final_transcript = '';
-            recognition.lang = 'en-US';
-            recognition.start();
-            final_span.innerHTML = '';
-            interim_span.innerHTML = '';
         }
     </script>
 
