@@ -321,8 +321,8 @@ def pdf(arguments=None):
         li["userID"]=Api.getNameFromID(li["userID"])
         # sort the list by date so that the newest entries appear first
         li["completedTasks"] = sorted(li["completedTasks"],key=lambda k: k['dateTimeCompleted'], reverse=True)
-    # sort the list by date so that the newest entries appear first
-    html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy)
+    date = datetime.now().strftime('%A, %B %d, %Y %I:%M %p')
+    html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy, date=date)
     return render_pdf(HTML(string=html))
    
 @app.route('/graph', methods=['GET'])
