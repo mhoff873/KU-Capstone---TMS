@@ -555,3 +555,24 @@ def getUncompletedTaskByID(userID, taskID):
     if not data:
         return None
     return int(data["count(completedTasks.taskID)"])
+    
+def getPathForTaskImage(taskID):
+    """
+    Description: get the path for a tasks image
+    Parameters: taskID - (int) task id
+    Return Value: img - (string) path to the file
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    img = ""
+    # query the database to get the data on the completed steps
+    cur.execute('SELECT task.image, task.title FROM task WHERE task.taskID = %d' % (int(taskID),))
+    path = cur.fetchone()
+    if not path:
+        return None
+    # check if no image exists, if so pull the default image
+    if path["image"] == "" or path["image"] == None:
+        img = "default/" + ((path["title"])[:1]).upper() + ".png"
+    else:
+        img = path["image"]
+    return str(img)

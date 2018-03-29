@@ -98,7 +98,7 @@
                         <div onclick="alert('{{ task.description }}')">
                             <!--card sizing below-->
                             <div class="card border-dark mb-3" style="width:175px">
-                                <img class="card-img-top" src="../static/img/letter-33690_960_720.png" alt="Card Image Cap">
+                                <img class="card-img-top" src="../static/img/{{img[task.taskID|int]|string}}" alt="Card Image Cap">
                                 <div class="card-body">
                                     <p class="card-text">{{ task.title }}</div>
                             </div>

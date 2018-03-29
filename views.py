@@ -10,7 +10,7 @@
 # Version: Python Version 3.6
 # ************************************************************/
 
-from flask import render_template, request, jsonify, redirect, json
+from flask import Flask, render_template, request, jsonify, redirect, json
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
@@ -123,6 +123,20 @@ def getCompletedTasksByID(date, ID):
     # created the required dictionary & lists and pass to function
     results = Api.getCompletedTasksByID(date, ID)
     return jsonify(results)
+    
+#http://tmst.kutztown.edu:5004/api/user/GetTaskImageByID/654706
+@app.route("/api/user/GetTaskImageByID/<taskID>", methods=['POST'])
+def GetTaskImageByID(taskID):
+    # prepare headers for http request
+    content_type = 'image/png'
+    headers = {'content-type': content_type}
+    ip = request.form.get('IpAddress')
+    taskID = request.form.get('taskID')
+    # call the api function to get the path
+    img = open(Api.getPathForTaskImage(taskID), 'rb').read()
+    # send http request with image and receive response
+    response = requests.post(ip, data=img, headers=headers)
+    return response
 # end API calls
 
 # Begin URL dispatching for TMS
@@ -564,7 +578,12 @@ def library(arguments=None):
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
         else:
             tasks = Library.sort_alphabetically(Library.get_tasks(current_user.supervisorID))
-    return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors, selectedID=selected_id)
+            img = {}
+            # determine the image to pull
+            for t in tasks:
+                #t.image = Api.getPathForTaskImage(t.taskID)
+                img[t.taskID] = Api.getPathForTaskImage(t.taskID)
+    return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors, selectedID=selected_id, img=img)
 
 # user assignment
 @app.route('/user_assignment/', methods=["GET", "POST"])
