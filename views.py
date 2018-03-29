@@ -10,16 +10,17 @@
 # Version: Python Version 3.6
 # ************************************************************/
 
-from flask import render_template, request, jsonify, redirect, json
+from flask import render_template, request, jsonify, redirect, json, flash, url_for
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
-from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api, Reports
+from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest
 from datetime import datetime, timedelta
 from flask_weasyprint import HTML, render_pdf
+from flask_mail import Message
 
 @app.route('/', methods=['GET'])
 def index():
@@ -209,6 +210,63 @@ def logout_account():
     logout_user()
     return redirect("login", code=302)
 
+# Reports related stuff below
+def generate_report(arguments=None):
+    """
+    Description: hangle the rendering and passing of the data to the reports page
+    Parameters: none
+    Return Value: form rendering
+    Author: Tyler Lance
+    """
+    # Chose which supervisor the report is being generated for
+    #supervisorID = current_user.supervisorID
+    supervisorID = current_user.supervisorID
+    # pull the list of assigned users to the supervisor
+    users =  Api.getAssignedUsers(supervisorID)
+    # default date for the data if no date is passed
+    date = "2000-01-01"
+    # what the data is sorted by
+    sortedBy = "Showing all entries by date"
+    # pull userIDs from the user data
+    lstUserIDs = [li['userID'] for li in users]
+    # check if arguments were passed to the url
+    if arguments is not None:
+        sort = arguments.split(':')[0]
+        data = arguments.split(':')[1]
+        # check if userID was passed via url and that it wasnt all
+        if sort == 'userid' and data != 'A':
+            # empties the list of userids and adds in the passed one
+            lstUserIDs = []
+            lstUserIDs.append(int(data))
+            sortedBy = "Showing entries for user: " + Api.getNameFromID(int(data))
+        # check if date specified was passed to url
+        elif sort == 'date':
+            if data == 'M':
+                date = str((datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
+                sortedBy = "Showing entries for the last 30 days"
+            elif data == 'W':
+                date = str((datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
+                sortedBy = "Showing entries for the last 7 days"
+            elif data == 'D':
+                date = str((datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d'))
+                sortedBy = "Showing entries for the last day"
+    # get completed tasks by passing the list and date
+    tasks = Api.getCompletedTasksByUsers(date, lstUserIDs)
+    lstTask = []
+    # create list containing dictionaries for each table row
+    for li in tasks:
+        for li2 in li["completedTasks"]:
+            dictTask = {}
+            dictTask["userID"]=Api.getNameFromID(li["userID"])
+            dictTask["title"]=li2["title"]
+            dictTask["totalTime"]=li2["totalTime"]
+            dictTask["dateTimeCompleted"]=li2["dateTimeCompleted"]
+            lstTask.append(dictTask)
+    # sort the list by date so that the newest entries appear first
+    lstTask = sorted(lstTask,key=lambda k: k['dateTimeCompleted'], reverse=True)
+    return (supervisorID, users, lstTask, sortedBy)
+
+
 #*****************This is where the admin reports page is****
 #This page was just made so Team UI could see and design the page.
 #the app route is correct, reports.html is the name of the page.
@@ -282,57 +340,15 @@ def pdf(arguments=None):
     Return Value: 
     Author: Patrick Earl
     """
-    # Get the supervisor ID
-    supervisorID = current_user.supervisorID
-    # pull the list of assigned users to the supervisor
-    users =  Api.getAssignedUsers(supervisorID)
-    # default date for the data if no date is passed
-    date = "2000-01-01"
-    # what the data is sorted by
-    sortedBy = "Showing all entries by date"
-    # pull userIDs from the user data
-    lstUserIDs = [li['userID'] for li in users]
-    # check if arguments were passed to the url
-    if arguments is not None:
-        sort = arguments.split(':')[0]
-        data = arguments.split(':')[1]
-        # check if userID was passed via url and that it wasnt all
-        if sort == 'userid' and data != 'A':
-            # empties the list of userids and adds in the passed one
-            lstUserIDs = []
-            lstUserIDs.append(int(data))
-            sortedBy = "Showing entries for user: " + Api.getNameFromID(int(data))
-        # check if date specified was passed to url
-        elif sort == 'date':
-            if data == 'M':
-                date = str((datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
-                sortedBy = "Showing entries for the last 30 days"
-            elif data == 'W':
-                date = str((datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
-                sortedBy = "Showing entries for the last 7 days"
-            elif data == 'D':
-                date = str((datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d'))
-                sortedBy = "Showing entries for the last day"
-    # get completed tasks by passing the list and date
-    tasks = Api.getCompletedTasksByUsers(date, lstUserIDs)
-    lstTask = []
-    # create list containing dictionaries for each table row
-    for li in tasks:
-        for li2 in li["completedTasks"]:
-            dictTask = {}
-            dictTask["userID"]=Api.getNameFromID(li["userID"])
-            dictTask["title"]=li2["title"]
-            dictTask["totalTime"]=li2["totalTime"]
-            dictTask["dateTimeCompleted"]=li2["dateTimeCompleted"]
-            lstTask.append(dictTask)
-    # sort the list by date so that the newest entries appear first
-    lstTask = sorted(lstTask,key=lambda k: k['dateTimeCompleted'], reverse=True)
+    (supervisorID, users, lstTask, sortedBy) = generate_report(arguments)
 
     html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy)
     return render_pdf(HTML(string=html))
    
 
 @app.route('/email', methods=['GET'])
+@app.route('/email/<arguments>', methods=['GET'])
+@login_required
 def email(arguments=None):
     """
     Description: 
@@ -340,8 +356,20 @@ def email(arguments=None):
     Return Value: 
     Author: 
     """
-    pass
+    subject = ""
 
+    if arguments is None:
+        subject = "Report for supervisor " + current_user.fname + " " + current_user.lname 
+    
+    msg = Message(subject,
+                sender="kutztms@gmail.com",
+                recipients=[current_user.email])
+
+    (supervisorID, users, lstTask, sortedBy) = generate_report(arguments)
+    msg.html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy)
+    mail.send(msg)
+    flash("Email send succesfully to " + current_user.email, 'success')
+    return redirect(url_for('reports', arguments=arguments))
     
 # supervisor account
 @app.route('/supervisor_account', methods=['GET', "POST"])

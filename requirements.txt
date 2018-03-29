@@ -1,9 +1,11 @@
+bcrypt
 wtforms
 flask
 flask-wtf
 flask-sqlalchemy
-sqlalchemy
 flask-login
 flask-cors
 flask-mysqldb
 Flask-WeasyPrint
+sqlalchemy
+mysql-connector-python

@@ -2,3 +2,5 @@
 *.pyo
 **/nohup.out
 __pyacache__
+config.py
+.vscode/
