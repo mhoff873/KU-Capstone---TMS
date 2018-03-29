@@ -391,12 +391,12 @@ def create_task():
     form = CreateTaskForm(request.form)
 
     # HERE BE SPEECH!
-    if form.voice_button_title.data:
-        form.title.process_data(TaskHelper.get_audio_transcript())
-        return render_template('create_task.html', form=form)
-    if form.voice_button_description.data:
-        form.description.process_data(TaskHelper.get_audio_transcript())
-        return render_template('create_task.html', form=form)
+    # if form.voice_button_title.data:
+    #     form.title.process_data(TaskHelper.get_audio_transcript())
+    #     return render_template('create_task.html', form=form)
+    # if form.voice_button_description.data:
+    #     form.description.process_data(TaskHelper.get_audio_transcript())
+    #     return render_template('create_task.html', form=form)
     # Now on to the boring stuff
     if form.save.data:
         """Save task."""
@@ -410,12 +410,12 @@ def create_task():
     for i, main_step in enumerate(form.main_steps):
         # Handling of main step deletion as well as detailed steps
         # addition and deletion which reside inside main steps
-        if main_step.voice_button_title.data:
-            main_step.title.process_data(TaskHelper.get_audio_transcript())
-        if main_step.voice_button_requiredItems.data:
-            main_step.requiredItems.process_data(TaskHelper.get_audio_transcript())
-        if main_step.voice_button_stepText.data:
-            main_step.stepText.process_data(TaskHelper.get_audio_transcript())
+        # if main_step.voice_button_title.data:
+        #     main_step.title.process_data(TaskHelper.get_audio_transcript())
+        # if main_step.voice_button_requiredItems.data:
+        #     main_step.requiredItems.process_data(TaskHelper.get_audio_transcript())
+        # if main_step.voice_button_stepText.data:
+        #     main_step.stepText.process_data(TaskHelper.get_audio_transcript())
         if main_step.main_step_removal.data:
             """User removes a main step."""
             form.main_steps.entries.pop(i)
