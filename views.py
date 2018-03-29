@@ -2,11 +2,11 @@ from flask import render_template, request, jsonify, redirect
 
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
-    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm
+    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
 from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
-from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest
+from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest, SurveyResult,SurveyAssigned
 
 @app.route('/', methods=['GET'])
 def index():
@@ -58,7 +58,7 @@ def postTaskCompleted():
     # print(d['TaskID'], d['AssignedUser'])
     results = Api.postTaskCompleted(d['TaskID'],d['AssignedUser'],d['TotalTime'],d['TotalDetailedStepsUsed'])
     return jsonify(results)
-
+                
 @app.route("/api/user/GetAllCompletedTasksByUser/<uname>", methods=['GET'])
 def getAllCompletedTasksByUser(uname):
     results = Api.getAllCompletedTasksByUser(uname)
@@ -81,25 +81,25 @@ def dashboard():
         tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
         users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
         requests = Request.query.filter_by(supervisorID=current_user.supervisorID).all()
-
+        
         # form some data dictionaries for use later
         # supervisor_to_users={}
         # user_to_supervisor{}
-
+        
         # mapping of user
         user_2_tasks={}
         task_2_users={}
-
+        
         # a plain array of user and tasks IDs assigned to the Supervisor
         userIDs=[]
         taskIDs=[]
-
+        
         for t in tasks:
             taskIDs.append(t.taskID)
-
+            
         for u in users:
             userIDs.append(u.userID)
-
+            
         if requests:
             for r in requests:
                 # structuring ddata
@@ -116,7 +116,7 @@ def dashboard():
                     task_2_users[r.taskID]=[r.userID]
         else:
             print("did not find any requests")
-
+            
         #print(user_to_tasks)
         #print(task_to_users)
             # need a structure that is indexable by userID for the Request object
@@ -138,16 +138,90 @@ def admin_dash():
         users  = User.query.all()
         return render_template("adminDashboard.html", supervisor_list=supervisors, user_list=users)
 
+# survey creation/edit page
+@app.route("/surveyCreation/", methods=["GET", "POST"])
+def surveyCreation():
+    form = CreateASurvey()
+    questions = SurveyQuest.query.all()
+    for q in questions:
+        print(q.questionText)
+    if form.validate_on_submit():
+        return ("You have Submitted the Survey")
+    return render_template("surveysTemp.html", form=form, form_questions = questions)
+
+    
+# survey results
+@app.route("/survey_results/", methods=["GET", "POST"])
+def survey_results():
+    survey_forms = SurveyForm.query.all() # the entire form table using the formID get the formTitle
+    survey_results = SurveyResult.query.all() # the entire result table. get the formID and the name
+    surveys_assigned = SurveyAssigned.query.all() # the entire assigned table
+    all_the_flippin_tasks = Task.query.all() # all the flippin tasks
+
+    das_struct = []
+    
+    formID_to_name = {} # result table map
+    formID_to_title = {} # surveyForm table map
+    formID_to_taskID = {} # assigned table map
+    taskID_to_title = {} # task table map
+    
+    formID_to_date = {} # result table map for date
+    
+    formIDs=[] # list of all formIDs from the result table
+    
+    # formIDs have unique titles in the surveyForms table
+    for s in survey_forms:
+        formID_to_title[s.formID]=s.formTitle
+        # print(formID_to_title[s.formID])
+        
+    # taskIDs have unique titles in the task table
+    for t in all_the_flippin_tasks:
+        taskID_to_title[t.taskID]=t.title
+        # print(taskID_to_title[t.taskID])
+    
+    # formIDs have unique names in the result table
+    for f in survey_results:
+        formID_to_name[f.formID]=f.name
+        formID_to_date[f.formID]=f.date
+        # print(formID_to_name[f.formID])
+        
+    # formID to taskID mapping from the assigned table
+    for a in surveys_assigned:
+        formID_to_taskID[a.formID]=a.taskID
+        formIDs.append(a.formID)
+        # print(formID_to_taskID[a.formID])
+        
+    # print(formIDs)
+    
+    # building das_struct
+    for f in formIDs:
+        #print(f)
+        #print(formID_to_name[f]) # prints name of the result
+        #print(taskID_to_title[formID_to_taskID[f]]) # prints the title of the task
+        #print(formID_to_title[f]) # prints the title of the surveyForm
+        das_struct.append({'formID':f,'date':formID_to_date[f],'taskTitle':taskID_to_title[formID_to_taskID[f]],'surveyTitle':formID_to_title[f],'userName':formID_to_name[f]})
+        
+    # print(das_struct)
+    return render_template("surveyResults.html", result_struct=das_struct)
+    
+    
 # survey management
 @app.route("/surveys/", methods=["GET", "POST"])
 def surveys():
-	form = CreateASurvey()
-	questions = SurveyQuest.query.all()
-	for q in questions:
-	    print(q.questionText)
-	if form.validate_on_submit():
-	    return ("You have Submitted the Survey")
-	return render_template("surveysTemp.html", form=form, form_questions = questions)
+    # create new survey form thing
+    # form = NewSurvey()
+    surveys = SurveyForm.query.all() # the entire result table. get the formID and the name
+    survey_list=[]
+    
+    for s in surveys:
+        survey_list.append({'formId':s.formID,'surveyTitle':s.formTitle,'surveyDesc':s.description})
+        
+    # print(survey_list)
+    
+    #if form.validate_on_submit():
+     #   print ("You are trying to create a new survey")
+     
+    return render_template("surveyManagement.html",survey_list=survey_list)
 
 # link to the logout page to log an account out
 @app.route('/logout', methods=['GET'])
@@ -344,6 +418,7 @@ def senior_assignment(arguments=None):
     return render_template("senior_assignment.html", supervisors=supervisors, superID=None, userID=-1, users=users, errors=None)
 
 
+    
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
