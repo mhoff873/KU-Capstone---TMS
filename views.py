@@ -20,6 +20,7 @@ from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest
 from datetime import datetime, timedelta
 from flask_weasyprint import HTML, render_pdf
+import weasyprint
 from flask_mail import Message
 
 @app.route('/', methods=['GET'])
@@ -214,8 +215,12 @@ def logout_account():
 def generate_report(arguments=None):
     """
     Description: hangle the rendering and passing of the data to the reports page
-    Parameters: none
-    Return Value: form rendering
+    Parameters: None or Sorted Options
+    Return Value: 
+        - SupervisorID - The supervisor requesting the report
+        - Users - The users that the report is for
+        - lstTask - The list of tasks being returned
+        - sortedBy - How the report is sorted (User or Time constraint)
     Author: Tyler Lance
     """
     # Chose which supervisor the report is being generated for
@@ -276,58 +281,13 @@ def generate_report(arguments=None):
 @app.route('/reports/<arguments>', methods=['GET'])
 @login_required
 def reports(arguments=None):
-    """
-    Description: hangle the rendering and passing of the data to the reports page
-    Parameters: none
-    Return Value: form rendering
-    Author: Tyler Lance
-    """
-    # Chose which supervisor the report is being generated for
-    #supervisorID = current_user.supervisorID
-    supervisorID = current_user.supervisorID
-    # pull the list of assigned users to the supervisor
-    users =  Api.getAssignedUsers(supervisorID)
-    # default date for the data if no date is passed
-    date = "2000-01-01"
-    # what the data is sorted by
-    sortedBy = "Showing all entries by date"
-    # pull userIDs from the user data
-    lstUserIDs = [li['userID'] for li in users]
-    # check if arguments were passed to the url
-    if arguments is not None:
-        sort = arguments.split(':')[0]
-        data = arguments.split(':')[1]
-        # check if userID was passed via url and that it wasnt all
-        if sort == 'userid' and data != 'A':
-            # empties the list of userids and adds in the passed one
-            lstUserIDs = []
-            lstUserIDs.append(int(data))
-            sortedBy = "Showing entries for user: " + Api.getNameFromID(int(data))
-        # check if date specified was passed to url
-        elif sort == 'date':
-            if data == 'M':
-                date = str((datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
-                sortedBy = "Showing entries for the last 30 days"
-            elif data == 'W':
-                date = str((datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
-                sortedBy = "Showing entries for the last 7 days"
-            elif data == 'D':
-                date = str((datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d'))
-                sortedBy = "Showing entries for the last day"
-    # get completed tasks by passing the list and date
-    tasks = Api.getCompletedTasksByUsers(date, lstUserIDs)
-    lstTask = []
-    # create list containing dictionaries for each table row
-    for li in tasks:
-        for li2 in li["completedTasks"]:
-            dictTask = {}
-            dictTask["userID"]=Api.getNameFromID(li["userID"])
-            dictTask["title"]=li2["title"]
-            dictTask["totalTime"]=li2["totalTime"]
-            dictTask["dateTimeCompleted"]=li2["dateTimeCompleted"]
-            lstTask.append(dictTask)
-    # sort the list by date so that the newest entries appear first
-    lstTask = sorted(lstTask,key=lambda k: k['dateTimeCompleted'], reverse=True)
+    '''
+        Description: Generate a report for the users assigned to the supervisor
+        Parameters: None or the sorting options
+        Return: A rendered template 
+        Author: Tyler Lance
+    '''
+    (supervisorID, users, lstTask, sortedBy) = generate_report(arguments)
     return render_template('reports.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy,  arguments=arguments)
 
 @app.route('/pdf', methods=['GET'])
@@ -336,8 +296,9 @@ def reports(arguments=None):
 def pdf(arguments=None):
     """
     Description: Generates a report for all users assigned to the supervisor or for a specifed user
-    Parameters: none
-    Return Value: 
+        Returns a pdf
+    Parameters: None or the sorting options
+    Return Value: pdf
     Author: Patrick Earl
     """
     (supervisorID, users, lstTask, sortedBy) = generate_report(arguments)
@@ -366,7 +327,12 @@ def email(arguments=None):
                 recipients=[current_user.email])
 
     (supervisorID, users, lstTask, sortedBy) = generate_report(arguments)
-    msg.html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy)
+    html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy, arguments=arguments)
+    pdf = weasyprint.HTML(string=html).write_pdf()
+    msg.attach('report.pdf', 'application/pdf', pdf)
+    msg.html = "<h3 style='text-align:center;'>Report is as an attached pdf</h3>"
+    msg.html += "<span style='text-align:center;'>Time of generation: " + datetime.now().strftime('%m-%d-%Y %H:%M:%S') + "</span>"
+    msg.html += "<p style='font-size:8px'>This is an automated message, this email is not monitored</p>"
     mail.send(msg)
     flash("Email send succesfully to " + current_user.email, 'success')
     return redirect(url_for('reports', arguments=arguments))
