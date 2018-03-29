@@ -55,7 +55,7 @@
                 <!-- Main Steps -->
                 <div style="display: inline-block; min-width: 90%">
                 {% for main_step in form.main_steps %}
-                    {{ main_step.title.label }}{{ main_step.title (class="form-control") }}
+                    {{ loop.index }}{{ main_step.title.label }}{{ main_step.title (class="form-control") }}
                     <br>
                     {{ main_step.requiredItem.label }}{{ main_step.requiredItem }}
                     <br>
@@ -71,7 +71,7 @@
                     <!-- Detailed Steps -->
                     <div style="display: inline-block; margin-left:3em">
                         {% for detailed_step in main_step.detailed_steps %}
-                            {{ detailed_step.title.label }}{{ detailed_step.title }}
+                            {{ loop.index }}{{ detailed_step.title.label }}{{ detailed_step.title }}
                             <br>
                             {{ detailed_step.stepText.label }}{{ detailed_step.stepText(style="height: 100px; width:100%") }}
                             <br>

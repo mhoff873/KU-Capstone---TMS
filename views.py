@@ -1,15 +1,21 @@
 from flask import render_template, request, jsonify, redirect, flash, url_for
 
-from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
-    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, TaskAssignmentForm
-from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, TaskAssignmentHelper, Api
+from Forms.forms import CreateAccount, CreateSupervisor, EditUser, AddUser, \
+    AssignUser, \
+    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, \
+    TaskAssignmentForm
+from helper_methods import UserMgmt, TaskHelper, Update, Login, Library, \
+    TaskAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
-from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest
+from Forms.models import Task, User, Supervisor, Request, SurveyForm, \
+    SurveyQuest
+
 
 @app.route('/', methods=['GET'])
 def index():
     return redirect("login", code=302)
+
 
 @app.route('/api/user/login', methods=['POST'])
 def api_login():
@@ -26,6 +32,7 @@ def api_login():
     else:
         return jsonify({'d': "sign in success"})
 
+
 @app.route('/api/user/GetByUser/<uname>', methods=['GET'])
 def api_getbyuser(uname):
     r = Api.getByUser(uname)
@@ -39,29 +46,38 @@ def getTaskDetails(taskid):
     results = Api.getTaskDetails(taskid)
     return jsonify(results)
 
+
 @app.route("/api/user/GetAllCompletedSteps/<uname>/<taskid>")
 def getAllCompletedSteps(uname, taskid):
     results = Api.getAllCompletedSteps(uname, taskid)
     return jsonify(results)
 
+
 @app.route("/api/user/PostMainStepCompleted", methods=['POST'])
 def postMainStepCompleted():
     d = json.loads(request.data)
     # print(d['MainStepName'])
-    results = Api.postMainStepCompleted(d['TaskID'],d['MainStepID'],d['AssignedUser'],d['TotalDetailedStepsUsed'],d['TotalTime'], request.remote_addr)
+    results = Api.postMainStepCompleted(d['TaskID'], d['MainStepID'],
+                                        d['AssignedUser'],
+                                        d['TotalDetailedStepsUsed'],
+                                        d['TotalTime'], request.remote_addr)
     return jsonify(results)
+
 
 @app.route("/api/user/PostTaskCompleted", methods=['POST'])
 def postTaskCompleted():
     d = json.loads(request.data)
     # print(d['TaskID'], d['AssignedUser'])
-    results = Api.postTaskCompleted(d['TaskID'],d['AssignedUser'],d['TotalTime'],d['TotalDetailedStepsUsed'])
+    results = Api.postTaskCompleted(d['TaskID'], d['AssignedUser'],
+                                    d['TotalTime'], d['TotalDetailedStepsUsed'])
     return jsonify(results)
-                
+
+
 @app.route("/api/user/GetAllCompletedTasksByUser/<uname>", methods=['GET'])
 def getAllCompletedTasksByUser(uname):
     results = Api.getAllCompletedTasksByUser(uname)
     return jsonify(results)
+
 
 # change to post then
 @app.route("/api/user/PostLoggedInIp/<data>", methods=['GET'])
@@ -70,35 +86,37 @@ def postLoggedInIp(data):
     return jsonify(results)
 
 
-
 # supervisor dashboard
 @app.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    if(current_user.role=="supervisor"):
+    if (current_user.role == "supervisor"):
         # query all the information
-        tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
-        users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
-        requests = Request.query.filter_by(supervisorID=current_user.supervisorID).all()
-        
+        tasks = Task.query.filter_by(
+            supervisorID=current_user.supervisorID).all()
+        users = User.query.filter_by(
+            supervisorID=current_user.supervisorID).all()
+        requests = Request.query.filter_by(
+            supervisorID=current_user.supervisorID).all()
+
         # form some data dictionaries for use later
         # supervisor_to_users={}
         # user_to_supervisor{}
-        
+
         # mapping of user
-        user_2_tasks={}
-        task_2_users={}
-        
+        user_2_tasks = {}
+        task_2_users = {}
+
         # a plain array of user and tasks IDs assigned to the Supervisor
-        userIDs=[]
-        taskIDs=[]
-        
+        userIDs = []
+        taskIDs = []
+
         for t in tasks:
             taskIDs.append(t.taskID)
-            
+
         for u in users:
             userIDs.append(u.userID)
-            
+
         if requests:
             for r in requests:
                 # structuring ddata
@@ -106,47 +124,55 @@ def dashboard():
                 if r.userID in user_2_tasks:
                     user_2_tasks[r.userID].append(r.taskID)
                 else:
-                    user_2_tasks[r.userID]=[r.taskID]
+                    user_2_tasks[r.userID] = [r.taskID]
                 # structuring data
                 # { taskID : [userID,*] }
                 if r.taskID in task_2_users:
                     task_2_users[r.taskID].append(r.userID)
                 else:
-                    task_2_users[r.taskID]=[r.userID]
+                    task_2_users[r.taskID] = [r.userID]
         else:
             print("did not find any requests")
-            
-        #print(user_to_tasks)
-        #print(task_to_users)
+
+            # print(user_to_tasks)
+            # print(task_to_users)
             # need a structure that is indexable by userID for the Request object
 
-        return render_template('dashboard.html', task_list=tasks, user_list=users, request_list=requests, task_to_users=task_2_users, user_to_tasks=user_2_tasks,userID_list=userIDs,taskID_list=taskIDs)
+        return render_template('dashboard.html', task_list=tasks,
+                               user_list=users, request_list=requests,
+                               task_to_users=task_2_users,
+                               user_to_tasks=user_2_tasks, userID_list=userIDs,
+                               taskID_list=taskIDs)
 
-
-    if(current_user.role=="admin"):
+    if (current_user.role == "admin"):
         return redirect("adminDashboard", code=302)
+
 
 # admin dash
 @app.route("/adminDashboard/", methods=["GET", "POST"])
 @login_required
 def admin_dash():
-    if(current_user.role=="supervisor"):
+    if (current_user.role == "supervisor"):
         return redirect("dashboard", code=302)
-    if(current_user.role=="admin"):
-        supervisors  = Supervisor.query.all()
-        users  = User.query.all()
-        return render_template("adminDashboard.html", supervisor_list=supervisors, user_list=users)
+    if (current_user.role == "admin"):
+        supervisors = Supervisor.query.all()
+        users = User.query.all()
+        return render_template("adminDashboard.html",
+                               supervisor_list=supervisors, user_list=users)
+
 
 # survey management
 @app.route("/surveys/", methods=["GET", "POST"])
 def surveys():
-	form = CreateASurvey()
-	questions = SurveyQuest.query.all()
-	for q in questions:
-	    print(q.questionText)
-	if form.validate_on_submit():
-	    return ("You have Submitted the Survey")
-	return render_template("surveysTemp.html", form=form, form_questions = questions)
+    form = CreateASurvey()
+    questions = SurveyQuest.query.all()
+    for q in questions:
+        print(q.questionText)
+    if form.validate_on_submit():
+        return ("You have Submitted the Survey")
+    return render_template("surveysTemp.html", form=form,
+                           form_questions=questions)
+
 
 # link to the logout page to log an account out
 @app.route('/logout', methods=['GET'])
@@ -154,6 +180,7 @@ def surveys():
 def logout_account():
     logout_user()
     return redirect("login", code=302)
+
 
 # supervisor account
 @app.route('/supervisor_account', methods=['GET', "POST"])
@@ -163,15 +190,15 @@ def supervisor_account():
     if eUser.validate_on_submit():
         UserMgmt.edit_supervisor(eUser, current_user)
         return dashboard()
-    return render_template('supervisor_account.html',EditUser=eUser)
+    return render_template('supervisor_account.html', EditUser=eUser)
 
 
 # login page
-@app.route('/login', methods=['POST','GET'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     lForm = LoginForm()
     if lForm.validate_on_submit():
-        if Login.verifyMain(lForm.email.data,lForm.password.data):
+        if Login.verifyMain(lForm.email.data, lForm.password.data):
             print("login sucessful")
             return redirect("dashboard", code=302)
         else:
@@ -179,28 +206,30 @@ def login():
     # form submission was invalid
     if lForm.errors:
         for error_field, error_message in lForm.errors.items():
-            print("Field : {field}; error : {error}".format(field=error_field, error=error_message))
+            print("Field : {field}; error : {error}".format(field=error_field,
+                                                            error=error_message))
     return render_template('login.html', form=lForm)
 
 
 # update password page (currently a page, maybe you will want a popup... whatever)
-@app.route('/update', methods=['POST','GET'])
+@app.route('/update', methods=['POST', 'GET'])
 def update():
     uForm = ChangePassword()
     if uForm.validate_on_submit():
-        Update.setPassword(uForm.email.data,uForm.password.data)
+        Update.setPassword(uForm.email.data, uForm.password.data)
         # lets go back to the login page to test if the new password works
         return render_template('login.html', form=LoginForm())
 
     # if form submission was invalid for some reason
     if uForm.errors:
         for error_field, error_message in uForm.errors.items():
-            print("Field : {field}; error : {error}".format(field=error_field, error=error_message))
+            print("Field : {field}; error : {error}".format(field=error_field,
+                                                            error=error_message))
     # the page has not been submitted before so lets render the form instead
     return render_template('update.html', form=uForm)
 
 
-#create supervisor page
+# create supervisor page
 @app.route("/create_supervisor/", methods=["GET", "POST"])
 @login_required
 def create_supervisor():
@@ -211,7 +240,7 @@ def create_supervisor():
     return render_template("createSupervisorTest.html", form=form)
 
 
-#create user page
+# create user page
 @app.route("/create_user/", methods=["GET", "POST"])
 @login_required
 def create_user():
@@ -250,7 +279,8 @@ def library(arguments=None):
             if sort == "alpha":
                 tasks = Library.sort_alphabetically(Library.search(keyword))
             elif sort == "alpha-rev":
-                tasks = Library.sort_alphabetically(Library.search(keyword), reverse=True)
+                tasks = Library.sort_alphabetically(Library.search(keyword),
+                                                    reverse=True)
         else:
             tasks = Library.sort_alphabetically(Library.search(keyword))
     else:
@@ -266,14 +296,19 @@ def library(arguments=None):
 
             # Check sort options
             if sort == "alpha":
-                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
+                tasks = Library.sort_alphabetically(
+                    Library.get_tasks(supervisor_id))
             if sort == "alpha-rev":
-                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id), reverse=True)
-            else: # Default option is to sort alphabetically
-                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
+                tasks = Library.sort_alphabetically(
+                    Library.get_tasks(supervisor_id), reverse=True)
+            else:  # Default option is to sort alphabetically
+                tasks = Library.sort_alphabetically(
+                    Library.get_tasks(supervisor_id))
         else:
-            tasks = Library.sort_alphabetically(Library.get_tasks(current_user.supervisorID))
-    return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors, selectedID=selected_id)
+            tasks = Library.sort_alphabetically(
+                Library.get_tasks(current_user.supervisorID))
+    return render_template("library.html", tasks=tasks, search=search_form,
+                           supervisors=allsupervisors, selectedID=selected_id)
 
 
 # user assignment
@@ -293,13 +328,14 @@ def task_assignment():
     # WARNING: If the user doesn't have a first name and a last name in the DB,
     # such as, say, the user was entered for testing purposes,
     # the concatenation of their first name and last name will crash the app.
-    user_choices = [(user.userID, user.fname + ' ' + user.lname) for user in users]
+    user_choices = [(user.userID, user.fname + ' ' + user.lname) for user in
+                    users]
     user_choices.append(('all_users', 'All Users'))
     form.assigned_users.choices = user_choices
     if form.assign_task_button.data:
         task_choices = [(task.taskID, task.title) for task
                         in TaskAssignmentHelper.get_assignable_tasks(
-                        current_user.supervisorID)]
+                current_user.supervisorID)]
         form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
@@ -310,7 +346,7 @@ def task_assignment():
             pass
         task_choices = [(task.taskID, task.title) for task
                         in TaskAssignmentHelper.get_tasks_assigned_to_user(
-                        form.assigned_users.data, current_user.supervisorID)]
+                form.assigned_users.data, current_user.supervisorID)]
         form.tasks.choices = task_choices
         return render_template("task_assignment.html", form=form)
     if form.assign_button.data:
@@ -327,15 +363,16 @@ def task_assignment():
     if form.remove_button.data:
         if form.assigned_users.data == 'all_users':
             flash('Task has been removed from all users.', 'info')
-            TaskAssignmentHelper.remove_from_all_users(current_user.supervisorID,
-                                                       form.tasks.data)
+            TaskAssignmentHelper.remove_from_all_users(
+                current_user.supervisorID,
+                form.tasks.data)
             return render_template("task_assignment.html", form=form)
         flash('Task has been removed from user.', 'info')
         TaskAssignmentHelper.delete_request(form.assigned_users.data,
                                             form.tasks.data)
         return render_template("task_assignment.html", form=form)
     return render_template("task_assignment.html", form=form)
-    
+
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
@@ -423,7 +460,7 @@ def edit_task(task_id=None):
     return render_template('edit_task.html', form=form)
 
 
-#User Account
+# User Account
 @app.route("/user_account/<user>", methods=["GET", "POST"])
 @login_required
 def user_account(user):
