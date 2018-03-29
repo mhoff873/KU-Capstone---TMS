@@ -34,7 +34,8 @@
     <!-- HTML5 Speech Recognition API -->
     <script>
         function startDictation() {
-
+            console.log('startDictation called');
+            console.log(window.hasOwnProperty('webkitSpeechRecognition'));
             if (window.hasOwnProperty('webkitSpeechRecognition')) {
 
                 var recognition = new webkitSpeechRecognition();
@@ -48,12 +49,14 @@
                 recognition.onresult = function (e) {
                     document.getElementById('transcript').value
                         = e.results[0][0].transcript;
+                    console.log(e.results[0][0].transcript);
                     recognition.stop();
                     document.getElementById('labnol').submit();
                 };
 
                 recognition.onerror = function (e) {
                     recognition.stop();
+                    console.log('Error receiving audio.')
                 }
 
             }
