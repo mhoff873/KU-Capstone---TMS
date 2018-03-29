@@ -297,7 +297,6 @@ def task_assignment():
     if form.assign_task_button.data:
         task_choices = [(task.taskID, task.title) for task in TaskAssignmentHelper.get_assignable_tasks(current_user.supervisorID)]
         form.tasks.choices = task_choices
-        flash('Task has been assigned to user.', 'info')
         return render_template("task_assignment.html", form=form)
     if form.view_assigned_tasks_button.data:
         if form.assigned_users.data == 'all_users':
@@ -311,8 +310,10 @@ def task_assignment():
     if form.assign_button.data:
         if form.assigned_users.data == 'all_users':
             TaskAssignmentHelper.assign_to_all_users(current_user.supervisorID, form.tasks.data)
+            flash('Task has been assigned to all users.', 'info')
             return render_template("task_assignment.html", form=form)
         TaskAssignmentHelper.assign_task(form.assigned_users.data, form.tasks.data, current_user.supervisorID)
+        flash('Task has been assigned to user.', 'info')
         return render_template("task_assignment.html", form=form)
     if form.remove_button.data:
         if form.assigned_users.data == 'all_users':
