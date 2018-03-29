@@ -282,6 +282,8 @@ def library(arguments=None):
 def task_assignment():
     """
     Authors: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    Handles logic and rendering of user_assignment page
+    :return: rendered user_assignment page
     """
     form = TaskAssignmentForm(request.form)
     if current_user.role == "supervisor":
