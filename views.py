@@ -13,7 +13,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, json
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
-    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
+    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm
 from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
@@ -62,7 +62,7 @@ def postTaskCompleted():
     d = json.loads(request.data)
     results = Api.postTaskCompleted(d['TaskID'],d['AssignedUser'],d['TotalTime'],d['TotalDetailedStepsUsed'])
     return jsonify(results)
-                
+
 @app.route("/api/user/GetAllCompletedTasksByUser/<uname>", methods=['GET'])
 def getAllCompletedTasksByUser(uname):
     results = Api.getAllCompletedTasksByUser(uname)
@@ -87,7 +87,7 @@ def postSurveyResults(test):
     # created the required dictionary & lists and pass to function
     results = Api.postSurveyResults(SR,SQR)
     return test
-    
+
 #http://tmst.kutztown.edu:5004/api/user/PostSurveyForm/test
 # this must be changed from get to post
 @app.route("/api/user/PostSurveyForm/<test>", methods=['GET'])
@@ -97,7 +97,7 @@ def postSurveyForm(test):
     # created the required dictionary & lists and pass to function
     results = Api.postSurveyForm(SF,SQ)
     return test
-    
+
 #http://tmst.kutztown.edu:5004/api/user/GetAssignedUsers/4
 @app.route("/api/user/GetAssignedUsers/<superID>", methods=['GET'])
 def getAssignedUsers(superID):
@@ -115,7 +115,7 @@ def getCompletedTasksByUsers(test):
     # created the required dictionary & lists and pass to function
     results = Api.getCompletedTasksByUsers(date, users)
     return jsonify(results)
-    
+
 #http://tmst.kutztown.edu:5004/api/user/GetCompletedTasksByID/2018-03-01/654706
 # change to post once you are ready to call function
 @app.route("/api/user/GetCompletedTasksByID/<date>/<ID>", methods=['GET'])
@@ -123,7 +123,7 @@ def getCompletedTasksByID(date, ID):
     # created the required dictionary & lists and pass to function
     results = Api.getCompletedTasksByID(date, ID)
     return jsonify(results)
-    
+
 #http://tmst.kutztown.edu:5004/api/user/GetTaskImageByID/654706
 @app.route("/api/user/GetTaskImageByID/<taskID>", methods=['POST'])
 def GetTaskImageByID(taskID):
@@ -149,25 +149,25 @@ def dashboard():
         tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
         users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
         requests = Request.query.filter_by(supervisorID=current_user.supervisorID).all()
-        
+
         # form some data dictionaries for use later
         # supervisor_to_users={}
         # user_to_supervisor{}
-        
+
         # mapping of user
         user_2_tasks={}
         task_2_users={}
-        
+
         # a plain array of user and tasks IDs assigned to the Supervisor
         userIDs=[]
         taskIDs=[]
-        
+
         for t in tasks:
             taskIDs.append(t.taskID)
-            
+
         for u in users:
             userIDs.append(u.userID)
-            
+
         if requests:
             for r in requests:
                 # structuring ddata
@@ -184,7 +184,7 @@ def dashboard():
                     task_2_users[r.taskID]=[r.userID]
         else:
             print("did not find any requests")
-            
+
         #print(user_to_tasks)
         #print(task_to_users)
             # need a structure that is indexable by userID for the Request object
@@ -338,7 +338,7 @@ def pdf(arguments=None):
     date = datetime.now().strftime('%A, %B %d, %Y %I:%M %p')
     html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy, date=date)
     return render_pdf(HTML(string=html))
-   
+
 @app.route('/graph', methods=['GET'])
 @app.route('/graph/<arguments>', methods=['GET'])
 @login_required
@@ -447,19 +447,19 @@ def graph(arguments=None):
                     statistics.append(Api.getTaskFromID(t['taskID']) + ' was uncompleted ' + str(Api.getUncompletedTaskByID(int(user),t['taskID'])) + ' time(s).')
     chart = chart.render_data_uri()
     return render_template('graph.html', supervisor=supervisorID, user=users, task=tasks, chart=chart, statistics=statistics)
-   
-   
+
+
 @app.route('/email', methods=['GET'])
 def email(arguments=None):
     """
-    Description: 
+    Description:
     Parameters: none
-    Return Value: 
-    Author: 
+    Return Value:
+    Author:
     """
     pass
 
-    
+
 # supervisor account
 @app.route('/supervisor_account', methods=['GET', "POST"])
 @login_required
@@ -556,6 +556,10 @@ def library(arguments=None):
                 tasks = Library.sort_alphabetically(Library.search(keyword))
             elif sort == "alpha-rev":
                 tasks = Library.sort_alphabetically(Library.search(keyword), reverse=True)
+            elif sort == "chrono":
+                tasks = Library.sort_chronologically(Library.search(keyword))
+            elif sort == "chrono-rev":
+                tasks = Library.sort_chronologically(Library.search(keyword), reverse=True)
         else:
             tasks = Library.sort_alphabetically(Library.search(keyword))
     else:
@@ -566,23 +570,26 @@ def library(arguments=None):
 
             # If the tasks were already sorted based on supervisor, keep those
             # tasks and just sort them.
-            if supervisor_id != "":
-                selected_id = supervisor_id
-
-            # Check sort options
-            if sort == "alpha":
+            if supervisor_id == "-1":
+                tasks = Library.sort_alphabetically(Library.search("*"))
+             # Check sort options
+            elif sort == "alpha":
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
-            if sort == "alpha-rev":
+            elif sort == "alpha-rev":
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id), reverse=True)
+            elif sort == "chrono":
+                tasks = Library.sort_chronologically(Library.get_tasks(supervisor_id))
+            elif sort == "chrono-rev":
+                tasks = Library.sort_chronologically(Library.get_tasks(supervisor_id), reverse=True)
             else: # Default option is to sort alphabetically
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
         else:
             tasks = Library.sort_alphabetically(Library.get_tasks(current_user.supervisorID))
-            img = {}
-            # determine the image to pull
-            for t in tasks:
-                #t.image = Api.getPathForTaskImage(t.taskID)
-                img[t.taskID] = Api.getPathForTaskImage(t.taskID)
+        img = {}
+        # determine the image to pull
+        for t in tasks:
+            #t.image = Api.getPathForTaskImage(t.taskID)
+            img[t.taskID] = Api.getPathForTaskImage(t.taskID)
     return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors, selectedID=selected_id, img=img)
 
 # user assignment
@@ -613,7 +620,7 @@ def user_assignment():
         # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
     #"""
     return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
-    
+
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
@@ -705,4 +712,3 @@ def user_account(user):
         UserMgmt.edit_user(eUser, user)
         return dashboard()
     return render_template("userAccount.html", EditUser=eUser, User=user)
-

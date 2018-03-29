@@ -28,6 +28,16 @@ def get_supervisors():
     return Supervisor.query.all()
 
 
+def sort_chronologically(tasks, reverse=False):
+    """
+    Sorts a list of tasks chronologically, ascending or descending.
+    :param tasks: List of tasks to be sorted.:
+    :param reverse: Optional on whether to sort ascending or descending.
+    :return: List of sorted tasks.
+    """
+    return sorted(tasks, key=chrono_sort_key, reverse=reverse)
+
+
 def sort_alphabetically(tasks, reverse=False):
     """
     Sorts a list of tasks alphabetically, ascending or descending
@@ -35,9 +45,19 @@ def sort_alphabetically(tasks, reverse=False):
     :param reverse: Optional on whether to sort ascending or descending.
     :return: List of sorted tasks.
     """
-    return sorted(tasks, key=sort_key, reverse=reverse)
+    return sorted(tasks, key=alpha_sort_key, reverse=reverse)
 
-def sort_key(task):
+
+def chrono_sort_key(task):
+    """
+    Allows the sorted functions to sort the tasks based on their title.
+    :param task: Task that will be passed in to be sorted.
+    :return: Title of each task passed into it.
+    """
+    return task.dateCreated
+
+
+def alpha_sort_key(task):
     """
     Allows the sorted functions to sort the tasks based on their title.
     :param task: Task that will be passed in to be sorted.
