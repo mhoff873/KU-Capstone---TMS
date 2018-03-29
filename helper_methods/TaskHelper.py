@@ -1,6 +1,7 @@
 """
 Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
 """
+import speech_recognition as speech_rec
 from flask_login import current_user
 
 from Forms.forms import CreateTaskForm
@@ -12,6 +13,7 @@ from database import db
 # Req 1
 def create_task(form):
     """
+    Author: David Schaeffer, February 2018 <dscha959@live.kutztown.edu>
     Extracts data from form entering it into our Task, MainStep, DetailedStep
     objects to be entered into the database.
     :param form: The CreateTaskForm.
@@ -80,7 +82,7 @@ def create_task(form):
 
 def get_task(task_id: int):
     """
-    Author: David Schaeffer, April 2018 <dscha959@live.kutztown.edu>
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     :param task_id: ID of task we will be displaying
     :return: A completed task form to be edited by user
     """
@@ -99,3 +101,27 @@ def get_task(task_id: int):
     form.keywords.process_data(keywords_string)
     print(form.data)
     return form
+
+
+def get_audio_transcript():
+    """
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    Gets the audio input from the user's microphone, converts it to text
+    :return: The transcript string or empty string if there was an error.
+    """
+    recognizer = speech_rec.Recognizer()
+    recognizer.energy_threshold = 4000
+    recognizer.pause_threshold = 1.0
+    with speech_rec.Microphone() as source:
+        print('Recording audio')
+        audio = recognizer.listen(source)
+    print('No longer recording.')
+    try:
+        transcript = recognizer.recognize_google(audio)
+        print('Google thinks you said: ', transcript)
+        return transcript
+    except speech_rec.UnknownValueError:
+        print('Could not understand you.')
+    except speech_rec.RequestError as e:
+        print('Could not get results from Google: ', e)
+    return ''

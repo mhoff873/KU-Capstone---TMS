@@ -55,11 +55,15 @@
                 <!-- Main Steps -->
                 <div style="display: inline-block; min-width: 90%">
                 {% for main_step in form.main_steps %}
-                    {{ loop.index }}. {{ main_step.title.label }}{{ main_step.title (class="form-control") }}
+                    {{ loop.index }}. {{ main_step.title.label }}
+                    {{ main_step.title (class="form-control") }}
+                    {{ main_step.voice_button_title }}
                     <br>
                     {{ main_step.requiredItem.label }}{{ main_step.requiredItem }}
+                    {{ main_step.voice_button_requiredItem }}
                     <br>
                     {{ main_step.stepText.label }}{{ main_step.stepText(style="height: 100px; width:100%") }}
+                    {{ main_step.voice_button_stepText }}
                     <br>
                     {{ main_step.audio.label }}{{ main_step.audio }}
                     <br>
@@ -71,9 +75,11 @@
                     <!-- Detailed Steps -->
                     <div style="display: inline-block; margin-left:3em">
                         {% for detailed_step in main_step.detailed_steps %}
-                            {{ loop.index }}. {{ detailed_step.title.label }}{{ detailed_step.title }}
+                            {{ loop.index }}. {{ detailed_step.title.label }}
+                            {{ detailed_step.title }}{{ detailed_step.voice_button_title }}
                             <br>
                             {{ detailed_step.stepText.label }}{{ detailed_step.stepText(style="height: 100px; width:100%") }}
+                            {{ detailed_step.voice_button_stepText }}
                             <br>
                             {{ detailed_step.image.label }}{{ detailed_step.image }}
                             <br>

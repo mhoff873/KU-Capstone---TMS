@@ -392,22 +392,11 @@ def create_task():
 
     # HERE BE SPEECH!
     if form.voice_button_title.data:
-        recognizer = speech_rec.Recognizer()
-        recognizer.energy_threshold = 4000
-        recognizer.pause_threshold = 0.8
-        with speech_rec.Microphone() as source:
-            print('Recording audio')
-            audio = recognizer.listen(source)
-        print('No longer recording.')
-        try:
-            transcript = recognizer.recognize_google(audio)
-            print('Google thinks you said: ', transcript)
-            form.title.process_data(transcript)
-            return render_template('create_task.html', form=form)
-        except speech_rec.UnknownValueError:
-            print('Could not understand you.')
-        except speech_rec.RequestError as e:
-            print('Could not get results from Google: ', e)
+        form.title.process_data(TaskHelper.get_audio_transcript())
+        return render_template('create_task.html', form=form)
+    if form.voice_button_description.data:
+        form.description.process_data(TaskHelper.get_audio_transcript())
+        return render_template('create_task.html', form=form)
     # Now on to the boring stuff
     if form.save.data:
         """Save task."""
