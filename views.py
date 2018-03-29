@@ -338,6 +338,9 @@ def graph(arguments=None):
     chart = pygal.HorizontalBar()
     # Get the supervisor ID
     supervisorID = current_user.supervisorID
+    # statistics to be displayed under the graph, empty if no arguments
+    statistics = []
+    sortedBy = ""
     # get users assigned to the supervisor
     users =  Api.getAssignedUsers(supervisorID)
     # get list of tasks created by the supervisor
@@ -388,10 +391,13 @@ def graph(arguments=None):
                         dictTask["userID"] = t["userID"]
                         dictTask["totalTime"] = t["totalTime"]
                         dictTask["total"] = 1
+                        dictTask["taskID"] = t["taskID"]
                         lstTask.append(dictTask)
                 # iterate over the list to calculate the averages for each user and add it to the chart
                 for t in lstTask:
                     chart.add(Api.getNameFromID(t['userID']), int((t['totalTime']/t['total'])/1000))
+                    statistics.append(Api.getNameFromID(t['userID']) + ' completed this task ' + str(t['total']) + ' time(s).')
+                    statistics.append(Api.getNameFromID(t['userID']) + ' was unable to complete this task ' + str(Api.getUncompletedTaskByID(t['userID'],t['taskID'])) + ' time(s).')
             # to generate the user graph
             elif submit == 'T' and user != 'None':
                 # get the name of the user
@@ -423,8 +429,10 @@ def graph(arguments=None):
                 # iterate over the list to calculate the averages for each task and add it to the chart
                 for t in lstTask:
                     chart.add(Api.getTaskFromID(t['taskID']), int((t['totalTime']/t['total'])/1000))
+                    statistics.append(Api.getTaskFromID(t['taskID']) + ' was completed ' + str(t['total']) + ' time(s).')
+                    statistics.append(Api.getTaskFromID(t['taskID']) + ' was uncompleted ' + str(Api.getUncompletedTaskByID(int(user),t['taskID'])) + ' time(s).')
     chart = chart.render_data_uri()
-    return render_template('graph.html', supervisor=supervisorID, user=users, task=tasks, chart=chart)
+    return render_template('graph.html', supervisor=supervisorID, user=users, task=tasks, chart=chart, statistics=statistics)
    
    
 @app.route('/email', methods=['GET'])

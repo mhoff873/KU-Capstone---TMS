@@ -92,8 +92,20 @@
    <embed type="image/svg+xml" src= {{ chart|safe }} />
 </div>
 </div>
- <!-- content goes here, above. -->
 
+<br>
+<div class = "container">
+ <div class="row text-left">
+    {% for s in statistics %}
+    {{ s }}
+    <br>
+    {% endfor %}
+  </div>
+</div>
+ <!-- content goes here, above. -->
+<br>
+<br>
+<br>
 
 
 {% endblock content %}

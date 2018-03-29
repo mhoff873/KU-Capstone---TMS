@@ -43,10 +43,12 @@
       </tr>
       <tr>
     </tbody>
+	</table>
+	<table class="table table-hover table-bordered">
     <thead>
       <tr>
 	<!-- Note we need to use colspan here http://jsfiddle.net/CBWJf/ -->
-	<th colspan="2">Step Name</th>
+	<th>Step Name</th>
 	<th>Time Spent</th>
 	<th>Date/TimeCompleted</th>
 	<th>Detailed Steps Used</th>
@@ -55,7 +57,7 @@
     {% for s in t["detailedSteps"] %}
     <tbody>
       <tr>
-	<td colspan="2">{{ s["title"] }}</td>
+	<td>{{ s["title"] }}</td>
 	<td>{{ s["timeSpent"]/1000 }} seconds</td>
 	<td>{{ s["dateTimeCompleted"] }}</td>
 	<td>{{ s["detailedStepsUsed"] }}</td>
