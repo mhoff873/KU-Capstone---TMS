@@ -410,6 +410,12 @@ def create_task():
     for i, main_step in enumerate(form.main_steps):
         # Handling of main step deletion as well as detailed steps
         # addition and deletion which reside inside main steps
+        if main_step.voice_button_title.data:
+            main_step.title.process_data(TaskHelper.get_audio_transcript())
+        if main_step.voice_button_requiredItems.data:
+            main_step.requiredItems.process_data(TaskHelper.get_audio_transcript())
+        if main_step.voice_button_stepText.data:
+            main_step.stepText.process_data(TaskHelper.get_audio_transcript())
         if main_step.main_step_removal.data:
             """User removes a main step."""
             form.main_steps.entries.pop(i)
@@ -419,6 +425,10 @@ def create_task():
             main_step.detailed_steps.append_entry()
             return render_template('create_task.html', form=form)
         for j, detailed_step in enumerate(main_step.detailed_steps):
+            if detailed_step.voice_button_title.data:
+                detailed_step.title.process_data(TaskHelper.get_audio_transcript())
+            if detailed_step.voice_button_stepText.data:
+                detailed_step.stepText.process_data(TaskHelper.get_audio_transcript())
             if detailed_step.detailed_step_removal.data:
                 main_step.detailed_steps.entries.pop(j)
                 return render_template('create_task.html', form=form)
