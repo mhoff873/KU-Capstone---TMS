@@ -9,7 +9,7 @@
         <div class="page_content">
 
 
-            <!--<h1>Task Creation Test Page</h1>-->
+            
 
             <form action="{{ url_for('create_task') }}" method="POST">
                 {{ form.hidden_tag() }}
@@ -21,8 +21,7 @@
                 <div style="display: inline-block; min-width: 13em">
                     {{ form.title (class="form-control") }}
                 </div>
-                <a class="btn btn-secondary btn-md" href="#">
-                    <i class="fas fa-microphone"></i>Voice</a>
+                <a class="btn btn-secondary btn-md" href="#"><i class="fas fa-microphone"></i>Voice</a>
 
                 <br>
 
@@ -47,6 +46,7 @@
                 <hr>
 
                 <!-- Main Steps -->
+				<div id="main1">
                 <div style="display: inline-block">
                 {% for main_step in form.main_steps %}
                     {{ main_step.title.label }}{{ main_step.title (class="form-control") }}
@@ -61,6 +61,8 @@
                     <br>
                     {{ main_step.video.label }}{{ main_step.video }}
                     <br>
+				</div>
+				</div>
 
                     <!-- Detailed Steps -->
                     <div style="display: inline-block; margin-left:3em">
@@ -84,17 +86,22 @@
                     {{ main_step.main_step_down (class='btn btn-secondary btn-md') }}
                     <hr>
                 {% endfor %}
-                </div>
+				<!--</div>-->
                 <br>
                 {{ form.add_main_step (class='btn btn-secondary btn-md') }}
                 <br><br>
                 {{ form.save_as_draft (class='btn btn-secondary btn-md') }}&nbsp;
+				
                 {{ form.publish (class='btn btn-secondary btn-md') }}
+				<br><br>
+				
                 {{ form.toggle_enabled (class='btn btn-secondary btn.md') }}
+				
                 {{ form.toggle_activation (class='btn btn-secondary btn.md') }}
+				<br><br><br>
             </form>
-
-
-        </div>
+	
+		</div>
     </div><!-- /.container -->
 {% endblock content %}
+

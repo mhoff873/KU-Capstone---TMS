@@ -20,75 +20,63 @@
 
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light bg-faded py-3" >
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#">TMS</a>
+    <a class="navbar-brand" style="font-size: 2em;" href="#">TMS</a>
     <div class="collapse navbar-collapse" id="navbarToggler">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       
         <li class="nav-item active">
-          <a class="nav-link" href="{{url_for('dashboard')}}">Dashboard <span class="sr-only">(current)</span></a>
+          <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('dashboard')}}">Dashboard <span class="sr-only">(current)</span></a>
         </li>
         
-        <!-- only a supervisor can visit the library -->
+        <!-- only a supervisor only-->
         {% if current_user.role=="supervisor" %}
           <li class="nav-item">
-            <a class="nav-link" href="{{url_for('library')}}">Library</a>
+            <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('library')}}">Library</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
+            <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('create_task')}}">Create Task</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/user_assignment">User Assignment</a>
+		  <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('user_assignment')}}">Task Assignment</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('senior_assignment') }}">Senior Assignment</a>
-          </li>
+          <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('surveys')}}">Survey Management</a>
+        </li>
         {% endif %}
         
-        <!-- only an admin can assign users, manage surveys, and create tasks -->
+        <!-- admin only -->
         {% if current_user.role=="admin" %}
-          <!--
-          <li class="nav-item">
-          <a class="nav-link" href="/user_assignment">User Assignment</a>
-        </li> -->
+
         <li class="nav-item">
-          <a class="nav-link" href="/surveys">Survey Management</a>
+          <a class="nav-link" style="font-size: 1.5em;" href="{{ url_for('senior_assignment') }}">Senior Assignment</a>
         </li>
-          <!--
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
-        </li>-->
+
         {% endif %}
         
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{current_user.username if current_user.role=="admin" else current_user.email}}</a>
+          <a class="nav-link dropdown-toggle" style="font-size: 1.5em;" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{current_user.username if current_user.role=="admin" else current_user.email}}</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
-<!--             <a class="dropdown-item" href="#">
-              Notificatitons
-              <span class="badge badge-pill bg-light align-text-bottom">79</span>
-            </a> -->
+
             
             <!-- only supervisors have an account page -->
             {% if current_user.role=="supervisor" %}
-            <a class="dropdown-item" href="{{url_for('supervisor_account')}}">Account</a>
-			<a class="dropdown-item" href="{{url_for('reports')}}">Reports</a>
+            <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('supervisor_account')}}">Account</a>
+			<!--<a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('reports')}}">Reports</a>-->
             {% endif %}
             
             <!-- only admins can create users and supervisors -->
             {% if current_user.role=="admin" %}
-            <!--<a class="dropdown-item" href="#">Reports</a>-->
-            <a class="dropdown-item" href="{{url_for('create_user')}}">Create User</a>
-            <a class="dropdown-item" href="{{url_for('create_supervisor')}}">Create Supervisor</a>
+            <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('reports')}}">Reports</a>
+            <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('create_user')}}">Create User</a>
+            <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('create_supervisor')}}">Create Supervisor</a>
             {% endif %}
             
             <!-- everybody may log out but only a few will return -->
-            <a class="dropdown-item" href="/logout">Logout</a>
+            <a class="dropdown-item" style="font-size: 1.5em;" href="/logout">Logout</a>
             
 
           </div>
@@ -98,16 +86,9 @@
     </div>
   </nav>
 
-  <!--<div class="jumbotron text-center">
-    <h1>{Insert Page Name Here}</h1>
-  </div>
-
-  <div class="container">
-    <div class="page_content">-->
-
-    <!-- content goes in here, below. -->
 
 
+	   <!-- content goes here, below. -->
 
 
    {% block content %}{% endblock content %}
@@ -118,8 +99,7 @@
 
     <!-- content goes here, above. -->
 
-    <!--</div>
-  </div>--><!-- /.container -->
+
 
 
 
