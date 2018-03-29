@@ -393,6 +393,7 @@ def create_task():
     # HERE BE SPEECH!
     if form.voice_button_title.data:
         recognizer = speech_rec.Recognizer()
+        recognizer.energy_threshold = 4000
         with speech_rec.Microphone() as source:
             print('Recording audio')
             audio = recognizer.listen(source)
