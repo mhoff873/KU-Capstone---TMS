@@ -4,14 +4,13 @@
 <div class="jumbotron text-center">
 	<h1>Survey Creation Page</h1>
 </div>
+
+<a href="{{url_for('surveys')}}">SurveyManagement</a>
+<a href="{{url_for('survey_results')}}">View All Results</a>
+
 <form method="POST">
 	{{form.csrf_token}}
 
-	{% for q in form_questions %}
-	<p>{{q.questionText}}</p>
-	{% endfor %}
-	
-<br>
 <br>
 	{{form.save}}
 	{{form.delete}} 
@@ -20,7 +19,7 @@
 	{{form.assign_a_survey.label}} 
 	{{form.assign_a_survey}} 
 	<br>
-<br>
+        <br>
 	{{form.delete}} 
 	{% for q in form.questions %}
 	{{q.stock_question.label}}

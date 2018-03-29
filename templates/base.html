@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +31,7 @@
           <a class="nav-link" href="{{url_for('dashboard')}}">Dashboard <span class="sr-only">(current)</span></a>
         </li>
 
-        <!-- only a supervisor can visit the library -->
+        <!-- supervisor only -->
         {% if current_user.role=="supervisor" %}
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('library')}}">Library</a>
@@ -41,29 +40,18 @@
             <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/user_assignment">User Assignment</a>
+            <a class="nav-link" href="{{url_for('user_assignment')}}">Task Assignment</a>
           </li>
+          <li class="nav-item">
+          <a class="nav-link" href="{{url_for('surveys')}}">Survey Management</a>
+        </li>
         {% endif %}
 
-        <!-- only an admin can assign users, manage surveys, and create tasks -->
+        <!-- admin only -->
         {% if current_user.role=="admin" %}
-          <!--
-          <li class="nav-item">
-          <a class="nav-link" href="/user_assignment">User Assignment</a>
-        </li> -->
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for('senior_assignment') }}">Senior Assignment</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/surveys">Survey Management</a>
-        </li>
-          <!--
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('create_task')}}">Create Task</a>
-        </li>-->
         {% endif %}
 
         <li class="nav-item dropdown">
@@ -97,32 +85,7 @@
     </div>
   </nav>
 
-  <!--<div class="jumbotron text-center">
-    <h1>{Insert Page Name Here}</h1>
-  </div>
-
-  <div class="container">
-    <div class="page_content">-->
-
-    <!-- content goes in here, below. -->
-
-
-
-
    {% block content %}{% endblock content %}
-
-
-
-
-
-    <!-- content goes here, above. -->
-
-    <!--</div>
-  </div>--><!-- /.container -->
-
-
-
-
 
   <!-- Bootstrap core JavaScript
   ================================================== -->
@@ -138,7 +101,5 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <!-- Own JS page -->
   <!--<script src="../static/js/test.css"></script>-->
-
-
     </body>
   </html>

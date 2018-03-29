@@ -17,9 +17,6 @@
                             Supervisor
                         </button>
                         <div class="dropdown-menu force-scroll">
-                            <a class="dropdown-item" href="/library/alpha:-1">
-                                ALL
-                            </a>
                             {% for supervisor in supervisors %}
                             <a class="dropdown-item" href="/library/alpha:{{ supervisor.supervisorID }}">
                                 {{ supervisor.fname }} {{ supervisor.lname }}

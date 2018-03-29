@@ -82,7 +82,7 @@
                 i, j, cells, clen;
             // fill the array with values from the table
             for (i = 0; i < rlen; i++) {
-                console.log(rows[i])
+                //console.log(rows[i])
                 cells = rows[i].cells;
                 clen = cells.length;
                 arr[i] = new Array();
@@ -91,10 +91,7 @@
             }
             // sort the array by the specified column number (col) and order (asc)
             arr.sort(function (a, b) {
-                if(col == 0) // sorting integers require - operator to compare
-                    return (a[col] == b[col]) ? 0 : asc == 1 ? (a[col] - b[col]) : (b[col] - a[col]);
-                else //strings sort using the > operator
-                    return (a[col] == b[col]) ? 0 : ((a[col] > b[col]) ? asc : -1 * asc);
+                return (a[col] == b[col]) ? 0 : ((a[col] > b[col]) ? asc : -1 * asc);
             });
             // update text within every td without altering the tags
             for (i = 0; i < rlen; i++)
@@ -158,21 +155,19 @@
 
 <!--Two tables for users and tasks-->
 <div class="row">
-  <div class="table-responsive col-md-6">
+  <div class="table-responsive col-md-12">
       <h2 class="sub-header text-center">Assigned Users</h2>
       <table class="table table-hover">
         <thead id='user_table_header'>
           <tr>
-            <th onclick='sort_table(user_table, 0, asc1); asc1 *= -1; asc2 =1;asc3 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_id").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_email").style.visibility="hidden"; document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_id").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"' >User ID <img id="user_id" style="height:1em;"></span></th>
-            <th onclick='sort_table(user_table, 1, asc2); asc2 *= -1; asc1 =1;asc3 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_date").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_email").style.visibility="hidden"; document.getElementById("user_id").style.visibility="hidden"; document.getElementById("user_date").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"' >Date Assigned <img id="user_date" style="height:1em;"></span></th>
-            <th onclick='sort_table(user_table, 2, asc3); asc3 *= -1; asc1 =1;asc2 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_email").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_id").style.visibility="hidden"; document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_email").src=(asc3==1)?"../static/img/up.png":"../static/img/down.png"' >Email <img id="user_email" style="height:1em;"></span></th>
-            <th onclick='sort_table(user_table, 3, asc4); asc4 *= -1; asc1 =1;asc2 =1;asc3 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_name").style.visibility="visible"; document.getElementById("user_email").style.visibility="hidden"; document.getElementById("user_id").style.visibility="hidden";document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_name").src=(asc4==1)?"../static/img/up.png":"../static/img/down.png"' >Name <img id="user_name" style="height:1em;"></span></th>
+            <th onclick='sort_table(user_table, 0, asc1); asc1 *= -1; asc2 =1;asc3 =1; unselect_row(last_row);unselect_row(row); document.getElementById("user_date").style.display="block"; document.getElementById("user_name").style.display="none"; document.getElementById("user_email").style.display="none";  document.getElementById("user_date").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"' >Assigned<img id="user_date" style="height:1em;"></th>
+            <th onclick='sort_table(user_table, 1, asc2); asc2 *= -1; asc1 =1;asc3 =1; unselect_row(last_row);unselect_row(row); document.getElementById("user_name").style.display="block"; document.getElementById("user_email").style.display="none";  document.getElementById("user_date").style.display="none"; document.getElementById("user_name").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"' >Name<img id="user_name" style="height:1em;"></th>
+            <th onclick='sort_table(user_table, 2, asc3); asc3 *= -1; asc1 =1;asc2 =1; unselect_row(last_row);unselect_row(row); document.getElementById("user_email").style.display="block"; document.getElementById("user_name").style.display="none"; document.getElementById("user_date").style.display="none"; document.getElementById("user_email").src=(asc3==1)?"../static/img/up.png":"../static/img/down.png"' >Email<img id="user_email" style="height:1em;"></th>
           </tr>
         </thead>
         <tbody id='user_table'>
         {% for u in user_list %} 
           <tr id='user_{{u.userID}}' >
-            <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.userID}}</td>
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.dateCreated}}</td>
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.fname}} {{u.lname}}</td>
             <td onclick='last_row=(row==0)?"user_{{u.userID}}":row; row="user_{{u.userID}}"; select_row(row,last_row);find_tasks({{u.userID}},{{user_to_tasks}},{{taskID_list}});'>{{u.email}}</td>
@@ -181,24 +176,24 @@
         </tbody>
     </table>
   </div>
-  <div class="table-responsive col-md-6">
+  <div class="table-responsive col-md-12">
       <h2 class="sub-header text-center">Assigned Tasks</h2>
       <table class="table table-hover">
         <thead>
           <tr>
-            <th onclick='sort_table(task_table, 0, asc5); asc5 *= -1; asc6 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_id").style.visibility="visible"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_id").src=(asc5==1)?"../static/img/up.png":"../static/img/down.png";' >Task ID<img id="task_id" style="height:1em;"></span></th>
-            <th onclick='sort_table(task_table, 1, asc6); asc6 *= -1; asc5 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_date").style.visibility="visible"; document.getElementById("task_id").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_date").src=(asc6==1)?"../static/img/up.png":"../static/img/down.png";' >Date Created<img id="task_date" style="height:1em;"></span></th>
-            <th onclick='sort_table(task_table, 2, asc7); asc7 *= -1; asc5 =1;asc6 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_title").style.visibility="visible"; document.getElementById("task_id").style.visibility="hidden"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_title").src=(asc7==1)?"../static/img/up.png":"../static/img/down.png";' >Title<img id="task_title" style="height:1em;"></span></th>
-            <th onclick='sort_table(task_table, 3, asc8); asc8 *= -1; asc5 =1;asc6 =1;asc7 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_description").style.visibility="visible"; document.getElementById("task_id").style.visibility="hidden"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").src=(asc8==1)?"../static/img/up.png":"../static/img/down.png";' >Description<img id="task_description" style="height:1em;"></span></th>
+            <th onclick='sort_table(task_table, 0, asc4); asc4 *= -1; asc5 =1;asc6 =1;asc7 =1; unselect_row(last_row);unselect_row(row);document.getElementById("task_date").style.visibility="visible"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_date").src=(asc4==1)?"../static/img/up.png":"../static/img/down.png";document.getElementById("task_progress").style.visibility="hidden";' >Assigned<img id="task_date" style="height:1em;"></th>
+            <th onclick='sort_table(task_table, 1, asc5); asc5 *= -1; asc4 =1;asc6 =1;asc7 =1; unselect_row(last_row);unselect_row(row);document.getElementById("task_title").style.visibility="visible";  document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_title").src=(asc5==1)?"../static/img/up.png":"../static/img/down.png";document.getElementById("task_progress").style.visibility="hidden";' >Title<img id="task_title" style="height:1em;"></th>
+            <th onclick='sort_table(task_table, 2, asc6); asc6 *= -1; asc4 =1;asc5 =1;asc7 =1; unselect_row(last_row);unselect_row(row);document.getElementById("task_description").style.visibility="visible"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").src=(asc6==1)?"../static/img/up.png":"../static/img/down.png";document.getElementById("task_progress").style.visibility="hidden";'>Description<img id="task_description" style="height:1em;"></th>
+            <th onclick='sort_table(task_table, 3, asc7); asc7 *= -1; asc4 =1;asc5 =1;asc6 =1; unselect_row(last_row);unselect_row(row);document.getElementById("task_progress").style.visibility="visible"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_progress").src=(asc7==1)?"../static/img/up.png":"../static/img/down.png";document.getElementById("task_description").style.visibility="hidden";'>Progress<img id="task_progress" style="height:1em;"></th>
           </tr>
         </thead>
         <tbody id='task_table'>
            {% for t in task_list %} 
-                  <tr id='task_{{t.taskID}}' ><!-- -->
-                    <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.taskID}}</td>
+                  <tr id='task_{{t.taskID}}'>
                     <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.dateCreated}}</td>
                     <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.title}}</td>
                     <td onclick='last_row=(row==0)?"task_{{t.taskID}}":row; row="task_{{t.taskID}}"; select_row(row,last_row);find_users({{t.taskID}},{{task_to_users}},{{userID_list}});'>{{t.description}}</td>
+                    <td>0%</td>
                   </tr>
             {% endfor %}
         </tbody>
