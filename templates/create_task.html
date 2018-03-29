@@ -1,65 +1,78 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <!-- CSS Styles -->
-    <style>
-        .speech {
-            border: 1px solid #DDD;
-            width: 300px;
-            padding: 0;
-            margin: 0
-        }
+    <div>
+        <a href="#" id="start_button"
+           onclick="startDictation(event)">Dictate</a>
+    </div>
 
-        .speech input {
-            border: 0;
-            width: 240px;
-            display: inline-block;
-            height: 30px;
-        }
+    <div id="results">
+        <span id="final_span" class="final"></span>
+        <span id="interim_span" class="interim"></span>
+    </div>
 
-        .speech img {
-            float: right;
-            width: 40px
-        }
-    </style>
+    <script type="text/javascript">
+        var final_transcript = '';
+        var recognizing = false;
 
-    <!-- Search Form -->
-    <form id="labnol" method="get" action="https://www.google.com/search">
-        <div class="speech">
-            <input type="text" name="q" id="transcript" placeholder="Speak"/>
-            <img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif"/>
-        </div>
-    </form>
+        if ('webkitSpeechRecognition' in window) {
 
-    <!-- HTML5 Speech Recognition API -->
-    <script>
-        function startDictation() {
-            console.log('startDictation called');
-            console.log(window.hasOwnProperty('webkitSpeechRecognition'));
-            if (window.hasOwnProperty('webkitSpeechRecognition')) {
+            var recognition = new webkitSpeechRecognition();
 
-                var recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
 
-                recognition.continuous = false;
-                recognition.interimResults = false;
+            recognition.onstart = function () {
+                recognizing = true;
+            };
 
-                recognition.lang = "en-US";
-                recognition.start();
+            recognition.onerror = function (event) {
+                console.log(event.error);
+            };
 
-                recognition.onresult = function (e) {
-                    document.getElementById('transcript').value
-                        = e.results[0][0].transcript;
-                    console.log(e.results[0][0].transcript);
-                    recognition.stop();
-                    document.getElementById('labnol').submit();
-                };
+            recognition.onend = function () {
+                recognizing = false;
+            };
 
-                recognition.onerror = function (e) {
-                    recognition.stop();
-                    console.log('Error receiving audio.')
+            recognition.onresult = function (event) {
+                var interim_transcript = '';
+                for (var i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        final_transcript += event.results[i][0].transcript;
+                    } else {
+                        interim_transcript += event.results[i][0].transcript;
+                    }
                 }
+                final_transcript = capitalize(final_transcript);
+                final_span.innerHTML = linebreak(final_transcript);
+                interim_span.innerHTML = linebreak(interim_transcript);
 
+            };
+        }
+
+        var two_line = /\n\n/g;
+        var one_line = /\n/g;
+
+        function linebreak(s) {
+            return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+        }
+
+        function capitalize(s) {
+            return s.replace(s.substr(0, 1), function (m) {
+                return m.toUpperCase();
+            });
+        }
+
+        function startDictation(event) {
+            if (recognizing) {
+                recognition.stop();
+                return;
             }
+            final_transcript = '';
+            recognition.lang = 'en-US';
+            recognition.start();
+            final_span.innerHTML = '';
+            interim_span.innerHTML = '';
         }
     </script>
 
@@ -79,7 +92,8 @@
                 {% endif %}
             {% endwith %}
 
-            <form id="create_task_form" action="{{ url_for('create_task') }}" method="POST">
+            <form id="create_task_form" action="{{ url_for('create_task') }}"
+                  method="POST">
                 {{ form.hidden_tag() }}
 
                 <!-- Title -->
@@ -89,7 +103,9 @@
                 <div style="display: inline-block; min-width: 13em">
                     {{ form.title (id="task_title", class="form-control") }}
                 </div>
-                <div onclick="startDictation('task_title')"><i class="fas fa-microphone"></i>Voice</div>
+                <div onclick="startDictation('task_title')"><i
+                        class="fas fa-microphone"></i>Voice
+                </div>
 
                 <br>
 
@@ -116,43 +132,47 @@
 
                 <!-- Main Steps -->
                 <div style="display: inline-block; min-width: 90%">
-                {% for main_step in form.main_steps %}
-                    {{ loop.index }}. {{ main_step.title.label }}&nbsp;{{ main_step.voice_button_title }}
-                    {{ main_step.title (class="form-control") }}
-                    <br>
-                    {{ main_step.requiredItem.label }}{{ main_step.requiredItem }}
-                    {{ main_step.voice_button_requiredItem(style="width:100%") }}
-                    <br>
-                    {{ main_step.stepText.label }}&nbsp;{{ main_step.voice_button_stepText }}
-                    {{ main_step.stepText(style="height: 100px; width:100%") }}
-                    <br>
-                    {{ main_step.audio.label }}{{ main_step.audio }}
-                    <br>
-                    {{ main_step.image.label }}{{ main_step.image }}
-                    <br>
-                    {{ main_step.video.label }}{{ main_step.video }}
-                    <br>
+                    {% for main_step in form.main_steps %}
+                        {{ loop.index }}. {{ main_step.title.label }}&nbsp;
+                        {{ main_step.voice_button_title }}
+                        {{ main_step.title (class="form-control") }}
+                        <br>
+                        {{ main_step.requiredItem.label }}{{ main_step.requiredItem }}
+                        {{ main_step.voice_button_requiredItem(style="width:100%") }}
+                        <br>
+                        {{ main_step.stepText.label }}&nbsp;
+                        {{ main_step.voice_button_stepText }}
+                        {{ main_step.stepText(style="height: 100px; width:100%") }}
+                        <br>
+                        {{ main_step.audio.label }}{{ main_step.audio }}
+                        <br>
+                        {{ main_step.image.label }}{{ main_step.image }}
+                        <br>
+                        {{ main_step.video.label }}{{ main_step.video }}
+                        <br>
 
-                    <!-- Detailed Steps -->
-                    <div style="display: inline-block; margin-left:3em">
-                        {% for detailed_step in main_step.detailed_steps %}
-                            {{ loop.index }}. {{ detailed_step.title.label }}
-                            {{ detailed_step.title }}{{ detailed_step.voice_button_title }}
-                            <br>
-                            {{ detailed_step.stepText.label }}&nbsp;{{ detailed_step.voice_button_stepText }}
-                            {{ detailed_step.stepText(style="height: 100px; width:100%") }}
-                            <br>
-                            {{ detailed_step.image.label }}{{ detailed_step.image }}
-                            <br>
-                            {{ detailed_step.detailed_step_removal (class='btn btn-secondary btn-md') }}
-                            <br><br>
-                        {% endfor %}
-                        {{ main_step.add_detailed_step (class='btn btn-secondary btn-md') }}
-                    </div>
-                    <br><br>
-                    {{ main_step.main_step_removal (class='btn btn-secondary btn-md') }}
-                    <hr>
-                {% endfor %}
+                        <!-- Detailed Steps -->
+                        <div style="display: inline-block; margin-left:3em">
+                            {% for detailed_step in main_step.detailed_steps %}
+                                {{ loop.index }}.
+                                {{ detailed_step.title.label }}
+                                {{ detailed_step.title }}{{ detailed_step.voice_button_title }}
+                                <br>
+                                {{ detailed_step.stepText.label }}&nbsp;
+                                {{ detailed_step.voice_button_stepText }}
+                                {{ detailed_step.stepText(style="height: 100px; width:100%") }}
+                                <br>
+                                {{ detailed_step.image.label }}{{ detailed_step.image }}
+                                <br>
+                                {{ detailed_step.detailed_step_removal (class='btn btn-secondary btn-md') }}
+                                <br><br>
+                            {% endfor %}
+                            {{ main_step.add_detailed_step (class='btn btn-secondary btn-md') }}
+                        </div>
+                        <br><br>
+                        {{ main_step.main_step_removal (class='btn btn-secondary btn-md') }}
+                        <hr>
+                    {% endfor %}
                 </div>
                 <br>
                 {{ form.add_main_step (class='btn btn-secondary btn-md') }}
