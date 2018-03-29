@@ -394,9 +394,11 @@ def create_task():
     if form.voice_button_title.data:
         recognizer = speech_rec.Recognizer()
         recognizer.energy_threshold = 4000
+        recognizer.pause_threshold = 0.8
         with speech_rec.Microphone() as source:
             print('Recording audio')
             audio = recognizer.listen(source)
+        print('No longer recording.')
         try:
             transcript = recognizer.recognize_google(audio)
             print('Google thinks you said: ', transcript)
