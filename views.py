@@ -712,3 +712,22 @@ def user_account(user):
         UserMgmt.edit_user(eUser, user)
         return dashboard()
     return render_template("userAccount.html", EditUser=eUser, User=user)
+
+#senior assignment
+@app.route("/senior_assignment/", methods=["GET", "POST"])
+@app.route("/senior_assignment/<arguments>", methods=["GET", "POST"])
+@login_required
+def senior_assignment(arguments=None):
+    # Get all supervisors
+    supervisors = Supervisor.query.all()
+
+    # Get all unassigned users
+    users = UserMgmt.get_unassigned()
+
+    if arguments is not None:
+        superID, userID = [int(x) for x in arguments.split(':')]
+        errors = None
+        if superID != -1 and userID != -1:
+            errors = UserMgmt.assign_user(superID, userID)
+        return render_template("senior_assignment.html", supervisors=supervisors, superID=superID, userID=userID, users=users, errors=errors)
+    return render_template("senior_assignment.html", supervisors=supervisors, superID=None, userID=-1, users=users, errors=None)
