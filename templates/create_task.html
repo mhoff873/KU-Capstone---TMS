@@ -6,7 +6,22 @@
         <h1>Task Editor</h1>
     </div>
 
+<style>
+  .speech {border: 1px solid #DDD; width: 300px; padding: 0; margin: 0}
+  .speech input {border: 0; width: 240px; display: inline-block; height: 30px;}
+  .speech img {float: right; width: 40px }
+</style>
+
+<!-- Search Form -->
+<form id="labnol" method="get" action="https://www.google.com/search">
+  <div class="speech">
+    <input type="text" name="q" id="transcript" placeholder="Speak" />
+    <img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif" />
+  </div>
+</form>
+
 <script>
+function startDictation() {
 var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
 recognition.lang = 'en-US';
 recognition.interimResults = false;
@@ -17,6 +32,7 @@ recognition.onresult = function(event) {
     window.alert(event.results[0][0].transcript);
     console.log('You said: ', event.results[0][0].transcript);
 };
+}
 </script>
 
 <!--
