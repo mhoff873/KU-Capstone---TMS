@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="jumbotron text-center">
+        <h1>Task Assignment</h1>
+    </div>
+
+    <div class="container">
+        <div class="page_content">
+            <div class= "text-center">
+                {% with messages = get_flashed_messages(category_filter=['info']) %}
+                    {% if messages %}
+                        <ul class=flashes>
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST">
+                    {{ form.csrf_token() }}
+                    {{ form.assigned_users }}<br><br>
+                    {{ form.assign_task_button (class='btn btn-secondary btn-sm') }}
+                    {{ form.view_assigned_tasks_button (class='btn btn-secondary btn-sm') }}
+                    <br>
+                    <br>
+                    <br>
+                    {% if form.assign_task_button.data %}
+                        {{ form.tasks }}&nbsp;{{ form.assign_button(class='btn btn-secondary btn-sm') }}
+                    {% endif %}
+                    {% if form.view_assigned_tasks_button.data %}
+                        {{ form.tasks }}&nbsp;{{ form.remove_button(class='btn btn-secondary btn-sm') }}
+                    {% endif %}
+                </form>
+            </div>
+
+        </div>
+    </div><!-- /.container -->
+{% endblock content %}

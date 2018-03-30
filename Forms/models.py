@@ -182,6 +182,21 @@ class DetailedStep(db.Model):
         super(DetailedStep, self).__init__()
         self.title = title
 
+
+class Keyword(db.Model):
+    """
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    """
+    __tablename__ = 'keywords'
+    keywordID = Column('keywordID', Integer, primary_key=True)
+    taskID = Column('taskID', Integer)
+    word = Column(String(255))
+
+    def __init__(self, task_id, word):
+        self.taskID = task_id
+        self.word = word
+
+
 class SurveyForm(db.Model):
 	__tablename__ = 'surveyForm'
 	formID = Column('formID', Integer, unique = True, index=True, primary_key=True)

@@ -1,17 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <!-- HTML5 Speech Recognition API -->
+    <script src="/static/js/speech_recognition.js"></script>
+
     <div class="jumbotron text-center">
-        <h1>Task Editor</h1>
+        <h1>Create Task</h1>
     </div>
 
     <div class="container">
         <div class="page_content">
+            {% with messages = get_flashed_messages(category_filter=['info']) %}
+                {% if messages %}
+                    <ul class=flashes>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
 
-
-            <!--<h1>Task Creation Test Page</h1>-->
-
-            <form action="{{ url_for('create_task') }}" method="POST">
+            <form id="create_task_form" action="{{ url_for('create_task') }}" method="POST">
                 {{ form.hidden_tag() }}
 
                 <!-- Title -->
@@ -19,10 +28,9 @@
                     {{ form.title.label }}
                 </div>
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.title (class="form-control") }}
+                    {{ form.title (id="task_title", class="form-control") }}
                 </div>
-                <a class="btn btn-secondary btn-md" href="#">
-                    <i class="fas fa-microphone"></i>Voice</a>
+                <img onclick="startDictation('task_title')" src="//i.imgur.com/cHidSVu.gif" />
 
                 <br>
 
@@ -31,8 +39,9 @@
                     {{ form.description.label }}
                 </div>
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.description (class="form-control") }}
+                    {{ form.description (id="task_description", class="form-control", style="height: 100px, width:100%") }}
                 </div>
+                <img onclick="startDictation('task_description')" src="//i.imgur.com/cHidSVu.gif" />
 
                 <br>
 
@@ -47,51 +56,61 @@
                 <hr>
 
                 <!-- Main Steps -->
-                <div style="display: inline-block">
-                {% for main_step in form.main_steps %}
-                    {{ main_step.title.label }}{{ main_step.title (class="form-control") }}
-                    <br>
-                    {{ main_step.requiredItem.label }}{{ main_step.requiredItem }}
-                    <br>
-                    {{ main_step.stepText.label }}{{ main_step.stepText }}
-                    <br>
-                    {{ main_step.audio.label }}{{ main_step.audio }}
-                    <br>
-                    {{ main_step.image.label }}{{ main_step.image }}
-                    <br>
-                    {{ main_step.video.label }}{{ main_step.video }}
-                    <br>
+                <div style="display: inline-block; min-width: 90%">
+                    {% for main_step in form.main_steps %}
+                        {{ loop.index }}. {{ main_step.title.label }}&nbsp;
+                        <img onclick="startDictation('main_step_title')" src="//i.imgur.com/cHidSVu.gif" />
+                        {{ main_step.title (id="main_step_title", class="form-control") }}
+                        <br>
+                        {{ main_step.requiredItem.label }}{{ main_step.requiredItem(id="main_step_requiredItems") }}
+                        <img onclick="startDictation('main_step_requiredItems')" src="//i.imgur.com/cHidSVu.gif" />
+                        <br>
+                        {{ main_step.stepText.label }}&nbsp;
+                        <img onclick="startDictation('main_step_stepText')" src="//i.imgur.com/cHidSVu.gif" />
+                        {{ main_step.stepText(id="main_step_stepText", style="height: 100px; width:100%") }}
+                        <br>
+                        {{ main_step.audio.label }}{{ main_step.audio }}
+                        <br>
+                        {{ main_step.image.label }}{{ main_step.image }}
+                        <br>
+                        {{ main_step.video.label }}{{ main_step.video }}
+                        <br>
 
-                    <!-- Detailed Steps -->
-                    <div style="display: inline-block; margin-left:3em">
-                        {% for detailed_step in main_step.detailed_steps %}
-                            {{ detailed_step.title.label }}{{ detailed_step.title }}
-                            <br>
-                            {{ detailed_step.stepText.label }}{{ detailed_step.stepText }}
-                            <br>
-                            {{ detailed_step.image.label }}{{ detailed_step.image }}
-                            <br>
-                            {{ detailed_step.detailed_step_removal (class='btn btn-secondary btn-md') }}
-                            {{ detailed_step.detailed_step_up (class='btn btn-secondary btn-md') }}
-                            {{ detailed_step.detailed_step_down (class='btn btn-secondary btn-md') }}
-                            <br><br>
-                        {% endfor %}
-                        {{ main_step.add_detailed_step (class='btn btn-secondary btn-md') }}
-                    </div>
-                    <br><br>
-                    {{ main_step.main_step_removal (class='btn btn-secondary btn-md') }}
-                    {{ main_step.main_step_up (class='btn btn-secondary btn-md') }}
-                    {{ main_step.main_step_down (class='btn btn-secondary btn-md') }}
-                    <hr>
-                {% endfor %}
+                        <!-- Detailed Steps -->
+                        <div style="display: inline-block; margin-left:3em">
+                            {% for detailed_step in main_step.detailed_steps %}
+                                {{ loop.index }}.
+                                {{ detailed_step.title.label }}
+                                {{ detailed_step.title(id="detailed_step_title") }}
+                                <img onclick="startDictation('detailed_step_title')" src="//i.imgur.com/cHidSVu.gif" />
+                                <br>
+                                {{ detailed_step.stepText.label }}&nbsp;
+                                <img onclick="startDictation('detailed_step_stepText')" src="//i.imgur.com/cHidSVu.gif" />
+                                {{ detailed_step.stepText(id="detailed_step_stepText", style="height: 100px; width:100%") }}
+                                <br>
+                                {{ detailed_step.image.label }}{{ detailed_step.image }}
+                                <br>
+                                {{ detailed_step.detailed_step_removal (class='btn btn-secondary btn-md') }}
+                                <br><br>
+                            {% endfor %}
+                            {{ main_step.add_detailed_step (class='btn btn-secondary btn-md') }}
+                        </div>
+                        <br><br>
+                        {{ main_step.main_step_removal (class='btn btn-secondary btn-md') }}
+                        <hr>
+                    {% endfor %}
                 </div>
                 <br>
                 {{ form.add_main_step (class='btn btn-secondary btn-md') }}
                 <br><br>
-                {{ form.save_as_draft (class='btn btn-secondary btn-md') }}&nbsp;
-                {{ form.publish (class='btn btn-secondary btn-md') }}
-                {{ form.toggle_enabled (class='btn btn-secondary btn.md') }}
-                {{ form.toggle_activation (class='btn btn-secondary btn.md') }}
+                {{ form.activation }}&nbsp;{{ form.activation.label }}
+                <br>
+                {{ form.publish }}&nbsp;{{ form.publish.label }}
+                <br>
+                {{ form.keywords.label }}&nbsp;<img onclick="startDictation('keywords')" src="//i.imgur.com/cHidSVu.gif" />
+                {{ form.keywords(id="keywords", style="height: 100px; width:100%") }}
+                <br>
+                {{ form.save (class='btn btn-secondary btn-md') }}&nbsp;
             </form>
 
 

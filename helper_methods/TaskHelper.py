@@ -1,15 +1,19 @@
 """
 Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
 """
+import speech_recognition as speech_rec
 from flask_login import current_user
 
-from Forms.models import Task, MainStep, DetailedStep, Supervisor, Admin
+from Forms.forms import CreateTaskForm
+from Forms.models import Task, MainStep, DetailedStep, Supervisor, Admin, \
+    Keyword
 from database import db
 
 
 # Req 1
 def create_task(form):
     """
+    Author: David Schaeffer, February 2018 <dscha959@live.kutztown.edu>
     Extracts data from form entering it into our Task, MainStep, DetailedStep
     objects to be entered into the database.
     :param form: The CreateTaskForm.
@@ -24,25 +28,23 @@ def create_task(form):
         new_task.supervisorID = current_user.supervisorID
     elif current_user.role == "admin":
         new_task.supervisorID = current_user.adminID
-    # bug test
-    # else:
-    #    new_task.supervisorID = 20
     new_task.description = form.description.data
     new_task.image = form.image.data
     # 0 = false, 1 = true
-    if form.save_as_draft.data:
-        new_task.published = 0
-        new_task.activated = 0
-    if form.publish.data:
-        new_task.published = 1
-        new_task.activated = 1
+    new_task.activated = form.activation.data
+    new_task.published = form.publish.data
     try:  # try/excepts to catch IntegrityErrors, if it exists, we update.
         db.session.add(new_task)
         db.session.commit()
-    except Exception:
+    except Exception as e:
+        print(e)
         db.session.commit()
     for i, main_step in enumerate(form.main_steps.entries):
-        new_main_step = MainStep(main_step.title.data)
+        existing_main_step = MainStep.query.filter_by(title=main_step.title.data).first()
+        if existing_main_step is not None:
+            new_main_step = existing_main_step
+        else:
+            new_main_step = MainStep(main_step.title.data)
         new_main_step.taskID = new_task.taskID
         new_main_step.stepText = main_step.stepText.data
         new_main_step.listOrder = i+1
@@ -50,45 +52,76 @@ def create_task(form):
         try:
             db.session.add(new_main_step)
             db.session.commit()
-        except Exception:
+        except Exception as e:
+            print(e)
             db.session.commit()
         for j, detailed_step in enumerate(main_step.detailed_steps.entries):
-            new_detailed_step = DetailedStep(detailed_step.title.data)
-            # new_detailed_step.mainStepID = new_main_step.taskID
-            """ """
-            temp_main_step = MainStep.query.filter_by(taskID=new_main_step.taskID, listOrder=new_main_step.listOrder).first()
-            new_detailed_step.mainStepID = temp_main_step.mainStepID
-            """ """
+            existing_detailed_step = DetailedStep.query.filter_by(title=detailed_step.title.data).first()
+            if existing_detailed_step is not None:
+                new_detailed_step = existing_detailed_step
+            else:
+                new_detailed_step = DetailedStep(detailed_step.title.data)
+            new_detailed_step.mainStepID = new_main_step.mainStepID
             new_detailed_step.stepText = detailed_step.stepText.data
             new_detailed_step.listOrder = i+1
             new_detailed_step.image = detailed_step.image.data
             try:
                 db.session.add(new_detailed_step)
                 db.session.commit()
-            except Exception:
+            except Exception as e:
+                print(e)
                 db.session.commit()
+    keywords = form.keywords.data.split(',')
+    print('Keywords: ', keywords)
+    for keyword in keywords:
+        new_keyword = Keyword(new_task.taskID, keyword)
+        db.session.add(new_keyword)
+    db.session.commit()
     return new_task
 
 
-# Req 20
-def toggle_enabled(form):
+def get_task(task_id: int):
     """
-    Toggles whether a task is enabled or not in database.
-    :param form: The CreateTaskForm.
-    :return: None
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    :param task_id: ID of task we will be displaying
+    :return: A completed task form to be edited by user
     """
-    task = Task.query.filter_by(title=form.title.data).first()
-    if task is not None:
-        task.activated = not task.activated
+    task = Task.query.filter_by(taskID=task_id).first()
+    form = CreateTaskForm(obj=task)
+    main_steps = MainStep.query.filter_by(taskID=task_id).all()
+    for i, main_step in enumerate(main_steps):
+        form.main_steps.append_entry(main_step)
+        detailed_steps = DetailedStep.query.filter_by(mainStepID=main_step.mainStepID).all()
+        for detailed_step in detailed_steps:
+            form.main_steps[i].detailed_steps.append_entry(detailed_step)
+    keywords_for_task = Keyword.query.filter_by(taskID=task_id).all()
+    keywords_string = ''
+    for word in keywords_for_task:
+        keywords_string += word.word + ', '
+    form.keywords.process_data(keywords_string)
+    print(form.data)
+    return form
 
 
-# Req 22
-def toggle_published(form):
+def get_audio_transcript():
     """
-    Toggles whether a task is published or not in the database.
-    :param form: The CreateTaskForm.
-    :return: None
+    Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    Gets the audio input from the user's microphone, converts it to text
+    :return: The transcript string or empty string if there was an error.
     """
-    task = Task.query.filter_by(title=form.title.data).first()
-    if task is not None:
-        task.published = not task.published
+    recognizer = speech_rec.Recognizer()
+    recognizer.energy_threshold = 4000
+    recognizer.pause_threshold = 1.0
+    with speech_rec.Microphone() as source:
+        print('Recording audio')
+        audio = recognizer.listen(source)
+    print('No longer recording.')
+    try:
+        transcript = recognizer.recognize_google(audio)
+        print('Google thinks you said: ', transcript)
+        return transcript
+    except speech_rec.UnknownValueError:
+        print('Could not understand you.')
+    except speech_rec.RequestError as e:
+        print('Could not get results from Google: ', e)
+    return ''

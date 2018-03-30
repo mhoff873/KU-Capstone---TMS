@@ -9,6 +9,7 @@ from Forms.models import User, Supervisor
 from database import db
 import bcrypt
 
+
 def create_account(form):
     """
     need to get rid of this create_accout
@@ -23,6 +24,7 @@ def create_account(form):
         user = User()
     user.email = email
     user.password = password
+
 
 def create_user(form):
     """
@@ -106,7 +108,6 @@ def edit_user(form, user):
     db.session.commit()
 
 
-
 # Requirement 32
 def get_supervisor_users(supervisor_email):
     """
@@ -114,8 +115,10 @@ def get_supervisor_users(supervisor_email):
     :param supervisor_email: Email that is used to get the supervisor ID.
     :return: List of users that have the coordinating supervisor ID.
     """
+    print(supervisor_email)
     supervisorID = (Supervisor.query.filter_by(email=supervisor_email).first()).supervisorID
     users = User.query.filter_by(supervisorID=supervisorID).all()
+    print(users)
     return users
 
 
