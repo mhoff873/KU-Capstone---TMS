@@ -2,6 +2,3 @@
 *.pyc
 *.pyo
 **/nohup.out
-__pyacache__
-.vscode/
-config.py
