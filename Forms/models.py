@@ -198,35 +198,61 @@ class Keyword(db.Model):
 
 
 class SurveyForm(db.Model):
-	__tablename__ = 'surveyForm'
-	formID = Column('formID', Integer, unique = True, index=True, primary_key=True)
-	supervisorID = Column('supervisorID', Integer, index=True)
-	formTitle = Column('formTitle', String(255), index=True)
-	description = Column('description', String(255), index=True)
-	dateCreated = Column('dateCreated', Date, index=True)
-	dateModified = Column('dateModified', Date, index=True)
-	isActive = Column('isActive', Boolean, index=True)
-	survey_quest = relationship("SurveyQuest", back_populates="survey_form")
+    __tablename__ = 'surveyForm'
+    formID = Column('formID', Integer, unique = True, index=True, primary_key=True)
+    supervisorID = Column('supervisorID', Integer, index=True)
+    formTitle = Column('formTitle', String(255), index=True)
+    description = Column('description', String(255), index=True)
+    dateCreated = Column('dateCreated', Date, index=True)
+    dateModified = Column('dateModified', Date, index=True)
+    isActive = Column('isActive', Boolean, index=True)
+    survey_quest = relationship("SurveyQuest", back_populates="survey_form")
 	
 
 	
-	def __init__(self, formTitle=None, surv_quest=None):
-		super(SurveyQuest, self).__init__()
-		self.formTitle = formTitle
-		survey_quest = surv_quest
+    def __init__(self, formTitle=None, surv_quest=None):
+        super(SurveyQuest, self).__init__()
+        self.formTitle = formTitle
+        survey_quest = surv_quest
 		
 class SurveyQuest(db.Model):
-	__tablename__ = 'surveyQuest'
-	questID = Column('questID', Integer, unique = True, index=True, primary_key=True) 
-	formID = Column(Integer, ForeignKey('surveyForm.formID'))
-	questType = Column('questType', String(255), index=True)
-	questionText = Column('questText', String(255), index=True)
-	questOrder = Column('questOrder', Integer, index=True)
-	isActive = Column('isActive', Boolean, index=True)
-	survey_form = relationship("SurveyForm", back_populates="survey_quest")
+    __tablename__ = 'surveyQuest'
+    questID = Column('questID', Integer, unique = True, index=True, primary_key=True) 
+    formID = Column(Integer, ForeignKey('surveyForm.formID'))
+    questType = Column('questType', String(255), index=True)
+    questionText = Column('questText', String(255), index=True)
+    questOrder = Column('questOrder', Integer, index=True)
+    isActive = Column('isActive', Boolean, index=True)
+    survey_form = relationship("SurveyForm", back_populates="survey_quest")
 	    
-	def __init__(self, questionText=None, questType = None, questionOrder = None):
-		super(SurveyQuest, self).__init__()
-		self.questionText = questionText
-		self.questType = questType
-		self.questOrder = questionOrder            
+    def __init__(self, questionText=None, questType = None, questionOrder = None):
+        super(SurveyQuest, self).__init__()
+        self.questionText = questionText
+        self.questType = questType
+        self.questOrder = questionOrder            
+
+class SurveyResult(db.Model):
+    __tablename__ = 'surveyResults'
+    resultID = Column('resultID', Integer, unique = True, index=True, primary_key=True) 
+    userID = Column('userID', Integer, index=True) 
+    formID = Column('formID', Integer, index=True) 
+    name = Column('name', String(255), index=True)
+    timeSpent = Column('timeSpent', Integer, index=True)
+    email = Column('email', String(255), index=True)
+    ipAddr = Column('ipAddr', String(255), index=True)
+    results = Column('results', String(255), index=True)
+    date = Column('date', Date, index=True)
+    comments = Column('comments', String(255), index=True)
+   
+    def __init__(self):
+        super(SurveyResult, self).__init__()
+
+class SurveyAssigned(db.Model):
+    __tablename__ = 'assigned'
+    assignedID = Column('assignedID', Integer, unique = True, index=True, primary_key=True) 
+    supervisorID = Column('supervisorID', Integer, index=True)
+    taskID = Column('taskID', Integer, primary_key=True)
+    formID = Column(Integer, ForeignKey('surveyForm.formID'))
+    
+    def __init__(self):
+        super(SurveyAssigned, self).__init__()

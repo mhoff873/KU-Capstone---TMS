@@ -28,6 +28,16 @@ def get_supervisors():
     return Supervisor.query.all()
 
 
+def sort_chronologically(tasks, reverse=False):
+    """
+    Sorts a list of tasks chronologically, ascending or descending.
+    :param tasks: List of tasks to be sorted.:
+    :param reverse: Optional on whether to sort ascending or descending.
+    :return: List of sorted tasks.
+    """
+    return sorted(tasks, key=chrono_sort_key, reverse=reverse)
+
+
 def sort_alphabetically(tasks, reverse=False):
     """
     Sorts a list of tasks alphabetically, ascending or descending
@@ -35,30 +45,42 @@ def sort_alphabetically(tasks, reverse=False):
     :param reverse: Optional on whether to sort ascending or descending.
     :return: List of sorted tasks.
     """
-    return sorted(tasks, key=sort_key, reverse=reverse)
+    return sorted(tasks, key=alpha_sort_key, reverse=reverse)
 
-def sort_key(task):
+def alpha_sort_key(task):
     """
     Allows the sorted functions to sort the tasks based on their title.
     :param task: Task that will be passed in to be sorted.
     :return: Title of each task passed into it.
     """
-    return task.title
+    return (task.title).lower()
 
+def chrono_sort_key(task):
+    """
+    Allows the sorted functions to sort the tasks based on their title.
+    :param task: Task that will be passed in to be sorted.
+    :return: Title of each task passed into it.
+    """
+    return task.dateCreated
 
-def search(keyword):
+def search(argument):
     """
     Checks for matching keywords to all titles of each task in database.
     :param keyword: Some substring that can be found in a task title.
     :return: List of tasks that match the search criteria.
     """
     alltasks = get_tasks()
-    if keyword == "*":
+    if argument == "*":
         return alltasks
     tasks = []
-    for task in alltasks:
-        if keyword in (task.title).lower():
-            tasks.append(task)
+    if len(argument) == 1:
+        for task in alltasks:
+            if argument.lower() == (task.title).lower()[0]:
+                tasks.append(task)
+    else:
+        for task in alltasks:
+            if argument.lower() in (task.title).lower():
+                tasks.append(task)
     return tasks
 
 
@@ -66,7 +88,3 @@ def search(keyword):
 class SearchForm(FlaskForm):
     search = TextField("Library Search Bar")
     submit = SubmitField("Search")
-
-
-class TaskForm(FlaskForm):
-    submit = SubmitField("blah")
