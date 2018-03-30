@@ -10,16 +10,18 @@
 # Version: Python Version 3.6
 # ************************************************************/
 
-from flask import Flask, render_template, request, jsonify, redirect, json
+from flask import render_template, request, jsonify, redirect, json, flash, url_for
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
-    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm
+    CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, UserAssignmentForm 
 from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, UserAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
 from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest
 from datetime import datetime, timedelta
 from flask_weasyprint import HTML, render_pdf
+import weasyprint
+from flask_mail import Message
 import pygal
 
 @app.route('/', methods=['GET'])
@@ -224,19 +226,16 @@ def logout_account():
     logout_user()
     return redirect("login", code=302)
 
-#*****************This is where the admin reports page is****
-#This page was just made so Team UI could see and design the page.
-#the app route is correct, reports.html is the name of the page.
-# Taken from UI sprint
-#(Admin) Reports Page
-@app.route('/reports', methods=['GET'])
-@app.route('/reports/<arguments>', methods=['GET'])
-@login_required
-def reports(arguments=None):
+# Reports related stuff below
+def generate_report(arguments=None):
     """
     Description: hangle the rendering and passing of the data to the reports page
-    Parameters: none
-    Return Value: form rendering
+    Parameters: None or Sorted Options
+    Return Value: 
+        - SupervisorID - The supervisor requesting the report
+        - Users - The users that the report is for
+        - lstTask - The list of tasks being returned
+        - sortedBy - How the report is sorted (User or Time constraint)
     Author: Tyler Lance
     """
     # Chose which supervisor the report is being generated for
@@ -285,6 +284,25 @@ def reports(arguments=None):
             lstTask.append(dictTask)
     # sort the list by date so that the newest entries appear first
     lstTask = sorted(lstTask,key=lambda k: k['dateTimeCompleted'], reverse=True)
+    return (supervisorID, users, lstTask, sortedBy)
+
+
+#*****************This is where the admin reports page is****
+#This page was just made so Team UI could see and design the page.
+#the app route is correct, reports.html is the name of the page.
+# Taken from UI sprint
+#(Admin) Reports Page
+@app.route('/reports', methods=['GET'])
+@app.route('/reports/<arguments>', methods=['GET'])
+@login_required
+def reports(arguments=None):
+    '''
+        Description: Generate a report for the users assigned to the supervisor
+        Parameters: None or the sorting options
+        Return: A rendered template 
+        Author: Tyler Lance
+    '''
+    (supervisorID, users, lstTask, sortedBy) = generate_report(arguments)
     return render_template('reports.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy,  arguments=arguments)
 
 @app.route('/pdf', methods=['GET'])
@@ -293,50 +311,14 @@ def reports(arguments=None):
 def pdf(arguments=None):
     """
     Description: Generates a report for all users assigned to the supervisor or for a specifed user
-    Parameters: None
-    Return Value: None
-    Author: Patrick Earl, taken from Tyler Lance
+        Returns a pdf
+    Parameters: None or the sorting options
+    Return Value: pdf
+    Author: Patrick Earl
     """
-    # Get the supervisor ID
-    supervisorID = current_user.supervisorID
-    # pull the list of assigned users to the supervisor
-    users =  Api.getAssignedUsers(supervisorID)
-    # default date for the data if no date is passed
-    date = "2000-01-01"
-    # what the data is sorted by
-    sortedBy = "Showing all entries by date"
-    # pull userIDs from the user data
-    lstUserIDs = [li['userID'] for li in users]
-    # check if arguments were passed to the url
-    if arguments is not None:
-        sort = arguments.split(':')[0]
-        data = arguments.split(':')[1]
-        # check if userID was passed via url and that it wasnt all
-        if sort == 'userid' and data != 'A':
-            # empties the list of userids and adds in the passed one
-            lstUserIDs = []
-            lstUserIDs.append(int(data))
-            sortedBy = "Showing entries for user: " + Api.getNameFromID(int(data))
-        # check if date specified was passed to url
-        elif sort == 'date':
-            if data == 'M':
-                date = str((datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
-                sortedBy = "Showing entries for the last 30 days"
-            elif data == 'W':
-                date = str((datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
-                sortedBy = "Showing entries for the last 7 days"
-            elif data == 'D':
-                date = str((datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d'))
-                sortedBy = "Showing entries for the last day"
-    # get completed tasks by passing the list and date
-    lstTask = Api.getCompletedTasksByUsers(date, lstUserIDs)
-    # create list containing dictionaries for each table row, adding the first and last names for each user
-    for li in lstTask:
-        li["userID"]=Api.getNameFromID(li["userID"])
-        # sort the list by date so that the newest entries appear first
-        li["completedTasks"] = sorted(li["completedTasks"],key=lambda k: k['dateTimeCompleted'], reverse=True)
-    date = datetime.now().strftime('%A, %B %d, %Y %I:%M %p')
-    html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy, date=date)
+    (supervisorID, users, lstTask, sortedBy) = generate_report(arguments)
+
+    html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy)
     return render_pdf(HTML(string=html))
 
 @app.route('/graph', methods=['GET'])
@@ -450,6 +432,8 @@ def graph(arguments=None):
 
 
 @app.route('/email', methods=['GET'])
+@app.route('/email/<arguments>', methods=['GET'])
+@login_required
 def email(arguments=None):
     """
     Description:
@@ -457,9 +441,25 @@ def email(arguments=None):
     Return Value:
     Author:
     """
-    pass
+    subject = ""
+    if arguments is None:
+        subject = "Report for supervisor " + current_user.fname + " " + current_user.lname 
+    
+    msg = Message(subject,
+                sender="kutztms@gmail.com",
+                recipients=[current_user.email])
 
-
+    (supervisorID, users, lstTask, sortedBy) = generate_report(arguments)
+    html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy, arguments=arguments)
+    pdf = weasyprint.HTML(string=html).write_pdf()
+    msg.attach('report.pdf', 'application/pdf', pdf)
+    msg.html = "<h3 style='text-align:center;'>Report is as an attached pdf</h3>"
+    msg.html += "<span style='text-align:center;'>Time of generation: " + datetime.now().strftime('%m-%d-%Y %H:%M:%S') + "</span>"
+    msg.html += "<p style='font-size:8px'>This is an automated message, this email is not monitored</p>"
+    mail.send(msg)
+    flash("Email send succesfully to " + current_user.email, 'success')
+    return redirect(url_for('reports', arguments=arguments))
+  
 # supervisor account
 @app.route('/supervisor_account', methods=['GET', "POST"])
 @login_required
