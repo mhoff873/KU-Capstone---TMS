@@ -37,13 +37,14 @@
       recognition.onresult = function(e) {
         document.getElementById('transcript').value
                                  = e.results[0][0].transcript;
+        window.alert("sometext");
         recognition.stop();
         document.getElementById('labnol').submit();
       };
 
       recognition.onerror = function(e) {
         recognition.stop();
-        window.alert("sometext");
+
       }
 
     }
