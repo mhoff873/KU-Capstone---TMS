@@ -6,6 +6,7 @@
         <h1>Task Editor</h1>
     </div>
 
+<!-- CSS Styles -->
 <style>
   .speech {border: 1px solid #DDD; width: 300px; padding: 0; margin: 0}
   .speech input {border: 0; width: 240px; display: inline-block; height: 30px;}
@@ -20,20 +21,33 @@
   </div>
 </form>
 
+<!-- HTML5 Speech Recognition API -->
 <script>
-function startDictation() {
-var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
-recognition.lang = 'en-US';
-recognition.interimResults = false;
-recognition.maxAlternatives = 5;
-recognition.start();
-window.alert(event.results[0][0].transcript);
+  function startDictation() {
 
-recognition.onresult = function(event) {
-    window.alert(event.results[0][0].transcript);
-    console.log('You said: ', event.results[0][0].transcript);
-};
-}
+    if (window.hasOwnProperty('webkitSpeechRecognition')) {
+
+      var recognition = new webkitSpeechRecognition();
+
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.lang = "en-US";
+      recognition.start();
+
+      recognition.onresult = function(e) {
+        document.getElementById('transcript').value
+                                 = e.results[0][0].transcript;
+        recognition.stop();
+        document.getElementById('labnol').submit();
+      };
+
+      recognition.onerror = function(e) {
+        recognition.stop();
+      }
+
+    }
+  }
 </script>
 
 <!--
