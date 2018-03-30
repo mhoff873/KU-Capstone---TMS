@@ -25,7 +25,7 @@
   function startDictation() {
 
 
-      window.alert("sometext");
+
       var recognition = new webkitSpeechRecognition();
 
       recognition.continuous = false;
@@ -43,10 +43,11 @@
 
       recognition.onerror = function(e) {
         recognition.stop();
+        window.alert("sometext");
       }
 
     }
-    
+
 </script>
 
     <div class="container">
