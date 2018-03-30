@@ -2,7 +2,7 @@
 # Flask request routing to map URLs to code
 # Author: Patrick Earl, Tyler Lance, <devs add names here>
 # Created: 03/04/2018
-# Updated: 03/27/2017
+# Updated: 03/30/2017
 # Purpose: these @app.route map URLs called in the browser to code. each of these
 #          routes pulls data from the url (get) or the form (post) and calls the
 #          corresponding function in the Api.py file. then gets the results from
@@ -294,7 +294,7 @@ def generate_report(arguments=None):
 #(Admin) Reports Page
 @app.route('/reports', methods=['GET'])
 @app.route('/reports/<arguments>', methods=['GET'])
-@login_required
+#@login_required Fix the flash message
 def reports(arguments=None):
     '''
         Description: Generate a report for the users assigned to the supervisor
@@ -313,12 +313,47 @@ def pdf(arguments=None):
     Description: Generates a report for all users assigned to the supervisor or for a specifed user
         Returns a pdf
     Parameters: None or the sorting options
-    Return Value: pdf
-    Author: Patrick Earl
+    Return Value: None
+    Author: Tyler Lance
     """
-    (supervisorID, users, lstTask, sortedBy) = generate_report(arguments)
-
-    html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=lstTask, constraint=sortedBy)
+    # Chose which supervisor the report is being generated for
+    #supervisorID = current_user.supervisorID
+    supervisorID = current_user.supervisorID
+    # pull the list of assigned users to the supervisor
+    users =  Api.getAssignedUsers(supervisorID)
+    # default date for the data if no date is passed
+    date = "2000-01-01"
+    # what the data is sorted by
+    sortedBy = "Showing all entries by date"
+    # pull userIDs from the user data
+    lstUserIDs = [li['userID'] for li in users]
+    # check if arguments were passed to the url
+    if arguments is not None:
+        sort = arguments.split(':')[0]
+        data = arguments.split(':')[1]
+        # check if userID was passed via url and that it wasnt all
+        if sort == 'userid' and data != 'A':
+            # empties the list of userids and adds in the passed one
+            lstUserIDs = []
+            lstUserIDs.append(int(data))
+            sortedBy = "Showing entries for user: " + Api.getNameFromID(int(data))
+        # check if date specified was passed to url
+        elif sort == 'date':
+            if data == 'M':
+                date = str((datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d'))
+                sortedBy = "Showing entries for the last 30 days"
+            elif data == 'W':
+                date = str((datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
+                sortedBy = "Showing entries for the last 7 days"
+            elif data == 'D':
+                date = str((datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d'))
+                sortedBy = "Showing entries for the last day"
+    # get completed tasks by passing the list and date
+    tasks = Api.getCompletedTasksByUsers(date, lstUserIDs)
+    # create list containing dictionaries for each table row
+    for li in tasks:
+        li["userID"]=Api.getNameFromID(li["userID"])
+    html = render_template('pdf.html', supervisor=supervisorID, user=users, tasks=tasks, constraint=sortedBy, date=str(datetime.now().strftime('%A %B %d, %Y %I:%M%p')))
     return render_pdf(HTML(string=html))
 
 @app.route('/graph', methods=['GET'])
@@ -337,6 +372,7 @@ def graph(arguments=None):
     # statistics to be displayed under the graph, empty if no arguments
     statistics = []
     sortedBy = ""
+    curDate = "2000-01-01"
     # get users assigned to the supervisor
     users =  Api.getAssignedUsers(supervisorID)
     # get list of tasks created by the supervisor
