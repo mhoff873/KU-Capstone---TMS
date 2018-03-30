@@ -1,6 +1,6 @@
 function startDictation(element_id) {
     console.log('startDictation called.');
-    var recognition = new new (window.SpeechRecognition ||
+    var recognition = new (window.SpeechRecognition ||
         window.webkitSpeechRecognition ||
         window.mozSpeechRecognition ||
         window.msSpeechRecognition)();
