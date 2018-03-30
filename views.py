@@ -114,15 +114,6 @@ def postSurveyForm(test):
     results = Api.postSurveyForm(SF,SQ)
     return test
 
-#http://tmst.kutztown.edu:5004/api/user/PostSurveyForm/test
-# this must be changed from get to post
-@app.route("/api/user/PostSurveyForm/<test>", methods=['GET'])
-def postSurveyForm(test):
-    SF = ""
-    SQ = ""
-    # created the required dictionary & lists and pass to function
-    results = Api.postSurveyForm(SF,SQ)
-    return test
 
 #http://tmst.kutztown.edu:5004/api/user/GetAssignedUsers/4
 @app.route("/api/user/GetAssignedUsers/<superID>", methods=['GET'])
