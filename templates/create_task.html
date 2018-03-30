@@ -21,7 +21,6 @@
                     document.getElementById(element_id).value
                         = e.results[0][0].transcript;
                     recognition.stop();
-                    document.getElementById('labnol').submit();
                 };
 
                 recognition.onerror = function (e) {
@@ -69,9 +68,9 @@
                     {{ form.description.label }}
                 </div>
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.description (class="form-control", style="height: 100px, width:100%") }}
+                    {{ form.description (id="task_description", class="form-control", style="height: 100px, width:100%") }}
                 </div>
-                {{ form.voice_button_description }}
+                <img onclick="startDictation('task_description')" src="//i.imgur.com/cHidSVu.gif" />
 
                 <br>
 
@@ -89,15 +88,15 @@
                 <div style="display: inline-block; min-width: 90%">
                     {% for main_step in form.main_steps %}
                         {{ loop.index }}. {{ main_step.title.label }}&nbsp;
-                        {{ main_step.voice_button_title }}
-                        {{ main_step.title (class="form-control") }}
+                        <img onclick="startDictation('main_step_title')" src="//i.imgur.com/cHidSVu.gif" />
+                        {{ main_step.title (id="main_step_title", class="form-control") }}
                         <br>
-                        {{ main_step.requiredItem.label }}{{ main_step.requiredItem }}
-                        {{ main_step.voice_button_requiredItem(style="width:100%") }}
+                        {{ main_step.requiredItem.label }}{{ main_step.requiredItem(id="main_step_requiredItems") }}
+                        <img onclick="startDictation('main_step_requiredItems')" src="//i.imgur.com/cHidSVu.gif" />
                         <br>
                         {{ main_step.stepText.label }}&nbsp;
-                        {{ main_step.voice_button_stepText }}
-                        {{ main_step.stepText(style="height: 100px; width:100%") }}
+                        <img onclick="startDictation('main_step_stepText')" src="//i.imgur.com/cHidSVu.gif" />
+                        {{ main_step.stepText(id="main_step_stepText", style="height: 100px; width:100%") }}
                         <br>
                         {{ main_step.audio.label }}{{ main_step.audio }}
                         <br>
@@ -111,11 +110,12 @@
                             {% for detailed_step in main_step.detailed_steps %}
                                 {{ loop.index }}.
                                 {{ detailed_step.title.label }}
-                                {{ detailed_step.title }}{{ detailed_step.voice_button_title }}
+                                {{ detailed_step.title(id="detailed_step_title") }}
+                                <img onclick="startDictation('detailed_step_title')" src="//i.imgur.com/cHidSVu.gif" />
                                 <br>
                                 {{ detailed_step.stepText.label }}&nbsp;
-                                {{ detailed_step.voice_button_stepText }}
-                                {{ detailed_step.stepText(style="height: 100px; width:100%") }}
+                                <img onclick="startDictation('detailed_step_stepText')" src="//i.imgur.com/cHidSVu.gif" />
+                                {{ detailed_step.stepText(id="detailed_step_stepText", style="height: 100px; width:100%") }}
                                 <br>
                                 {{ detailed_step.image.label }}{{ detailed_step.image }}
                                 <br>
