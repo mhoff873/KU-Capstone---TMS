@@ -190,13 +190,10 @@ def supervisor_account():
     if eUser.validate_on_submit():
         UserMgmt.edit_supervisor(eUser, current_user)
         return dashboard()
-<<<<<<< HEAD
     return render_template('supervisor_account.html', EditUser=eUser)
-=======
     aUser = AddUser()
     assUser = AssignUser()
     return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
->>>>>>> sprint3_teamUI
 
 
 # login page
