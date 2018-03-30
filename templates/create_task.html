@@ -25,9 +25,9 @@
 <script>
   function startDictation() {
 
-    if (window.hasOwnProperty('webkitSpeechRecognition')) {
+    if (window.hasOwnProperty('mozSpeechRecognition')) {
 
-      var recognition = new webkitSpeechRecognition();
+      var recognition = new window.mozSpeechRecognition();
 
       recognition.continuous = false;
       recognition.interimResults = false;
