@@ -16,16 +16,16 @@
 <!-- Create Supervisor Account -->
 <form method="POST">
     {{ CreateAccount.csrf_token }}
-    {{ CreateAccount.email.label }}
+    {{ CreateAccount.email.label (style="font-size: 1.5em;")}}
     {{ CreateAccount.email }}
     <br>
-    {{ CreateAccount.password.label }}
+    {{ CreateAccount.password.label (style="font-size: 1.5em;")}}
     {{ CreateAccount.password }}
     <br>
-    {{ CreateAccount.confirm.label }}
+    {{ CreateAccount.confirm.label (style="font-size: 1.5em;")}}
     {{ CreateAccount.confirm }}
     <br>
-    {{ CreateAccount.is_supervisor.label}}
+    {{ CreateAccount.is_supervisor.label(style="font-size: 1.5em;")}}
     {{ CreateAccount.is_supervisor }}
     <br>
     {{ CreateAccount.submit }}

@@ -153,14 +153,14 @@
   <h1>Supervisor Dashboard</h1>
 </div>
 
-<div class="container">
+<div class="container" style="font-size: 1.5em;">
   <div class="page_content">
 
 <!--Two tables for users and tasks-->
 <div class="row">
-  <div class="table-responsive col-md-6">
+  <div class="table-responsive col-md-12">
       <h2 class="sub-header text-center">Assigned Users</h2>
-      <table class="table table-hover">
+      <table class="table table-hover table-bordered">
         <thead id='user_table_header'>
           <tr>
             <th onclick='sort_table(user_table, 0, asc1); asc1 *= -1; asc2 =1;asc3 =1;asc4 = 1; unselect_row(last_row);unselect_row(row); document.getElementById("user_id").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_email").style.visibility="hidden"; document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_id").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"' >User ID <img id="user_id" style="height:1em;"></span></th>
@@ -181,9 +181,9 @@
         </tbody>
     </table>
   </div>
-  <div class="table-responsive col-md-6">
+  <div class="table-responsive col-md-12">
       <h2 class="sub-header text-center">Assigned Tasks</h2>
-      <table class="table table-hover">
+      <table class="table table-hover table-bordered">
         <thead>
           <tr>
             <th onclick='sort_table(task_table, 0, asc5); asc5 *= -1; asc6 =1;asc7 =1;asc8 = 1; unselect_row(last_row);unselect_row(row);document.getElementById("task_id").style.visibility="visible"; document.getElementById("task_date").style.visibility="hidden"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_id").src=(asc5==1)?"../static/img/up.png":"../static/img/down.png";' >Task ID<img id="task_id" style="height:1em;"></span></th>

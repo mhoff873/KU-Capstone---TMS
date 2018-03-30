@@ -17,19 +17,25 @@
 
       {{ form.csrf_token }}
       <div style="display: inline-block; min-width: 13em">
-      {{ form.email.label }}
+          {% if errors != "" %}
+            {{ errors }}
+          {% endif %}
+      </div>
+      <br>
+      <div style="display: inline-block; min-width: 13em">
+      {{ form.email.label (style="font-size: 1.5em;")}}
       {{ form.email (class="form-control")}}
       </div>
       <br>
       <br>
       <div style="display: inline-block; min-width: 13em">
-      {{ form.password.label }}
+      {{ form.password.label (style="font-size: 1.5em;")}}
       {{ form.password (class="form-control")}}
       </div>
       <br>
       <br>
       <div style="display: inline-block; min-width: 13em">
-      {{ form.confirm.label }}
+      {{ form.confirm.label (style="font-size: 1.5em;")}}
       {{ form.confirm (class="form-control")}}
       </div>
       <br>

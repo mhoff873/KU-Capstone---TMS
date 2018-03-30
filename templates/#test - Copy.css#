@@ -5,17 +5,10 @@ UI darker color that (from the Jamaal file), darker hambuger and then lighter
 red for the background. The top with logo and then logo to the left next to the
 hambuger. */
 
-/*redish color for navbar a5031e */
-/*yellowish color for buttons f4c804 */
-/*maroon ku color 550000*/
-
-/*look at https://www.dunkindonuts.com/en/dd-perks*/
-
 /*css for the index.html page*/
 body {
     font-family: 'Roboto', sans-serif;
-    /*background: #fafafa;*/
-	background: #f2f2f2;
+    background: #fafafa;
 }
 /*paragraph style*/
 p {
@@ -24,11 +17,7 @@ p {
     font-weight: 300;
     line-height: 1.7em;
     color: #999;
-}
-/*when inserted, will make dropdowns scroll*/
-.force-scroll {
-    height: 200px;
-    overflow-y: scroll;	
+
 }
 
 .theme-dropdown .dropdown-menu {
@@ -49,48 +38,32 @@ p {
   text-align: center;
   vertical-align: middle;
   padding-top: 0px;
-}
-
-
-/*To Be Continued*/
-
-.dropdown-content{
-	color: red;
-}
-
-.container{
-/*background-color: silver;*/
-
-	}
-
-.table tbody{
-	color: #33334d;
-}
-
-/*banner top of page banner*/
-.jumbotron{
-  /*background-color: #550000; /*this is the maroon color*/
-  color: white;
-  /*max-height: 200px; */
-  background-color: #990000;
 
 }
 
-/*navbar????*/
-.bg-company-red {
-    background-color: white;
-}
-
-/*Button Colors*/
-/*.btn {*?
-	 /*background-color: #f4c804;*/
-	/* background-color: #FFC300
-}/*
-
-/*end of to be continued*/
 
 /*****End index.html**********/
 
+/*css for supervisor accout/ senior account*/
+#upload_button{
+padding-bottom: 20px;
+}
+/*css for supervisor account/ senior account*/
+#supervisor_buttons{
+text-align: center;
+
+}
+/*css for supervisor account/ senior account*/
+#senior_dropdown{
+padding-top: 30px;
+
+}
+
+/*css for  create supervisor account/ create senior account*/
+#createSupervisorDrpdn{
+text-align:left;
+
+}
 
 /*login page*/
 

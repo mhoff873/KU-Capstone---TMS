@@ -6,82 +6,117 @@
 </div>
 
 <div class="container">
-  <div class="page_content">
+ <div class="page_content">
 
   <!-- content goes in here, below. -->
 
-<div class= "text-center">
+  <div class= "text-center">
+
 
 
   <!-- Edit user info -->
   <form method="POST">
       {{ EditUser.csrf_token }}
+	  <!--first name field-->
+	  <div class="row">
+	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.password.label }}
-      {{ EditUser.password (class="form-control")}}
-      </div>
-      <br>
-      <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.phone.label }}
-      {{ EditUser.phone (class="form-control")}}
-      </div>
-      <br>
-      <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.fname.label }}
+      {{ EditUser.fname.label (style="font-size: 1.5em;")}}
       {{ EditUser.fname (class="form-control")}}
       </div>
+	  </div>
       <br>
+	  <!--middle name field-->
+	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.mname.label }}
+      {{ EditUser.mname.label (style="font-size: 1.5em;")}}
       {{ EditUser.mname (class="form-control")}}
       </div>
+	  </div>
       <br>
+	  <!--last name field-->
+	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.lname.label }}
+      {{ EditUser.lname.label (style="font-size: 1.5em;")}}
       {{ EditUser.lname (class="form-control")}}
       </div>
+	  </div>
+	  </div>
       <br>
+	  <!--phone field-->
+	  <div class="row">
+	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.gender.label }}
+      {{ EditUser.phone.label (style="font-size: 1.5em;")}}
+      {{ EditUser.phone (class="form-control")}}
+      </div>
+	  </div>
+	  <br>
+	  <!--gender field-->
+	  <div class="col-sm-4">
+      <div style="display: inline-block; min-width: 13em">
+      {{ EditUser.gender.label (style="font-size: 1.5em;")}}
       {{ EditUser.gender (class="form-control")}}
       </div>
+	  </div>
       <br>
+	  <!--birthday field-->
+	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.birthday.label }}
-      {{ EditUser.birthday (class="form-control")}}
+	  
+      {{ EditUser.birthday.label (style="font-size: 1.5em;")}}
+	  
+	  {{ EditUser.birthday (class="form-control")}}
+	  
       </div>
+	  </div>
+	  </div>
       <br>
+	  <!-- affiliation field-->
+	  <div class="row">
+	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.affiliation.label }}
+      {{ EditUser.affiliation.label (style="font-size: 1.5em;")}}
       {{ EditUser.affiliation (class="form-control")}}
       </div>
+	  </div>
       <br>
+	  <!--ethnicity field-->
+	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.ethnicity.label }}
+      {{ EditUser.ethnicity.label (style="font-size: 1.5em;")}}
       {{ EditUser.ethnicity (class="form-control")}}
       </div>
+	  </div>
       <br>
+	  <!-- picture upload button-->
+	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
-      {{ EditUser.picture.label }}
-      {{ EditUser.picture(class="form-control")}}
+      {{ EditUser.picture.label (style="font-size: 1.5em;")}}
+      <!--{{ EditUser.picture(class="form-control")}}-->
+		<div class="form-group">
+			<!--<label for="exampleInputFile">File input</label>-->
+			<input type="file" class="form-control-file"  id="exampleInputFile" aria-describedby="fileHelp">
+			<!--<small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>-->
+		</div>
       </div>
-      {% for field, errors in EditUser.errors.items() %}
-        <div class="alert alert-error">
-            {{ EditUser[field].label }}: {{ ", ".join(errors) }}
-        </div>
-      {% endfor %}
+	  </div>
+	  </div>
       <br>
       <br>
-      {{ EditUser.submit (class="btn btn-secondary btn-md")}}
+      {{ EditUser.submit (class="btn btn-secondary btn-lg")}}
+	  <br>
+	  <br>
   </form>
-</div>
+ </div>
 
 
 
 
   <!-- content goes here, above. -->
 
-  </div>
+ </div>
 </div><!-- /.container -->
 
 {% endblock content %}
+
