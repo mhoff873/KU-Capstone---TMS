@@ -8,13 +8,9 @@ from helper_methods import UserMgmt, TaskHelper, Update, Login, Library, \
     TaskAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
-<<<<<<< HEAD
-from Forms.models import Task, User, Supervisor, Request, SurveyForm, \
-    SurveyQuest
 
-=======
 from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest, SurveyResult,SurveyAssigned
->>>>>>> sprint3_devb
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -235,7 +231,6 @@ def survey_results():
 # survey management
 @app.route("/surveys/", methods=["GET", "POST"])
 def surveys():
-<<<<<<< HEAD
     form = CreateASurvey()
     questions = SurveyQuest.query.all()
     for q in questions:
@@ -245,22 +240,6 @@ def surveys():
     return render_template("surveysTemp.html", form=form,
                            form_questions=questions)
 
-=======
-    # create new survey form thing
-    # form = NewSurvey()
-    surveys = SurveyForm.query.all() # the entire result table. get the formID and the name
-    survey_list=[]
-    
-    for s in surveys:
-        survey_list.append({'formId':s.formID,'surveyTitle':s.formTitle,'surveyDesc':s.description})
-        
-    # print(survey_list)
-    
-    #if form.validate_on_submit():
-     #   print ("You are trying to create a new survey")
-     
-    return render_template("surveyManagement.html",survey_list=survey_list)
->>>>>>> sprint3_devb
 
 # link to the logout page to log an account out
 @app.route('/logout', methods=['GET'])
@@ -326,14 +305,7 @@ def update():
 def create_supervisor():
     form = CreateSupervisor()
     if form.validate_on_submit():
-<<<<<<< HEAD
-        UserMgmt.create_supervisor(form)
-        eUser = EditUser()
-        aUser = AddUser()
-        assUser = AssignUser()
-        return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
-    return render_template("createSupervisorTest.html", form=form)
-=======
+
         # Check for duplicate entry in the db.
         if Supervisor.query.filter_by(email=form.email.data).first() is None:
             UserMgmt.create_supervisor(form)
@@ -341,7 +313,7 @@ def create_supervisor():
         else:
             return render_template("createSupervisorTest.html", form=form, errors="Duplicate account! Try another email!")
     return render_template("createSupervisorTest.html", form=form, errors="")
->>>>>>> sprint3_devb
+
 
 
 # create user page
@@ -387,16 +359,13 @@ def library(arguments=None):
             if sort == "alpha":
                 tasks = Library.sort_alphabetically(Library.search(keyword))
             elif sort == "alpha-rev":
-<<<<<<< HEAD
-                tasks = Library.sort_alphabetically(Library.search(keyword),
-                                                    reverse=True)
-=======
+
                 tasks = Library.sort_alphabetically(Library.search(keyword), reverse=True)
             elif sort == "chrono":
                 tasks = Library.sort_chronologically(Library.search(keyword))
             elif sort == "chrono-rev":
                 tasks = Library.sort_chronologically(Library.search(keyword), reverse=True)
->>>>>>> sprint3_devb
+
         else:
             tasks = Library.sort_alphabetically(Library.search(keyword))
     else:
@@ -410,18 +379,7 @@ def library(arguments=None):
             if supervisor_id != "":
                 selected_id = supervisor_id
 
-<<<<<<< HEAD
-            # Check sort options
-            if sort == "alpha":
-                tasks = Library.sort_alphabetically(
-                    Library.get_tasks(supervisor_id))
-            if sort == "alpha-rev":
-                tasks = Library.sort_alphabetically(
-                    Library.get_tasks(supervisor_id), reverse=True)
-            else:  # Default option is to sort alphabetically
-                tasks = Library.sort_alphabetically(
-                    Library.get_tasks(supervisor_id))
-=======
+
             if supervisor_id == "-1":
                 tasks = Library.sort_alphabetically(Library.search("*"))
              # Check sort options
@@ -435,7 +393,7 @@ def library(arguments=None):
                 tasks = Library.sort_chronologically(Library.get_tasks(supervisor_id), reverse=True)
             else: # Default option is to sort alphabetically
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
->>>>>>> sprint3_devb
+
         else:
             tasks = Library.sort_alphabetically(
                 Library.get_tasks(current_user.supervisorID))
@@ -457,7 +415,7 @@ def task_assignment():
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
         users = User.query.all()
-<<<<<<< HEAD
+
     # WARNING: If the user doesn't have a first name and a last name in the DB,
     # such as, say, the user was entered for testing purposes,
     # the concatenation of their first name and last name will crash the app.
@@ -506,21 +464,6 @@ def task_assignment():
         return render_template("task_assignment.html", form=form)
     return render_template("task_assignment.html", form=form)
 
-=======
-    # on add_task button press, show list of tasks
-    if form.add_task.data:
-        # if current_user == Supervisor:
-            # tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-            # assign = True
-        # else:
-        tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
-        return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
-    #if form.show_history.data:
-        # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
-    #if form.assign.data:
-        # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
-    #"""
-    return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
 
 
 #senior assignment
@@ -544,7 +487,7 @@ def senior_assignment(arguments=None):
 
 
     
->>>>>>> sprint3_devb
+
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
