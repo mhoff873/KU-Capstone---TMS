@@ -2,35 +2,7 @@
 
 {% block content %}
     <!-- HTML5 Speech Recognition API -->
-    <script>
-        function startDictation(element_id) {
-            console.log('startDictation called.');
-            console.log(window.hasOwnProperty('webkitSpeechRecognition'));
-            if (window.hasOwnProperty('webkitSpeechRecognition')) {
-                console.log('Browser is HTML5 Speech Recognition capable');
-                var recognition = new webkitSpeechRecognition();
-                console.log(recognition);
-                recognition.continuous = false;
-                recognition.interimResults = false;
-
-                recognition.lang = "en-US";
-                recognition.start();
-                console.log('Starting recording.');
-                recognition.onresult = function (e) {
-                    console.log('Result: ' + e.results[0][0].transcript);
-                    document.getElementById(element_id).value
-                        = e.results[0][0].transcript;
-                    recognition.stop();
-                };
-
-                recognition.onerror = function (e) {
-                    console.log('Error occurred: ' + e);
-                    recognition.stop();
-                }
-
-            }
-        }
-    </script>
+    <script src="/static/js/speech_recognition.js"></script>
 
     <div class="jumbotron text-center">
         <h1>Create Task</h1>
@@ -48,8 +20,7 @@
                 {% endif %}
             {% endwith %}
 
-            <form id="create_task_form" action="{{ url_for('create_task') }}"
-                  method="POST">
+            <form id="create_task_form" action="{{ url_for('create_task') }}" method="POST">
                 {{ form.hidden_tag() }}
 
                 <!-- Title -->
