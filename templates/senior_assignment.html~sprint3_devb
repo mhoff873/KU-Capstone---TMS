@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="jumbotron text-center">
+        <h1>User Assignment</h1>
+    </div>
+
+    <div class="container">
+        <div class="page_content">
+            <div class= "text-center">
+                <form method="POST">
+
+                    <!--
+                    {{ request.url }}
+                    {{ request.path }}
+                    -->
+                    {% if errors is not none %}
+                        {{ errors }}
+                    {% endif %}
+    				<div class="container">
+    					<div class="row">
+    						<div class="col-sm">
+    					        <!-- Supervisor Dropdown -->
+        						<div class="dropdown">
+        							<button type="button" class="btn btn-secondary btn-lg btn-block dropdown-toggle" data-toggle="dropdown">
+                                        {% if superID is not none and superID != -1 %}
+                                            {% for supervisor in supervisors if supervisor.supervisorID == superID %}
+                                                {{ supervisor.fname }} {{ supervisor.lname }}
+                                            {% endfor %}
+                                        {% else %}
+            								Supervisor
+                                        {% endif %}
+        							</button>
+        							<div class="dropdown-menu col-sm-12 force-scroll">
+        							        <form class="#">
+        										<input type="search" class="form-control" id="#" placeholder="Search" autofocus="autofocus">
+        									</form>
+                                            {% for supervisor in supervisors %}
+                                            <a class="dropdown-item" href="{{url_for('senior_assignment')}}{{supervisor.supervisorID}}:-1">
+                                                    {{ supervisor.fname }} {{ supervisor.lname }}
+                                            </a>
+                                            {% endfor %}
+        							</div>
+        						</div>
+
+
+    						</div>
+
+    						<div class="col-sm-2"></div>
+
+    						<div class="col-sm">
+        						<!-- Supervisor Dropdown -->
+        						<div class="dropdown">
+        							<button type="button" class="btn btn-secondary btn-lg btn-block dropdown-toggle" data-toggle="dropdown">
+        								Assign Seniors
+        							</button>
+        							<div class="dropdown-menu col-sm-12 force-scroll">
+        									<form class="#">
+        										<input type="search" class="form-control" id="#" placeholder="Search" autofocus="autofocus">
+        									</form>
+                                            {% for user in users if user.userID != userID %}
+                                                {% if superID is none %}
+                                                    <a class="dropdown-item" href="{{url_for('senior_assignment')}}-1:{{user.userID}}">
+                                                        {{ user.fname }} {{ user.lname }}
+                                                    </a>
+                                                {% else %}
+                                                    <a class="dropdown-item" href="{{url_for('senior_assignment')}}{{superID}}:{{user.userID}}">
+                                                        {{ user.fname }} {{ user.lname }}
+                                                    </a>
+                                                {% endif %}
+                                            {% endfor %}
+        							</div>
+        						</div>
+    						</div>
+    					</div>
+    				</div>
+                    <!-- -->
+                </form>
+            </div>
+
+        </div>
+    </div><!-- /.container -->
+{% endblock content %}
+
+
+<!--
+                {% for user in users %}
+                    <p> {{ user.fname }} {{ user.lname }} </p>
+                    {{form.add_task (class='btn btn-secondary btn-sm')}}
+                    {{form.show_history (class='btn btn-secondary btn-sm')}}
+                    {% for task in tasks %}
+                        {{ task.title }}
+                        {{form.assign (class='btn btn-secondary btn-sm')}}
+                        <br>
+                    {% endfor %}
+                {% endfor %}
+-->

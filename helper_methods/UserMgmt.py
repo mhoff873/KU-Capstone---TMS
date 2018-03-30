@@ -132,23 +132,21 @@ def get_unassigned():
     return users
 
 
-def assign_user(form):
+def assign_user(superID, userID):
     """
     Assigns a user to a supervisor.
     :param form: Form submitted to assign a user to a supervisor.
     :return: N/A
     """
     errors = ""
-    supervisor = Supervisor.query.filter_by(email=form.supervisor.data).first()
+    supervisor = Supervisor.query.filter_by(supervisorID=superID).first()
     if supervisor is not None:
-        user = User.query.filter_by(email=form.user.data).first()
+        user = User.query.filter_by(userID=userID).first()
         if user is not None:
             user.supervisorID = supervisor.supervisorID
             db.session.commit()
         else:
-            errors += "There is no user with the name of {}".format(
-                    form.user.data)
+            errors += "Could not find specified user!"
     else:
-        errors += "There is no supervisor with the name of {}".format(
-                form.supervisor.data)
+        errors += "Could not find specified supervisor!"
     return "Successfully assigned user to supervisor!" if errors == "" else errors
