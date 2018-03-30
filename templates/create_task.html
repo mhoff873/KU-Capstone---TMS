@@ -1,40 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <!-- CSS Styles -->
-    <style>
-        .speech {
-            border: 1px solid #DDD;
-            width: 300px;
-            padding: 0;
-            margin: 0
-        }
-
-        .speech input {
-            border: 0;
-            width: 240px;
-            display: inline-block;
-            height: 30px;
-        }
-
-        .speech img {
-            float: right;
-            width: 40px
-        }
-    </style>
-
-    <!-- Search Form -->
-    <form id="labnol" method="get" action="https://www.google.com/search">
-        <div class="speech">
-            <input type="text" name="q" id="transcript" placeholder="Speak"/>
-            <img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif"/>
-        </div>
-    </form>
-
     <!-- HTML5 Speech Recognition API -->
     <script>
         function startDictation(element_id) {
             console.log('startDictation called.');
+            console.log(window.hasOwnProperty('webkitSpeechRecognition'));
             if (window.hasOwnProperty('webkitSpeechRecognition')) {
                 console.log('Browser is HTML5 Speech Recognition capable');
                 var recognition = new webkitSpeechRecognition();
@@ -89,7 +60,7 @@
                 <div style="display: inline-block; min-width: 13em">
                     {{ form.title (id="task_title", class="form-control") }}
                 </div>
-                {{ form.voice_button_title }}
+                <img onclick="startDictation('task_title')" src="//i.imgur.com/cHidSVu.gif" />
 
                 <br>
 
