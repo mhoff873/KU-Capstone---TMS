@@ -11,10 +11,10 @@ installation of all libraries the app uses. It is called via:
 """
 from flask import Flask
 from flask_cors import CORS # Needed for API requests
-from flask_sslify import SSLify
+#from flask_sslify import SSLify
 
 
 app = Flask(__name__)
 app.config.from_object('config')
 CORS(app)  # This allows Cross site access. Temp solution
-sslify = SSLify(app)
+#sslify = SSLify(app)
