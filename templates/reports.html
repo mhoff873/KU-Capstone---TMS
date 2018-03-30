@@ -7,9 +7,21 @@
 </div>
 
 <!-- content goes here, below. -->
-  
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <!-- <strong>Title</strong> --> {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
  <div class="col-sm"></div><!-- this is used for spacing purposes-->
- <div class="col-sm"></div><!-- this is used for spacing purposes--> 
+ <div class="col-sm"></div><!-- this is used for spacing purposes-->
 <!-- end -->
 </div>
 </div>
@@ -25,12 +37,16 @@
   <div class="row">
     <div class="col-sm-4">
 	<!-- second row left button -->
-		<a href="#" role="button" class="btn btn-secondary btn-lg btn-block">Graph</a>
+		<a href="{{url_for('graph')}}" role="button" class="btn btn-secondary btn-lg btn-block">Graph</a>
     </div>
     <div class="col-sm-4">
-	<!-- second row middle button -->
+  <!-- second row middle button -->
+  {% if arguments is none %}
 		<a href="{{url_for('email')}}" role="button" class="btn btn-secondary btn-lg btn-block">Email</a>
-    </div>
+  {% else %}
+    <a href="{{url_for('email') + '/' + arguments}}" role="button" class="btn btn-secondary btn-lg btn-block">Email</a>
+  {% endif %}
+  </div>
 	<div class="col-sm-4">
   <!-- second row right button -->
   {% if arguments is none %}
@@ -74,7 +90,7 @@
     </div>
 	</div>
   <div class="col-sm-3"></div><!-- this is used for spacing purposes-->
-  <div class="col-sm-3"></div><!-- this is used for spacing purposes--> 
+  <div class="col-sm-3"></div><!-- this is used for spacing purposes-->
   <div class="col-sm-3">
     <div class="dropdown">
       <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
@@ -84,7 +100,7 @@
       <a class="dropdown-item" href="{{url_for('reports') + '/date:A'}}">All</a>
       <a class="dropdown-item" href="{{url_for('reports') + '/date:M'}}">Monthly</a>
       <a class="dropdown-item" href="{{url_for('reports') + '/date:W'}}">Weekly</a>
-      <a class="dropdown-item" href="{{url_for('reports') + '/date:A'}}">Daily</a>
+      <a class="dropdown-item" href="{{url_for('reports') + '/date:D'}}">Daily</a>
     </div>
       
     </div>
