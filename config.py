@@ -9,7 +9,7 @@ SECRET_KEY = 'wefb292h3d9be#@@YEBBCE2NION32UDFEBUE2U202hfeu2onwdsjdf'
 #Flask-mysql
 MYSQL_HOST = '127.0.0.1'
 MYSQL_USER = 'tmst_db'
-MYSQL_PASSWORD = 'humedavid'
+MYSQL_PASSWORD = ''
 MYSQL_DB = 'tmst_db'
 MYSQL_CURSORCLASS = 'DictCursor'
 
@@ -19,11 +19,11 @@ MAIL_PORT = 587
 MAIL_USE_SSL = False
 MAIL_USE_TLS = True
 #MAIL_DEBUG = True 
-MAIL_USERNAME = "kutztms@gmail.com"
-MAIL_PASSWORD = "csc355KU."
+MAIL_USERNAME = ""
+MAIL_PASSWORD = ""
 # USE THIS WHEN TESTING STUFF
 MAIL_SUPPRESS_SEND = False
 
 # Database Configs
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://tmst_db:humedavid@localhost:3306/tmst_db'
+SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://tmst_db:password@localhost:3306/tmst_db'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
