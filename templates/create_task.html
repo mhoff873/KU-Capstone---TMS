@@ -136,7 +136,8 @@
                 <br>
                 {{ form.publish }}&nbsp;{{ form.publish.label }}
                 <br>
-                {{ form.keywords.label }} {{ form.keywords(style="height: 100px; width:100%") }}
+                {{ form.keywords.label }}&nbsp;<img onclick="startDictation('keywords')" src="//i.imgur.com/cHidSVu.gif" />
+                {{ form.keywords(id="keywords", style="height: 100px; width:100%") }}
                 <br>
                 {{ form.save (class='btn btn-secondary btn-md') }}&nbsp;
             </form>

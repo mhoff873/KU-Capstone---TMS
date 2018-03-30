@@ -1,6 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <!-- HTML5 Speech Recognition API -->
+    <script>
+        function startDictation(element_id) {
+            console.log('startDictation called.');
+            console.log(window.hasOwnProperty('webkitSpeechRecognition'));
+            if (window.hasOwnProperty('webkitSpeechRecognition')) {
+                console.log('Browser is HTML5 Speech Recognition capable');
+                var recognition = new webkitSpeechRecognition();
+                console.log(recognition);
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.lang = "en-US";
+                recognition.start();
+                console.log('Starting recording.');
+                recognition.onresult = function (e) {
+                    console.log('Result: ' + e.results[0][0].transcript);
+                    document.getElementById(element_id).value
+                        = e.results[0][0].transcript;
+                    recognition.stop();
+                };
+
+                recognition.onerror = function (e) {
+                    console.log('Error occurred: ' + e);
+                    recognition.stop();
+                }
+
+            }
+        }
+    </script>
+
     <div class="jumbotron text-center">
         <h1>Edit Task</h1>
     </div>
@@ -17,7 +48,7 @@
                 {% endif %}
             {% endwith %}
 
-            <form action="{{ url_for('edit_task') }}" method="POST">
+            <form id="edit_task_form" action="{{ url_for('edit_task') }}" method="POST">
                 {{ form.hidden_tag() }}
 
                 <!-- Title -->
@@ -25,9 +56,9 @@
                     {{ form.title.label }}
                 </div>
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.title (class="form-control") }}
+                    {{ form.title (id="task_title", class="form-control") }}
                 </div>
-                {{ form.voice_button_title }}
+                <img onclick="startDictation('task_title')" src="//i.imgur.com/cHidSVu.gif" />
 
                 <br>
 
@@ -36,9 +67,9 @@
                     {{ form.description.label }}
                 </div>
                 <div style="display: inline-block; min-width: 13em">
-                    {{ form.description (class="form-control", style="height: 100px, width:100%") }}
+                    {{ form.description (id="task_description", class="form-control", style="height: 100px, width:100%") }}
                 </div>
-                {{ form.voice_button_description }}
+                <img onclick="startDictation('task_description')" src="//i.imgur.com/cHidSVu.gif" />
 
                 <br>
 
@@ -54,43 +85,48 @@
 
                 <!-- Main Steps -->
                 <div style="display: inline-block; min-width: 90%">
-                {% for main_step in form.main_steps %}
-                    {{ loop.index }}. {{ main_step.title.label }}&nbsp;{{ main_step.voice_button_title }}
-                    {{ main_step.title (class="form-control") }}
-                    <br>
-                    {{ main_step.requiredItem.label }}{{ main_step.requiredItem }}
-                    {{ main_step.voice_button_requiredItem(style="width:100%") }}
-                    <br>
-                    {{ main_step.stepText.label }}&nbsp;{{ main_step.voice_button_stepText }}
-                    {{ main_step.stepText(style="height: 100px; width:100%") }}
-                    <br>
-                    {{ main_step.audio.label }}{{ main_step.audio }}
-                    <br>
-                    {{ main_step.image.label }}{{ main_step.image }}
-                    <br>
-                    {{ main_step.video.label }}{{ main_step.video }}
-                    <br>
+                    {% for main_step in form.main_steps %}
+                        {{ loop.index }}. {{ main_step.title.label }}&nbsp;
+                        <img onclick="startDictation('main_step_title')" src="//i.imgur.com/cHidSVu.gif" />
+                        {{ main_step.title (id="main_step_title", class="form-control") }}
+                        <br>
+                        {{ main_step.requiredItem.label }}{{ main_step.requiredItem(id="main_step_requiredItems") }}
+                        <img onclick="startDictation('main_step_requiredItems')" src="//i.imgur.com/cHidSVu.gif" />
+                        <br>
+                        {{ main_step.stepText.label }}&nbsp;
+                        <img onclick="startDictation('main_step_stepText')" src="//i.imgur.com/cHidSVu.gif" />
+                        {{ main_step.stepText(id="main_step_stepText", style="height: 100px; width:100%") }}
+                        <br>
+                        {{ main_step.audio.label }}{{ main_step.audio }}
+                        <br>
+                        {{ main_step.image.label }}{{ main_step.image }}
+                        <br>
+                        {{ main_step.video.label }}{{ main_step.video }}
+                        <br>
 
-                    <!-- Detailed Steps -->
-                    <div style="display: inline-block; margin-left:3em">
-                        {% for detailed_step in main_step.detailed_steps %}
-                            {{ loop.index }}. {{ detailed_step.title.label }}
-                            {{ detailed_step.title }}{{ detailed_step.voice_button_title }}
-                            <br>
-                            {{ detailed_step.stepText.label }}&nbsp;{{ detailed_step.voice_button_stepText }}
-                            {{ detailed_step.stepText(style="height: 100px; width:100%") }}
-                            <br>
-                            {{ detailed_step.image.label }}{{ detailed_step.image }}
-                            <br>
-                            {{ detailed_step.detailed_step_removal (class='btn btn-secondary btn-md') }}
-                            <br><br>
-                        {% endfor %}
-                        {{ main_step.add_detailed_step (class='btn btn-secondary btn-md') }}
-                    </div>
-                    <br><br>
-                    {{ main_step.main_step_removal (class='btn btn-secondary btn-md') }}
-                    <hr>
-                {% endfor %}
+                        <!-- Detailed Steps -->
+                        <div style="display: inline-block; margin-left:3em">
+                            {% for detailed_step in main_step.detailed_steps %}
+                                {{ loop.index }}.
+                                {{ detailed_step.title.label }}
+                                {{ detailed_step.title(id="detailed_step_title") }}
+                                <img onclick="startDictation('detailed_step_title')" src="//i.imgur.com/cHidSVu.gif" />
+                                <br>
+                                {{ detailed_step.stepText.label }}&nbsp;
+                                <img onclick="startDictation('detailed_step_stepText')" src="//i.imgur.com/cHidSVu.gif" />
+                                {{ detailed_step.stepText(id="detailed_step_stepText", style="height: 100px; width:100%") }}
+                                <br>
+                                {{ detailed_step.image.label }}{{ detailed_step.image }}
+                                <br>
+                                {{ detailed_step.detailed_step_removal (class='btn btn-secondary btn-md') }}
+                                <br><br>
+                            {% endfor %}
+                            {{ main_step.add_detailed_step (class='btn btn-secondary btn-md') }}
+                        </div>
+                        <br><br>
+                        {{ main_step.main_step_removal (class='btn btn-secondary btn-md') }}
+                        <hr>
+                    {% endfor %}
                 </div>
                 <br>
                 {{ form.add_main_step (class='btn btn-secondary btn-md') }}
@@ -99,7 +135,8 @@
                 <br>
                 {{ form.publish }}&nbsp;{{ form.publish.label }}
                 <br>
-                {{ form.keywords.label }} {{ form.keywords(style="height: 100px; width:100%") }}
+                {{ form.keywords.label }}&nbsp;<img onclick="startDictation('keywords')" src="//i.imgur.com/cHidSVu.gif" />
+                {{ form.keywords(id="keywords", style="height: 100px; width:100%") }}
                 <br>
                 {{ form.save (class='btn btn-secondary btn-md') }}&nbsp;
             </form>
