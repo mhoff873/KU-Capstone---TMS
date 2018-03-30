@@ -1,6 +1,6 @@
 function startDictation(element_id) {
     console.log('startDictation called.');
-    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    var SpeechRecognition = webkitSpeechRecognition;
     var recognition = new SpeechRecognition();
     console.log(recognition);
     recognition.continuous = false;
