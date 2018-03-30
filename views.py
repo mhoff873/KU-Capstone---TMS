@@ -8,9 +8,13 @@ from helper_methods import UserMgmt, TaskHelper, Update, Login, Library, \
     TaskAssignmentHelper, Api
 from database import *
 from flask_login import current_user, login_required, logout_user
+<<<<<<< HEAD
 from Forms.models import Task, User, Supervisor, Request, SurveyForm, \
     SurveyQuest
 
+=======
+from Forms.models import Task, User, Supervisor, Request, SurveyForm, SurveyQuest, SurveyResult,SurveyAssigned
+>>>>>>> sprint3_devb
 
 @app.route('/', methods=['GET'])
 def index():
@@ -161,9 +165,77 @@ def admin_dash():
                                supervisor_list=supervisors, user_list=users)
 
 
+# survey creation/edit page
+@app.route("/surveyCreation/", methods=["GET", "POST"])
+def surveyCreation():
+    form = CreateASurvey()
+    questions = SurveyQuest.query.all()
+    for q in questions:
+        print(q.questionText)
+    if form.validate_on_submit():
+        return ("You have Submitted the Survey")
+    return render_template("surveysTemp.html", form=form, form_questions = questions)
+
+    
+# survey results
+@app.route("/survey_results/", methods=["GET", "POST"])
+def survey_results():
+    survey_forms = SurveyForm.query.all() # the entire form table using the formID get the formTitle
+    survey_results = SurveyResult.query.all() # the entire result table. get the formID and the name
+    surveys_assigned = SurveyAssigned.query.all() # the entire assigned table
+    all_the_flippin_tasks = Task.query.all() # all the flippin tasks
+
+    das_struct = []
+    
+    formID_to_name = {} # result table map
+    formID_to_title = {} # surveyForm table map
+    formID_to_taskID = {} # assigned table map
+    taskID_to_title = {} # task table map
+    
+    formID_to_date = {} # result table map for date
+    
+    formIDs=[] # list of all formIDs from the result table
+    
+    # formIDs have unique titles in the surveyForms table
+    for s in survey_forms:
+        formID_to_title[s.formID]=s.formTitle
+        # print(formID_to_title[s.formID])
+        
+    # taskIDs have unique titles in the task table
+    for t in all_the_flippin_tasks:
+        taskID_to_title[t.taskID]=t.title
+        # print(taskID_to_title[t.taskID])
+    
+    # formIDs have unique names in the result table
+    for f in survey_results:
+        formID_to_name[f.formID]=f.name
+        formID_to_date[f.formID]=f.date
+        # print(formID_to_name[f.formID])
+        
+    # formID to taskID mapping from the assigned table
+    for a in surveys_assigned:
+        formID_to_taskID[a.formID]=a.taskID
+        formIDs.append(a.formID)
+        # print(formID_to_taskID[a.formID])
+        
+    # print(formIDs)
+    
+    # building das_struct
+    for f in formIDs:
+        #print(f)
+        #print(formID_to_name[f]) # prints name of the result
+        #print(taskID_to_title[formID_to_taskID[f]]) # prints the title of the task
+        #print(formID_to_title[f]) # prints the title of the surveyForm
+        das_struct.append({'formID':f,'date':formID_to_date[f],'taskTitle':taskID_to_title[formID_to_taskID[f]],'surveyTitle':formID_to_title[f],'userName':formID_to_name[f]})
+        
+    # print(das_struct)
+    return render_template("surveyResults.html", result_struct=das_struct)
+    
+    
 # survey management
 @app.route("/surveys/", methods=["GET", "POST"])
 def surveys():
+<<<<<<< HEAD
     form = CreateASurvey()
     questions = SurveyQuest.query.all()
     for q in questions:
@@ -173,6 +245,22 @@ def surveys():
     return render_template("surveysTemp.html", form=form,
                            form_questions=questions)
 
+=======
+    # create new survey form thing
+    # form = NewSurvey()
+    surveys = SurveyForm.query.all() # the entire result table. get the formID and the name
+    survey_list=[]
+    
+    for s in surveys:
+        survey_list.append({'formId':s.formID,'surveyTitle':s.formTitle,'surveyDesc':s.description})
+        
+    # print(survey_list)
+    
+    #if form.validate_on_submit():
+     #   print ("You are trying to create a new survey")
+     
+    return render_template("surveyManagement.html",survey_list=survey_list)
+>>>>>>> sprint3_devb
 
 # link to the logout page to log an account out
 @app.route('/logout', methods=['GET'])
@@ -238,12 +326,22 @@ def update():
 def create_supervisor():
     form = CreateSupervisor()
     if form.validate_on_submit():
+<<<<<<< HEAD
         UserMgmt.create_supervisor(form)
         eUser = EditUser()
         aUser = AddUser()
         assUser = AssignUser()
         return render_template('supervisor_account.html',EditUser=eUser,AddUser=aUser,AssignUser=assUser)
     return render_template("createSupervisorTest.html", form=form)
+=======
+        # Check for duplicate entry in the db.
+        if Supervisor.query.filter_by(email=form.email.data).first() is None:
+            UserMgmt.create_supervisor(form)
+            return dashboard()
+        else:
+            return render_template("createSupervisorTest.html", form=form, errors="Duplicate account! Try another email!")
+    return render_template("createSupervisorTest.html", form=form, errors="")
+>>>>>>> sprint3_devb
 
 
 # create user page
@@ -252,10 +350,14 @@ def create_supervisor():
 def create_user():
     form = CreateUser()
     if form.validate_on_submit():
-        email = form.email.data
-        UserMgmt.create_user(form)
-        return user_account(email)
-    return render_template("createUser.html", form=form)
+        # Check if the user already is in db.
+        if User.query.filter_by(email=form.email.data).first() is None:
+            email = form.email.data
+            UserMgmt.create_user(form)
+            return user_account(email)
+        else:
+            return render_template("createUser.html", form=form, errors="Duplicate account! Try another email!")
+    return render_template("createUser.html", form=form, errors="")
 
 
 # library
@@ -285,8 +387,16 @@ def library(arguments=None):
             if sort == "alpha":
                 tasks = Library.sort_alphabetically(Library.search(keyword))
             elif sort == "alpha-rev":
+<<<<<<< HEAD
                 tasks = Library.sort_alphabetically(Library.search(keyword),
                                                     reverse=True)
+=======
+                tasks = Library.sort_alphabetically(Library.search(keyword), reverse=True)
+            elif sort == "chrono":
+                tasks = Library.sort_chronologically(Library.search(keyword))
+            elif sort == "chrono-rev":
+                tasks = Library.sort_chronologically(Library.search(keyword), reverse=True)
+>>>>>>> sprint3_devb
         else:
             tasks = Library.sort_alphabetically(Library.search(keyword))
     else:
@@ -300,6 +410,7 @@ def library(arguments=None):
             if supervisor_id != "":
                 selected_id = supervisor_id
 
+<<<<<<< HEAD
             # Check sort options
             if sort == "alpha":
                 tasks = Library.sort_alphabetically(
@@ -310,6 +421,21 @@ def library(arguments=None):
             else:  # Default option is to sort alphabetically
                 tasks = Library.sort_alphabetically(
                     Library.get_tasks(supervisor_id))
+=======
+            if supervisor_id == "-1":
+                tasks = Library.sort_alphabetically(Library.search("*"))
+             # Check sort options
+            elif sort == "alpha":
+                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
+            elif sort == "alpha-rev":
+                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id), reverse=True)
+            elif sort == "chrono":
+                tasks = Library.sort_chronologically(Library.get_tasks(supervisor_id))
+            elif sort == "chrono-rev":
+                tasks = Library.sort_chronologically(Library.get_tasks(supervisor_id), reverse=True)
+            else: # Default option is to sort alphabetically
+                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
+>>>>>>> sprint3_devb
         else:
             tasks = Library.sort_alphabetically(
                 Library.get_tasks(current_user.supervisorID))
@@ -331,6 +457,7 @@ def task_assignment():
         users = UserMgmt.get_supervisor_users(current_user.email)
     else:
         users = User.query.all()
+<<<<<<< HEAD
     # WARNING: If the user doesn't have a first name and a last name in the DB,
     # such as, say, the user was entered for testing purposes,
     # the concatenation of their first name and last name will crash the app.
@@ -379,6 +506,45 @@ def task_assignment():
         return render_template("task_assignment.html", form=form)
     return render_template("task_assignment.html", form=form)
 
+=======
+    # on add_task button press, show list of tasks
+    if form.add_task.data:
+        # if current_user == Supervisor:
+            # tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+            # assign = True
+        # else:
+        tasks = UserAssignmentHelper.get_assignable_tasks(current_user.supervisorID)
+        return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
+    #if form.show_history.data:
+        # tasks = UserAssignmentHelper.get_tasks_assigned(users) # how to find which one?
+    #if form.assign.data:
+        # UserAssignmentHelper.assign_task(user,task,supervisor) # need to find user, task, and super
+    #"""
+    return render_template("user_assignment.html", assign=assign, users=users, tasks=tasks, form=form)
+
+
+#senior assignment
+@app.route("/senior_assignment/", methods=["GET", "POST"])
+@app.route("/senior_assignment/<arguments>", methods=["GET", "POST"])
+@login_required
+def senior_assignment(arguments=None):
+    # Get all supervisors
+    supervisors = Supervisor.query.all()
+
+    # Get all unassigned users
+    users = UserMgmt.get_unassigned()
+
+    if arguments is not None:
+        superID, userID = [int(x) for x in arguments.split(':')]
+        errors = None
+        if superID != -1 and userID != -1:
+            errors = UserMgmt.assign_user(superID, userID)
+        return render_template("senior_assignment.html", supervisors=supervisors, superID=superID, userID=userID, users=users, errors=errors)
+    return render_template("senior_assignment.html", supervisors=supervisors, superID=None, userID=-1, users=users, errors=None)
+
+
+    
+>>>>>>> sprint3_devb
 
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
@@ -488,7 +654,7 @@ def edit_task(task_id=None):
 @login_required
 def user_account(user):
     eUser = EditUser()
-    # DO NOT REMOVE NEXT LINE!!!! PASSWORD WILL SHOW IN FORM. DUNNO WHY :)
+    # DO NOT REMOVE NEXT LINE!!!! PASSWORD WILL SHOW IN FORM. DUNNO WHY (O.0)
     eUser.password.data = ""
     # DO NOT REMOVE ABOVE LINE!!!! SERIOUSLY...
     if eUser.validate_on_submit():

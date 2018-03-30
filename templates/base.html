@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,12 +26,17 @@
     <a class="navbar-brand" style="font-size: 2em;" href="#">TMS</a>
     <div class="collapse navbar-collapse" id="navbarToggler">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      
+
         <li class="nav-item active">
           <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('dashboard')}}">Dashboard <span class="sr-only">(current)</span></a>
         </li>
+<<<<<<< HEAD
         
         <!-- only a supervisor only-->
+=======
+
+        <!-- supervisor only -->
+>>>>>>> sprint3_devb
         {% if current_user.role=="supervisor" %}
           <li class="nav-item">
             <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('library')}}">Library</a>
@@ -41,6 +45,7 @@
             <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('create_task')}}">Create Task</a>
           </li>
           <li class="nav-item">
+<<<<<<< HEAD
 <<<<<<< HEAD
             <a class="nav-link" href="{{url_for('task_assignment')}}">User Assignment</a>
 =======
@@ -59,29 +64,56 @@
           <a class="nav-link" style="font-size: 1.5em;" href="{{ url_for('senior_assignment') }}">Senior Assignment</a>
         </li>
 
+=======
+            <a class="nav-link" href="{{url_for('user_assignment')}}">Task Assignment</a>
+          </li>
+          <li class="nav-item">
+          <a class="nav-link" href="{{url_for('surveys')}}">Survey Management</a>
+        </li>
         {% endif %}
-        
+
+        <!-- admin only -->
+        {% if current_user.role=="admin" %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('senior_assignment') }}">Senior Assignment</a>
+        </li>
+>>>>>>> sprint3_devb
+        {% endif %}
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" style="font-size: 1.5em;" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{current_user.username if current_user.role=="admin" else current_user.email}}</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
+<<<<<<< HEAD
 
             
+=======
+<!--             <a class="dropdown-item" href="#">
+              Notificatitons
+              <span class="badge badge-pill bg-light align-text-bottom">79</span>
+            </a> -->
+
+>>>>>>> sprint3_devb
             <!-- only supervisors have an account page -->
             {% if current_user.role=="supervisor" %}
             <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('supervisor_account')}}">Account</a>
 			<!--<a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('reports')}}">Reports</a>-->
             {% endif %}
-            
+
             <!-- only admins can create users and supervisors -->
             {% if current_user.role=="admin" %}
             <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('reports')}}">Reports</a>
             <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('create_user')}}">Create User</a>
             <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('create_supervisor')}}">Create Supervisor</a>
             {% endif %}
-            
+
             <!-- everybody may log out but only a few will return -->
+<<<<<<< HEAD
             <a class="dropdown-item" style="font-size: 1.5em;" href="/logout">Logout</a>
             
+=======
+            <a class="dropdown-item" href="/logout">Logout</a>
+
+>>>>>>> sprint3_devb
 
           </div>
         </li>
@@ -90,6 +122,7 @@
     </div>
   </nav>
 
+<<<<<<< HEAD
 
 
 	   <!-- content goes here, below. -->
@@ -109,6 +142,10 @@
 
 
 
+=======
+   {% block content %}{% endblock content %}
+
+>>>>>>> sprint3_devb
   <!-- Bootstrap core JavaScript
   ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
@@ -123,7 +160,5 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <!-- Own JS page -->
   <!--<script src="../static/js/test.css"></script>-->
-
-
     </body>
   </html>
