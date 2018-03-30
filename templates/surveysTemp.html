@@ -4,6 +4,7 @@
 <div class="jumbotron text-center">
 	<h1>Survey Creation Page</h1>
 </div>
+<<<<<<< HEAD
 	<div class="container-fluid">
         <div class="row">
 		<!--making columns so they resize ontop (small screen) and 4 columns (desktop)-->
@@ -48,6 +49,39 @@
 				</form>
 			</div>
 		</div>
+=======
+
+<a href="{{url_for('surveys')}}">SurveyManagement</a>
+<a href="{{url_for('survey_results')}}">View All Results</a>
+
+<form method="POST">
+	{{form.csrf_token}}
+
+<br>
+	{{form.save}}
+	{{form.delete}} 
+	{{form.activate_a_survey.label}} 
+	{{form.activate_a_survey}} 
+	{{form.assign_a_survey.label}} 
+	{{form.assign_a_survey}} 
+	<br>
+        <br>
+	{{form.delete}} 
+	{% for q in form.questions %}
+	{{q.stock_question.label}}
+	{{q.stock_question}}
+	{{q.delete_a_question}}
+	{{q.rearrange_a_question}}
+	<br>
+	<br>
+    {% endfor %}
+	
+	{{form.add_question}}
+<br>
+<br>
+	
+</form>
+>>>>>>> sprint3_devb
 
 
 
