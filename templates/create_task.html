@@ -23,9 +23,9 @@
 <!-- HTML5 Speech Recognition API -->
 <script>
   function startDictation() {
-    window.alert("sometext");
-    if (window.hasOwnProperty('webkitSpeechRecognition')) {
 
+    if (window.hasOwnProperty('webkitSpeechRecognition')) {
+      window.alert("sometext");
       var recognition = new webkitSpeechRecognition();
 
       recognition.continuous = false;
