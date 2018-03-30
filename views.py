@@ -1,4 +1,3 @@
-import speech_recognition as speech_rec
 from flask import render_template, request, jsonify, redirect, flash, url_for
 
 from Forms.forms import CreateAccount, CreateSupervisor, EditUser, AddUser, \

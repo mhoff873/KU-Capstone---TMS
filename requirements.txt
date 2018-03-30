@@ -6,3 +6,4 @@ sqlalchemy
 flask-login
 flask-cors
 flask-mysqldb
+flask-sslify
