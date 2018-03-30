@@ -6,49 +6,54 @@
         <h1>Task Editor</h1>
     </div>
 
-<!-- CSS Styles -->
-<style>
-  .speech {border: 1px solid #DDD; width: 300px; padding: 0; margin: 0}
-  .speech input {border: 0; width: 240px; display: inline-block; height: 30px;}
-  .speech img {float: right; width: 40px }
-</style>
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Voice Controlled Notes App</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Search Form -->
-<form id="labnol" method="get" action="https://www.google.com/search">
-  <div class="speech">
-    <input type="text" name="q" id="transcript" placeholder="Speak" />
-    <img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif" />
-  </div>
-</form>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shoelace-css/1.0.0-beta16/shoelace.css">
+        <link rel="stylesheet" href="styles.css">
 
-<!-- HTML5 Speech Recognition API -->
-<script>
-  function startDictation() {
+    </head>
+    <body>
+        <div class="container">
 
-    if (window.hasOwnProperty('mozSpeechRecognition')) {
+            <h1>Voice Controlled Notes App</h1>
+            <p class="page-description">A tiny app that allows you to take notes by recording your voice</p>
+            <p><a class="tz-link" href="https://tutorialzine.com/2017/08/converting-from-speech-to-text-with-javascript">Read the full article on Tutorialzine »</a></p>
 
-      var recognition = new window.mozSpeechRecognition();
+            <h3 class="no-browser-support">Sorry, Your Browser Doesn't Support the Web Speech API. Try Opening This Demo In Google Chrome.</h3>
 
-      recognition.continuous = false;
-      recognition.interimResults = false;
+            <div class="app">
+                <h3>Add New Note</h3>
+                <div class="input-single">
+                    <textarea id="note-textarea" placeholder="Create a new note by typing or using voice recognition." rows="6"></textarea>
+                </div>
+                <button id="start-record-btn" title="Start Recording">Start Recognition</button>
+                <button id="pause-record-btn" title="Pause Recording">Pause Recognition</button>
+                <button id="save-note-btn" title="Save Note">Save Note</button>
+                <p id="recording-instructions">Press the <strong>Start Recognition</strong> button and allow access.</p>
 
-      recognition.lang = "en-US";
-      recognition.start();
+                <h3>My Notes</h3>
+                <ul id="notes">
+                    <li>
+                        <p class="no-notes">You don't have any notes.</p>
+                    </li>
+                </ul>
 
-      recognition.onresult = function(e) {
-        document.getElementById('transcript').value
-                                 = e.results[0][0].transcript;
-        recognition.stop();
-        document.getElementById('labnol').submit();
-      };
+            </div>
 
-      recognition.onerror = function(e) {
-        recognition.stop();
-      }
+        </div>
 
-    }
-  }
-</script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="script.js"></script>
+
+    </body>
+</html>
+
 
 <!--
     <div class="container">
