@@ -1,4 +1,6 @@
 function startDictation(element_id) {
+    // Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
+    // Uses the webkitSpeechRecoginition API in Chrome to handle speech-to-text
     console.log('startDictation called.');
     var SpeechRecognition = webkitSpeechRecognition;
     var recognition = new SpeechRecognition();
