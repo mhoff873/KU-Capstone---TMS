@@ -72,7 +72,7 @@
 
             <!-- only admins can create users and supervisors -->
             {% if current_user.role=="admin" %}
-            <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('reports')}}">Reports</a>
+            <!--<a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('reports')}}">Reports</a>-->
             <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('create_user')}}">Create User</a>
             <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('create_supervisor')}}">Create Supervisor</a>
             {% endif %}
