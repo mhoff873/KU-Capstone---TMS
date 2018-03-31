@@ -5,8 +5,21 @@
 	<h1>Survey Creation Page</h1>
 </div>
 
+<div class= "text-center">
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+
 <a href="{{url_for('surveys')}}">SurveyManagement</a>
+     </div>
+	 <div class="col-sm-6">
 <a href="{{url_for('survey_results')}}">View All Results</a>
+		</div>
+	</div>
+</div>
+</div>
+
+<div class= "text-center">
 
 <form method="POST">
 	{{form.csrf_token}}
@@ -35,7 +48,7 @@
 <br>
 
 </form>
-
+</div>
 
 
 {% endblock content %}

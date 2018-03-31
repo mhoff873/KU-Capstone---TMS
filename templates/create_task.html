@@ -45,6 +45,7 @@
                 <div style="display: inline-block; min-width: 13em">
                     {{ form.description (id="task_description", class="form-control", style="height: 100px, width:100%") }}
                 </div>
+				
                 <img onclick="startDictation('task_description')" src="//i.imgur.com/cHidSVu.gif" />
 
                 <br>
@@ -114,9 +115,9 @@
                 <br>
                 {{ form.keywords.label }}&nbsp;<img onclick="startDictation('keywords')" src="//i.imgur.com/cHidSVu.gif" />
                 {{ form.keywords(id="keywords", style="height: 100px; width:100%") }}
-                <br>
+                <br><br>
                 {{ form.save (class='btn btn-secondary btn-md') }}&nbsp;
-
+				<br><br>
             </form>
 	
 		</div>

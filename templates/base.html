@@ -41,7 +41,7 @@
           </li>
           <li class="nav-item">
 
-            <a class="nav-link" href="{{url_for('task_assignment')}}">User Assignment</a>
+            <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('task_assignment')}}">Task Assignment</a>
           </li>
           <li class="nav-item">
           <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('surveys')}}">Survey Management</a>
@@ -55,7 +55,7 @@
           <a class="nav-link" style="font-size: 1.5em;" href="{{ url_for('senior_assignment') }}">Senior Assignment</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/surveys">Survey Management</a>
+          <a class="nav-link" style="font-size: 1.5em;" href="/surveys">Survey Management</a>
         </li>
 
         {% endif %}
@@ -67,7 +67,7 @@
             <!-- only supervisors have an account page -->
             {% if current_user.role=="supervisor" %}
             <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('supervisor_account')}}">Account</a>
-			<a class="dropdown-item" href="{{url_for('reports')}}">Reports</a>
+			<a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('reports')}}">Reports</a>
             {% endif %}
 
             <!-- only admins can create users and supervisors -->
