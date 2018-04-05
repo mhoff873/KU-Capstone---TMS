@@ -153,14 +153,14 @@ def generateSurvey(formID):
     form = CreateASurvey()
     form.title.data = SF['formTitle']
     form.description.data = SF['description']
-    if SF['isActive'] == 1:
-        form.activate_a_survey.checked = True
+    if SF['isActive'] == 0:
+        form.activate_a_survey.checked = False
     # iterate over each question to append
     for q in SQ:
         questions = form.questions.append_entry()
         questions.stock_question.data = q['questText']
-        if q['isActive'] == 1:
-            questions.isActive.checked = True
+        if q['isActive'] == 0:
+            questions.isActive.checked = False
         if q['questType'] == 'multiple choice':
             for m in q['surveyMultQuest']:
                 responses = questions.responses.append_entry()
@@ -415,7 +415,7 @@ def generate_report(arguments=None):
 #(Admin) Reports Page
 @app.route('/reports', methods=['GET'])
 @app.route('/reports/<arguments>', methods=['GET'])
-#@login_required Fix the flash message
+@login_required
 def reports(arguments=None):
     '''
         Description: Generate a report for the users assigned to the supervisor
@@ -487,6 +487,7 @@ def graph(arguments=None):
     Return Value: none
     Author: Tyler Lance
     """
+    display = False
     chart = pygal.HorizontalBar()
     # Get the supervisor ID
     supervisorID = current_user.supervisorID
@@ -526,6 +527,7 @@ def graph(arguments=None):
                 sortedBy = " For All Entries"
             # if a graph needs to be displayed - generates the task graph
             if submit == 'T' and task != 'None':
+                display = True
                 # get the task name given the id
                 chart.title = "Everyones Average Completion Time For " + Api.getTaskFromID(task) + sortedBy
                 # get the necessary data for all completed entries for the specified task
@@ -553,6 +555,7 @@ def graph(arguments=None):
                     statistics.append(Api.getNameFromID(t['userID']) + ' was unable to complete this task ' + str(Api.getUncompletedTaskByID(t['userID'],t['taskID'])) + ' time(s).')
             # to generate the user graph
             elif submit == 'T' and user != 'None':
+                display = True
                 # get the name of the user
                 name = Api.getNameFromID(int(user))
                 # generate title for the graph
@@ -584,8 +587,11 @@ def graph(arguments=None):
                     chart.add(Api.getTaskFromID(t['taskID']), int((t['totalTime']/t['total'])/1000))
                     statistics.append(Api.getTaskFromID(t['taskID']) + ' was completed ' + str(t['total']) + ' time(s).')
                     statistics.append(Api.getTaskFromID(t['taskID']) + ' was uncompleted ' + str(Api.getUncompletedTaskByID(int(user),t['taskID'])) + ' time(s).')
+            # display message that they need to select a name or task
+            if submit == 'T' and user == 'None' and task == 'None':
+                flash("You must select either a Senior Name or a Task before a graph can be generated", "warning")
     chart = chart.render_data_uri()
-    return render_template('graph.html', supervisor=supervisorID, user=users, task=tasks, chart=chart, statistics=statistics)
+    return render_template('graph.html', supervisor=supervisorID, user=users, task=tasks, chart=chart, statistics=statistics, display=display)
 
 
 @app.route('/email', methods=['GET'])
@@ -981,4 +987,3 @@ def user_account(user):
         UserMgmt.edit_user(eUser, user)
         return dashboard()
     return render_template("userAccount.html", EditUser=eUser, User=user)
-
