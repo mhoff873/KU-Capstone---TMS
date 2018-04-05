@@ -17,6 +17,9 @@
                             Supervisor
                         </button>
                         <div class="dropdown-menu force-scroll">
+                            <a class="dropdown-item" href="/library/alpha:-1">
+                                Show All
+                           </a>
                             {% for supervisor in supervisors %}
                             <a class="dropdown-item" href="/library/alpha:{{ supervisor.supervisorID }}">
                                 {{ supervisor.fname }} {{ supervisor.lname }}
@@ -55,9 +58,9 @@
                                 <div style="display: inline-block; min-width: 20em">
                                     {{ search.csrf_token }}
                                     {{ search.search }}
-                                   
+
                                     {{ search.submit }}
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -74,15 +77,15 @@
                 <!-- start content here -->
                 {% for task in tasks %}
                     <div class="col-sm-4">
-                    
+
                         <!-- This temporarily is used to show description -->
-                        <!--<div onclick="alert('{{ task.description }}')">--> 
+                        <!--<div onclick="alert('{{ task.description }}')">-->
 						<!--card sizing below-->
                             <div class="card border-dark mb-3 text-center" style="width:175px">
 								<img class="card-img-top" src="../static/img/{{img[task.taskID|int]|string}}" alt="Card Image Cap">
                                 <div class="card-body">
                                 <p class="card-text">{{ task.title }}</p>
-								
+
 									<!-- Button trigger modal -->
 									<div class= text-center>
 										<button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModalCenter">
@@ -93,15 +96,15 @@
 									<!-- Modal -->
 									<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 										<div class="modal-dialog modal-dialog-centered" role="document">
-										
+
 											<div class="modal-content">
 												<div class="modal-header">
-											
+
 													<h5 class="modal-title">Claim / Edit: {{ task.title }}</h5>
 													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 													<span aria-hidden="true">&times;</span>
 													</button>
-										
+
 												</div>
 												<div class="modal-body">
 												Would you like to claim or edit this task?
@@ -114,10 +117,10 @@
 											</div>
 										</div>
 									</div>
-								
+
 								</div>
                             </div>
-                       
+
                     </div>
                 {% endfor %}
                 <br>

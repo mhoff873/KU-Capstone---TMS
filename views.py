@@ -63,7 +63,7 @@ def postTaskCompleted():
     # print(d['TaskID'], d['AssignedUser'])
     results = Api.postTaskCompleted(d['TaskID'],d['AssignedUser'],d['TotalTime'],d['TotalDetailedStepsUsed'])
     return jsonify(results)
-                
+
 @app.route("/api/user/GetAllCompletedTasksByUser/<uname>", methods=['GET'])
 def getAllCompletedTasksByUser(uname):
     results = Api.getAllCompletedTasksByUser(uname)
@@ -86,25 +86,25 @@ def dashboard():
         tasks  = Task.query.filter_by(supervisorID=current_user.supervisorID).all()
         users  = User.query.filter_by(supervisorID=current_user.supervisorID).all()
         requests = Request.query.filter_by(supervisorID=current_user.supervisorID).all()
-        
+
         # form some data dictionaries for use later
         # supervisor_to_users={}
         # user_to_supervisor{}
-        
+
         # mapping of user
         user_2_tasks={}
         task_2_users={}
-        
+
         # a plain array of user and tasks IDs assigned to the Supervisor
         userIDs=[]
         taskIDs=[]
-        
+
         for t in tasks:
             taskIDs.append(t.taskID)
-            
+
         for u in users:
             userIDs.append(u.userID)
-            
+
         if requests:
             for r in requests:
                 # structuring ddata
@@ -121,7 +121,7 @@ def dashboard():
                     task_2_users[r.taskID]=[r.userID]
         else:
             print("did not find any requests")
-            
+
         #print(user_to_tasks)
         #print(task_to_users)
             # need a structure that is indexable by userID for the Request object
@@ -239,7 +239,7 @@ def surveyCreation(arguments=None):
                     return render_template("surveysTemp.html", form=form, task=task)
     return render_template("surveysTemp.html", form=form, task=task)
 
-    
+
 def prepareSurveyCreationform(form):
     """
     Description: handles the pulling of data from the form and calling of the api.postSurveyForm method
@@ -270,7 +270,7 @@ def prepareSurveyCreationform(form):
             dict['surveyMultQuest'] = lstResponses
         SQ.append(dict)
     return Api.postSurveyForm(SF,SQ)
-    
+
 # survey results
 @app.route("/survey_results/", methods=["GET", "POST"])
 @login_required
@@ -281,51 +281,51 @@ def survey_results():
     all_the_flippin_tasks = Task.query.all() # all the flippin tasks
 
     das_struct = []
-    
+
     formID_to_name = {} # result table map
     formID_to_title = {} # surveyForm table map
     formID_to_taskID = {} # assigned table map
     taskID_to_title = {} # task table map
     formID_to_date = {}
-    
+
     formIDs=[] # list of all formIDs from the result table
-    
+
     # formIDs have unique titles in the surveyForms table
     for s in survey_forms:
         formID_to_title[s.formID]=s.formTitle
         # print(formID_to_title[s.formID])
-        
+
     # taskIDs have unique titles in the task table
     for t in all_the_flippin_tasks:
         taskID_to_title[t.taskID]=t.title
         # print(taskID_to_title[t.taskID])
-    
+
     # formIDs have unique names in the result table
     for f in survey_results:
         formID_to_name[f.formID]=f.name
         formID_to_date[f.formID] = f.date
         # print(formID_to_name[f.formID])
-        
+
     # formID to taskID mapping from the assigned table
     for a in surveys_assigned:
         formID_to_taskID[a.formID]=a.taskID
         formIDs.append(a.formID)
         # print(formID_to_taskID[a.formID])
-        
+
     # print(formIDs)
-    
+
     # building das_struct
     for f in formIDs:
         # print(formID_to_name[f]) # prints name of the result
         # print(taskID_to_title[formID_to_taskID[f]]) # prints the title of the task
         # print(formID_to_title[f]) # prints the title of the surveyForm
         das_struct.append({'formID':f,'taskTitle':taskID_to_title[formID_to_taskID[f]],'surveyTitle':formID_to_title[f],'userName':formID_to_name[f],'date':formID_to_date[f]})
-        
+
     # print(das_struct)
     return render_template("surveyResults.html", result_struct=das_struct)
-    
-    
-    
+
+
+
 # display survey to user
 #@app.route("/userSurvey/<userID>/<taskID>", methods=["GET"])
 # def userSurvey(userID,taskID):
@@ -343,7 +343,7 @@ def survey_results():
             # for m in q['surveyMultQuest']:
                 # responses = questions.responses.append_entry()
                 # responses.response.label = m['questText']
-            
+
     # print(SF)
     # print(SQ)
     # return render_template("userSurvey.html", form=form, task=Api.getTaskFromID(taskID))
@@ -352,7 +352,7 @@ def generate_report(arguments=None):
     """
     Description: hangle the rendering and passing of the data to the reports page
     Parameters: None or Sorted Options
-    Return Value: 
+    Return Value:
         - SupervisorID - The supervisor requesting the report
         - Users - The users that the report is for
         - lstTask - The list of tasks being returned
@@ -420,7 +420,7 @@ def reports(arguments=None):
     '''
         Description: Generate a report for the users assigned to the supervisor
         Parameters: None or the sorting options
-        Return: A rendered template 
+        Return: A rendered template
         Author: Tyler Lance
     '''
     (supervisorID, users, lstTask, sortedBy) = generate_report(arguments)
@@ -606,8 +606,8 @@ def email(arguments=None):
     """
     subject = ""
     if arguments is None:
-        subject = "Report for supervisor " + current_user.fname + " " + current_user.lname 
-    
+        subject = "Report for supervisor " + current_user.fname + " " + current_user.lname
+
     msg = Message(subject,
                 sender="kutztms@gmail.com",
                 recipients=[current_user.email])
@@ -622,7 +622,7 @@ def email(arguments=None):
     mail.send(msg)
     flash("Email send succesfully to " + current_user.email, 'success')
     return redirect(url_for('reports', arguments=arguments))
-    
+
 # survey management
 @app.route("/surveys/", methods=["GET", "POST"])
 @app.route('/surveys/<arguments>/<formID>', methods=["GET"])
@@ -654,7 +654,7 @@ def surveys(arguments=None,formID=None):
     for s in surveys:
         survey_list.append({'formId':s.formID,'surveyTitle':s.formTitle,'surveyDesc':s.description,'isActive':s.isActive,'task':Api.getAssignedTask(s.formID)})
     return render_template("surveyManagement.html",survey_list=survey_list, task=task)
-        
+
 # link to the logout page to log an account out
 @app.route('/logout', methods=['GET'])
 @login_required
@@ -735,6 +735,7 @@ def create_user():
 @app.route("/library/<arguments>", methods=["GET", "POST"])
 @login_required
 def library(arguments=None):
+    img = {}
     tasks = []
 
     # Create form(s).
@@ -746,8 +747,7 @@ def library(arguments=None):
     # selected_id is the current supervisor selected or the current_user logged
     # in if no supervisor was selected from dropdown
     selected_id = current_user.supervisorID
-    img = {}
-    
+
     # Check if the form is validated, or whether it was submitted.
     if search_form.validate_on_submit():
         # Uses the search form data to look for tasks that match.
@@ -759,6 +759,11 @@ def library(arguments=None):
                 tasks = Library.sort_alphabetically(Library.search(keyword))
             elif sort == "alpha-rev":
                 tasks = Library.sort_alphabetically(Library.search(keyword), reverse=True)
+            elif sort == "chrono":
+                tasks = Library.sort_chronologically(Library.search(keyword))
+            elif sort == "chrono-rev":
+                tasks = Library.sort_chronologically(Library.search(keyword), reverse=True)
+
         else:
             tasks = Library.sort_alphabetically(Library.search(keyword))
     else:
@@ -772,16 +777,25 @@ def library(arguments=None):
             if supervisor_id != "":
                 selected_id = supervisor_id
 
+            if supervisor_id == "-1":
+                tasks = Library.sort_alphabetically(Library.search("*"))
+            else:
+                tasks = Library.get_tasks(supervisor_id)
+
             # Check sort options
             if sort == "alpha":
-                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
-            if sort == "alpha-rev":
-                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id), reverse=True)
+                tasks = Library.sort_alphabetically(tasks)
+            elif sort == "alpha-rev":
+                tasks = Library.sort_alphabetically(tasks, reverse=True)
+            elif sort == "chrono":
+                tasks = Library.sort_chronologically(tasks)
+            elif sort == "chrono-rev":
+                tasks = Library.sort_chronologically(tasks, reverse=True)
             else: # Default option is to sort alphabetically
-                tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
+                tasks = Library.sort_alphabetically(tasks)
+
         else:
             tasks = Library.sort_alphabetically(Library.get_tasks(current_user.supervisorID))
-        
         # determine the image to pull
     for t in tasks:
             #t.image = Api.getPathForTaskImage(t.taskID)
@@ -789,7 +803,7 @@ def library(arguments=None):
     return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors, selectedID=selected_id, img=img)
 
 
-    
+
 #senior assignment
 @app.route("/senior_assignment/", methods=["GET", "POST"])
 @app.route("/senior_assignment/<arguments>", methods=["GET", "POST"])
