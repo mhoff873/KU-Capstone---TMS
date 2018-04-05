@@ -12,7 +12,7 @@ from flask_weasyprint import HTML, render_pdf
 import weasyprint
 from flask_mail import Message
 import pygal
-
+print("test")
 @app.route('/', methods=['GET'])
 def index():
     return redirect("login", code=302)
