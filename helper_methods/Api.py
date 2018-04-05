@@ -423,14 +423,6 @@ def postSurveyForm(SF, SQ):
     Return Value: (bool) results if the data was able to be stored
     Author: Tyler Lance
     """
-    # hard coded data for testing and to understand the function parameters, remove when implementing
-    # query will fail if the form record is not deleted because the formTitle is a secondary key
-    SF = {'supervisorID': 4, 'formTitle': "title example", 'description': "form description", 'isActive': 1}
-    SQ = [{'questType': "multiple choice", 'questText': "How did it go?", 'isActive': 1, 'questOrder': 1,
-           'surveyMultQuest': [{'questText': "Excellent", 'questOrder': 1}, {'questText': "Poor", 'questOrder': 2}]},
-          {'formID': 1, 'questType': "open ended", 'questText': "How was the survey?", 'isActive': 1, 'questOrder': 2,
-           'surveyMultQuest': ""}]
-
     # get the current date and time in the format needed in the database
     SF['dateCreated'] = str(datetime.now().strftime('%Y-%m-%d'))
     SF['dateModified'] = str(datetime.now().strftime('%Y-%m-%d'))
@@ -442,7 +434,7 @@ def postSurveyForm(SF, SQ):
     if formid:
         # testing - print message that title already exists in db and survey could not be added
         print("TITLE EXISTS IN DB - False was returned and the data was not inserted.")
-        return 1
+        return True
     # insert the record into the form table
     cur.execute('''INSERT INTO surveyForm (`supervisorID`,`formTitle`,`description`,`dateCreated`,`dateModified`,`isActive`) 
             values(%d,"%s","%s","%s","%s",%d)''' % (
@@ -469,9 +461,165 @@ def postSurveyForm(SF, SQ):
             cur.execute('''INSERT INTO surveyMultQuest (`questID`,`questText`,`questOrder`)
                 values(%d,"%s",%d)''' % (int(questID['LAST_INSERT_ID()']), str(m['questText']), int(m['questOrder']),))
             mysql.connection.commit()
-    return 0
+    return False
 
+def deleteSurvey(formID):
+    """
+    Description: delete survey given the form
+    Parameters: formID - (int) id of the form
+    Return Value: none
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT questID FROM surveyQuest WHERE formID=%d' % (int(formID),))
+    r = cur.fetchall()
+    # iterate over the multi questions and questions table to delete the records
+    for q in r:
+        cur.execute('''DELETE FROM surveyMultQuest WHERE questID=%d''' % (int(q['questID']),))
+        mysql.connection.commit()
+        cur.execute('''DELETE FROM surveyQuest WHERE questID=%d''' % (int(q['questID']),))
+        mysql.connection.commit()
+    # delete the form
+    cur.execute('''DELETE FROM surveyForm WHERE formID=%d''' % (int(formID),))
+    mysql.connection.commit()
+    return True
 
+def archiveSurvey(formID, value):
+    """
+    Description: archive survey given the form, toggles from 1 to 0 or 0 to 1
+    Parameters: formID - (int) id of the form
+    Return Value: none
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # update the value in the table
+    cur.execute('''UPDATE `surveyForm`
+                SET `isActive`=%d
+                WHERE surveyForm.formID=%d''' % (int(value),int(formID),))
+    print('''UPDATE `surveyForm`
+                SET `isActive`=%d
+                WHERE surveyForm.formID=%d''' % (int(value),int(formID),))
+    mysql.connection.commit()
+    return True
+    
+def getSurvey(formID):
+    """
+    Description: returns the data necessary for generating a form
+    Parameters: formID - (int) id of the form
+    Return Value: SF - (dict) dictionary containing data for the form laid out as:
+                SF = {'supervisorID':4,'formTitle':"title example",'description':"form description",'isActive':1}
+                SQ - (list) list containing each question and multiple choice questions if necessary, laid out as:
+                SQ = [{'questType':"multiple choice",'questText':"How did it go?",'isActive':1,'questOrder':1,
+                'surveyMultQuest':[{'questText':"Excellent",'questOrder':1},{'questText':"Poor",'questOrder':2}]},
+                {'formID':1,'questType':"open ended",'questText':"How was the survey?",'isActive':1,
+                'questOrder':2,'surveyMultQuest':[]}]
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get data relevant to the form and create the first dictionary
+    cur.execute('SELECT * FROM surveyForm WHERE formID=%d' % (int(formID),))
+    r = cur.fetchone()
+    SF = {'supervisorID': r['supervisorID'], 'formTitle': r['formTitle'], 'description': r['description'], 'isActive': r['isActive']}
+    
+    # get the questions and the multiple choice responses
+    cur.execute('SELECT * FROM surveyQuest WHERE formID=%d' % (int(formID),))
+    r = cur.fetchall()
+    SQ = []
+    for d in r:
+        dict = {'questType': d['questType'], 'questText': d['questText'], 'isActive': d['isActive'], 'questOrder': d['questOrder']}
+        lstMult = []
+        cur.execute('SELECT * FROM surveyMultQuest WHERE questID=%d' % (int(d['questID']),))
+        r2 = cur.fetchall()
+        for d2 in r2:
+            lstDict = {'questText': d2['questText'], 'questOrder': d2['questOrder']}
+            lstMult.append(lstDict)
+        lstMult = sorted(lstMult, key=lambda k: k['questOrder'])
+        dict['surveyMultQuest'] = lstMult
+        SQ.append(dict)
+        SQ = sorted(SQ, key=lambda k: k['questOrder'])
+    return (SF, SQ)
+    
+def getCreatedTasks(superID):
+    """
+    Description: get list of tasks created by the supervisor
+    Parameters: superID - (int) id of the supervisor
+    Return Value: (list) contains a dictionary containing the task id and task name
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT taskID,title FROM task WHERE supervisorID=%d' % (int(superID),))
+    r = cur.fetchall()
+    if not r:
+        return None
+    return list(r)
+    
+def getAssignedTask(formID):
+    """
+    Description: gets task name assigned to survey
+    Parameters: formID - (int) id of the survey
+    Return Value: (string) name of the task
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT task.title FROM task,assigned WHERE task.taskID=assigned.taskID AND formID=%d' % (int(formID),))
+    r = cur.fetchone()
+    if not r:
+        return None
+    return r['title']
+    
+def getAssignedSurvey(taskID):
+    """
+    Description: gets survey id assigned to task
+    Parameters: taskID - (int) id of the task
+    Return Value: (int) id of the survey form
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT formID FROM assigned WHERE taskID=%d' % (int(taskID),))
+    r = cur.fetchone()
+    if not r:
+        return None
+    return int(r['formID'])
+    
+def updateTask(taskID, formID, superID):
+    """
+    Description: update table to assign a survey to a task
+    Parameters: formID - (int) id of the form
+                taskID - (int) id of the task
+                superID - (int) id of the supervisor
+    Return Value: none
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # remove form and task from the table because they should only be assigned to one another
+    cur.execute('''DELETE FROM `assigned` WHERE taskID=%d''' % (int(taskID),))
+    mysql.connection.commit()
+    cur.execute('''DELETE FROM `assigned` WHERE formID=%d''' % (int(formID),))
+    mysql.connection.commit()
+    # insert those values into the table
+    cur.execute('''INSERT INTO `assigned`(supervisorID,taskID,formID) VALUES (%d,%d,%d)''' % (int(superID),int(taskID),int(formID),))
+    mysql.connection.commit()
+    return True
+    
+def getTaskFromID(taskID):
+    """
+    Description: get the task name given the task if
+    Parameters: taskID - (int) id of the task
+    Return Value: (string) name of the task
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT task.title FROM task WHERE taskID=%d' % (int(taskID),))
+    task = cur.fetchone()
+    if not task:
+        return None
+    return str(task["title"])
+    
 def getAssignedUsers(superID):
     """
     Description: get data of the users assigned to the supervisor
