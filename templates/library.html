@@ -108,7 +108,8 @@
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary" data-dismiss="modal">Claim</button>
-													<button type="button" class="btn btn-primary">Edit</button>
+													<a href="{{url_for('edit_task',task_id=task.taskID)}}">
+													<button type="button" class="btn btn-success">Edit</button></a>
 												</div>
 											</div>
 										</div>
