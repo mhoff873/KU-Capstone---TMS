@@ -31,91 +31,70 @@
         }
 		
 </script>
-<div class="jumbotron text-center">
-	<h1>Survey Management</h1>
-</div>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-  <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{ category }} alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <!-- <strong>Title</strong> --> {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
-<br>
+<div class="jumbotron text-center"><h1>Survey Management</h1></div>
 <div class="container">
-        <div class="page_content">
-<div class="row">
-<div class="col-sm-4">
-<a href="{{url_for('surveyCreation')}}" role="button" class="btn btn-secondary btn-lg btn-block">Create Survey</a>
-</div>
-
-</div>
-<div class="container">
-<div class="page_content">
-
-<!-- survey_list -->
-<div class="row">
-  <div class="table-responsive col-md-12">
-    <h2 class="sub-header text-center">Created Surveys</h2>
-    <table class="table table-hover">
-      <thead>
-        <th onclick='sort_table(survey_table, 0, asc1); asc1 *= -1; asc2=1;unselect_row(last_row);unselect_row(row);document.getElementById("title").style.visibility="visible";document.getElementById("desc").style.visibility="hidden";document.getElementById("title").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"'>Title<img id="title" style="height:1em;"></span></th>
-        <th onclick='sort_table(survey_table, 1, asc2); asc2 *= -1; asc1=1;unselect_row(last_row);unselect_row(row);document.getElementById("desc").style.visibility="visible";document.getElementById("title").style.visibility="hidden";document.getElementById("desc").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"'>Description<img id="desc" style="height:1em;"></span></th>
-        <th>Archive</th>
-		<th>Edit</th>
-		<th>Delete</th>
-        <th>Assigned</th>
-      </thead>
-      <tbody id='survey_table'>
-        {% for s in survey_list %} 
-          <tr id='form_{{s["formID"]}}'>
-            <td>{{s['surveyTitle']}}</td>
-            <td>{{s['surveyDesc']}}</td>
-            {%if s['isActive'] %}
-            <td><a href="{{url_for('surveys') + 'A/' + s['formId']|string}}" role="button" class="btn btn-secondary btn-lg btn-block">Archive</a></td>
-            {%else%}
-            <td><a href="{{url_for('surveys') + 'U/' + s['formId']|string}}" role="button" class="btn btn-secondary btn-lg btn-block">Unarchive</a></td>
-            {% endif %}
-			<td><a href="{{url_for('surveys') + 'E/' + s['formId']|string}}" role="button" class="btn btn-secondary btn-lg btn-block">Edit</a></td>
-			<td><a href="{{url_for('surveys') + 'D/' + s['formId']|string}}" role="button" class="btn btn-secondary btn-lg btn-block">Delete</a></td>
-            <td>
-            
-            <div class="dropdown">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-            {{s['task']}}
-            </button>
-            <div class="dropdown-menu force-scroll">
-                {% for t in task %}
-                <a class="dropdown-item" href="{{url_for('surveys') + t['taskID']|string + '/' + s['formId']|string}}">
-                    {{ t["title"] }}
-                </a>
-                {% endfor %}
-            </div>
-            </div>
-          </tr> 
+  <div class="page_content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <!-- <strong>Title</strong> --> {{ message }}
+          </div>
         {% endfor %}
-
-      </body>
-    </table>
+      {% endif %}
+    {% endwith %}
+    <div class="row">
+      <div class="col-sm-4">
+        <a href="{{url_for('surveyCreation')}}" role="button" class="btn btn-secondary btn-lg btn-block">Create Survey</a>
+      </div>
+    </div>
+    <!-- survey_list -->
+    <div class="row">
+      <div class="table-responsive col-md-12">
+        <h2 class="sub-header text-center">Created Surveys</h2>
+        <table class="table table-hover">
+          <thead>
+            <th onclick='sort_table(survey_table, 0, asc1); asc1 *= -1; asc2=1;document.getElementById("title").style.visibility="visible";document.getElementById("desc").style.visibility="hidden";document.getElementById("title").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"'>Title<img id="title" style="height:1em;"></th>
+            <th onclick='sort_table(survey_table, 1, asc2); asc2 *= -1; asc1=1;document.getElementById("desc").style.visibility="visible";document.getElementById("title").style.visibility="hidden";document.getElementById("desc").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"'>Description<img id="desc" style="height:1em;"></th>
+            <th>Archive</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>Assigned</th>
+          </thead>
+          <tbody id='survey_table'>
+            {% for s in survey_list %} 
+              <tr id='form_{{s["formID"]}}'>
+                <td>{{s['surveyTitle']}}</td>
+                <td>{{s['surveyDesc']}}</td>
+                {%if s['isActive'] %}
+                <td><a href="{{url_for('surveys') + 'A/' + s['formId']|string}}" role="button" class="btn btn-secondary btn-sm btn-block">Archive</a></td>
+                {%else%}
+                <td><a href="{{url_for('surveys') + 'U/' + s['formId']|string}}" role="button" class="btn btn-secondary btn-sm btn-block">Unarchive</a></td>
+                {% endif %}
+                <td><a href="{{url_for('surveys') + 'E/' + s['formId']|string}}" role="button" class="btn btn-secondary btn-sm btn-block">Edit</a></td>
+                <td><a href="{{url_for('surveys') + 'D/' + s['formId']|string}}" role="button" class="btn btn-secondary btn-sm btn-block">Delete</a></td>
+                <td>
+                
+                <div class="dropdown">
+                  <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                    {{s['task']}}
+                  </button>
+                  <div class="dropdown-menu force-scroll">
+                    {% for t in task %}
+                    <a class="dropdown-item" href="{{url_for('surveys') + t['taskID']|string + '/' + s['formId']|string}}">
+                      {{ t["title"] }}
+                    </a>
+                    {% endfor %}
+                  </div>
+                </div>
+              </tr> 
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<br>
-<br>
-
-<br>
-<br>
-
-
-
-
 {% endblock content %}
