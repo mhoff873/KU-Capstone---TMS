@@ -17,9 +17,6 @@
                             Supervisor
                         </button>
                         <div class="dropdown-menu force-scroll">
-                            <a class="dropdown-item" href="/library/alpha:-1">
-                                Show All
-                            </a>
                             {% for supervisor in supervisors %}
                             <a class="dropdown-item" href="/library/alpha:{{ supervisor.supervisorID }}">
                                 {{ supervisor.fname }} {{ supervisor.lname }}
@@ -111,7 +108,7 @@
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary" data-dismiss="modal">Claim</button>
-													<a href="{{url_for('create_task',task_id=task.taskID)}}">
+													<a href="{{url_for('edit_task',task_id=task.taskID)}}">
 													<button type="button" class="btn btn-success">Edit</button></a>
 												</div>
 											</div>
