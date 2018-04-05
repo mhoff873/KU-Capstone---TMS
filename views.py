@@ -153,14 +153,14 @@ def generateSurvey(formID):
     form = CreateASurvey()
     form.title.data = SF['formTitle']
     form.description.data = SF['description']
-    if SF['isActive'] == 1:
-        form.activate_a_survey.checked = True
+    if SF['isActive'] == 0:
+        form.activate_a_survey.checked = False
     # iterate over each question to append
     for q in SQ:
         questions = form.questions.append_entry()
         questions.stock_question.data = q['questText']
-        if q['isActive'] == 1:
-            questions.isActive.checked = True
+        if q['isActive'] == 0:
+            questions.isActive.checked = False
         if q['questType'] == 'multiple choice':
             for m in q['surveyMultQuest']:
                 responses = questions.responses.append_entry()
