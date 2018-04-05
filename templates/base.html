@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
     <!-- Custom css styles for this template -->
-    <link href="../static/css/test.css" rel="stylesheet">
-    <link rel="stylesheet" href="#">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
     <!--font awesome for icons-->
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
     <!--Google material use-->
@@ -41,7 +40,7 @@
           </li>
           <li class="nav-item">
 
-            <a class="nav-link" href="{{url_for('task_assignment')}}">User Assignment</a>
+            <a class="nav-link" href="{{url_for('task_assignment')}}">Task Assignment</a>
           </li>
           <li class="nav-item">
           <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('surveys')}}">Survey Management</a>
@@ -52,10 +51,10 @@
         {% if current_user.role=="admin" %}
 
         <li class="nav-item">
-          <a class="nav-link" style="font-size: 1.5em;" href="{{ url_for('senior_assignment') }}">Senior Assignment</a>
+          <a class="nav-link" style="font-size: 1.5em;" href="{{ url_for('senior_assignment') }}">User Assignment</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/surveys">Survey Management</a>
+          <a class="nav-link" href="{{ url_for('surveys') }}">Survey Management</a>
         </li>
 
         {% endif %}
@@ -67,12 +66,11 @@
             <!-- only supervisors have an account page -->
             {% if current_user.role=="supervisor" %}
             <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('supervisor_account')}}">Account</a>
-			<a class="dropdown-item" href="{{url_for('reports')}}">Reports</a>
+			<a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('reports')}}">Reports</a>
             {% endif %}
 
             <!-- only admins can create users and supervisors -->
             {% if current_user.role=="admin" %}
-            <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('reports')}}">Reports</a>
             <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('create_user')}}">Create User</a>
             <a class="dropdown-item" style="font-size: 1.5em;" href="{{url_for('create_supervisor')}}">Create Supervisor</a>
             {% endif %}

@@ -20,9 +20,7 @@
                 {% endif %}
             {% endwith %}
 
-
             <form id="create_task_form" action="{{ url_for('create_task') }}" method="POST">
-
                 {{ form.hidden_tag() }}
 
                 <!-- Title -->
@@ -32,9 +30,7 @@
                 <div style="display: inline-block; min-width: 13em">
                     {{ form.title (id="task_title", class="form-control") }}
                 </div>
-
                 <img onclick="startDictation('task_title')" src="//i.imgur.com/cHidSVu.gif" />
-
 
                 <br>
 
@@ -60,7 +56,6 @@
                 <hr>
 
                 <!-- Main Steps -->
-
                 <div style="display: inline-block; min-width: 90%">
                     {% for main_step in form.main_steps %}
                         {{ loop.index }}. {{ main_step.title.label }}&nbsp;
@@ -116,10 +111,9 @@
                 {{ form.keywords(id="keywords", style="height: 100px; width:100%") }}
                 <br>
                 {{ form.save (class='btn btn-secondary btn-md') }}&nbsp;
-
             </form>
-	
-		</div>
+
+
+        </div>
     </div><!-- /.container -->
 {% endblock content %}
-

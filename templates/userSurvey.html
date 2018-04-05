@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="jumbotron text-center">
+	<h1>Survey Page</h1>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <!-- <strong>Title</strong> --> {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="container">
+        <div class="page_content">
+
+<form method="POST">
+	{{form.csrf_token}}
+
+    <!-- Task Name -->
+
+    <h4 class="sub-header text-center">You are completing a survey for the task: {{ task }}</h4>
+    <br>
+    {% for q in form.questions %}
+    {{q.csrf_token}}
+    <div style="display: inline-block; min-width: 28em">
+	{{q.stock_question.label}}
+    </div>
+    <br>
+    {% if q.responses|length == 0 %}
+        <div style="display: inline-block; min-width: 28em">
+        {{q.stock_question (class="form-control")}}<br>
+        </div>
+    {% endif %}
+    
+    {{q.radio.choices}}
+    
+    
+    {% for r in q.responses %}
+    {{r.csrf_token}}
+    <div style="display: inline-block; min-width: 13em">
+    {{r.response.label}}
+    </div>
+    <br>
+    {% endfor %}
+
+    <br>
+    {% endfor %}
+    <br>
+	{{form.save}}
+<br>
+<br>
+	
+</form>
+
+        </div>
+    </div><!-- /.container -->
+
+{% endblock content %}
