@@ -26,4 +26,4 @@ app.debug = True
 app.config['SECRET_KEY'] = 'nunyabusiness'
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['DEBUG_TB_PROFILER_ENABLED'] = True
-toolbar = DebugToolbarExtension(app)
+# toolbar = DebugToolbarExtension(app)
