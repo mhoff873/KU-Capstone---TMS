@@ -65,8 +65,8 @@
     <h2 class="sub-header text-center">Created Surveys</h2>
     <table class="table table-hover">
       <thead>
-        <th onclick='sort_table(survey_table, 0, asc1); asc1 *= -1; asc2=1;unselect_row(last_row);unselect_row(row);document.getElementById("title").style.visibility="visible";document.getElementById("desc").style.visibility="hidden";document.getElementById("title").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"'>Title<img id="title" style="height:1em;"></span></th>
-        <th onclick='sort_table(survey_table, 1, asc2); asc2 *= -1; asc1=1;unselect_row(last_row);unselect_row(row);document.getElementById("desc").style.visibility="visible";document.getElementById("title").style.visibility="hidden";document.getElementById("desc").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"'>Description<img id="desc" style="height:1em;"></span></th>
+        <th onclick='sort_table(survey_table, 0, asc1); asc1 *= -1; asc2=1;document.getElementById("title").style.visibility="visible";document.getElementById("desc").style.visibility="hidden";document.getElementById("title").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"'>Title<img id="title" style="height:1em;"></th>
+        <th onclick='sort_table(survey_table, 1, asc2); asc2 *= -1; asc1=1;document.getElementById("desc").style.visibility="visible";document.getElementById("title").style.visibility="hidden";document.getElementById("desc").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"'>Description<img id="desc" style="height:1em;"></th>
         <th>Archive</th>
 		<th>Edit</th>
 		<th>Delete</th>
