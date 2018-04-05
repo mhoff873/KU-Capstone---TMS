@@ -168,17 +168,38 @@ class TaskAssignmentForm(FlaskForm):
         
 # Yocums create survey form 3/6/18 4:53pm
 
+class SurveyResponses(FlaskForm):
+    response = StringField('Response:', [InputRequired()])
+    delete_response = SubmitField("Delete")
+    @staticmethod
+    def process_data(data):
+        return data
+
 class SurveyQuestion(FlaskForm):
-	stock_question = RadioField ("Did You Have Fun?", choices = [("1","1"),("2","2"),("3","3"),("4","4"),("5","5")])
-	delete_a_question = SubmitField("Delete Question")
-	rearrange_a_question = SubmitField("Rearrange Question")
+    #radio = RadioField ("test", choices = [("1","1"),("2","2"),("3","3"),("4","4"),("5","5")])
+    stock_question = StringField('Question:', [InputRequired()])
+    delete_a_question = SubmitField("Delete Question")
+    add_response = SubmitField("Add Response")
+    isActive = BooleanField("Active", default=0)
+    responses = FieldList(FormField(SurveyResponses), min_entries=0)
+    #question_up = SubmitField('Move Question â†‘')
+    #question_down = SubmitField('Move Question â†“')
+    @staticmethod
+    def process_data(data):
+        return data
 
 class CreateASurvey(FlaskForm):
-	save = SubmitField("Save")
-	delete = SubmitField("Delete")  
-	activate_a_survey = BooleanField("Activate")
-	assign_a_survey = BooleanField("Assign")
-	questions = FieldList(FormField(SurveyQuestion), min_entries=2)
-	add_question = SubmitField("Add a New Question")
+    save = SubmitField("Save")
+    delete = SubmitField("Delete")  
+    #taskButton = ButtonField("Tasks")
+    activate_a_survey = BooleanField("Activate", default=0)
+    #assign_a_survey = BooleanField("Assign")
+    questions = FieldList(FormField(SurveyQuestion), min_entries=0)
+    add_question = SubmitField("Add Question")
+    title = StringField('Survey Name:', [InputRequired()])
+    description = StringField('Description:', [InputRequired()])
+    @staticmethod
+    def process_data(data):
+        return data
         
         
