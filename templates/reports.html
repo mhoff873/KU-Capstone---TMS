@@ -1,61 +1,77 @@
 {% extends 'base.html' %}
 {% block content %}
+<script>
+        /* stores the ordered state of columns */
+        var asc1=1;
+        var asc2=1;
+        var asc3=1;
+        var asc4=1;
+        
+        // sorts a column of a tbody
+        function sort_table(tbody, col, asc) {
+            var rows = tbody.rows,
+                rlen = rows.length;
+            
+            var swapped;
+            do {
+                swapped = false;
+                for (var i=0; i < rlen-1; i++) {
+                    if (asc==1){
+                            if (rows[i].cells[col].textContent > rows[i+1].cells[col].textContent) { //ascending order
+                                tbody.insertBefore(rows[i+1], rows[i]);
+                                swapped = true;
+                            }
+                    }if (asc==-1){
+                            if (rows[i].cells[col].textContent < rows[i+1].cells[col].textContent) { //descending order
+                                tbody.insertBefore(rows[i+1], rows[i]);
+                                swapped = true;
+                            }
+                    }
+                }
+            } while (swapped);
+        }
+        
+</script>
+<div class="jumbotron text-center"><h1>Reports</h1></div>
+  <div class="container">
+    <div class="text-center">
+      <!-- content goes here, below. -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <!-- <strong>Title</strong> --> {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <!-- end of top row -->
 
-
-<div class="jumbotron text-center">
-  <h1>Reports</h1>
-</div>
-
-<!-- content goes here, below. -->
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-  <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{ category }} alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <!-- <strong>Title</strong> --> {{ message }}
+      <!--start of second row-->
+      <div class="row">
+        <div class="col-sm-4">
+          <!-- second row left button -->
+          <a href="{{url_for('graph')}}" role="button" class="btn btn-secondary btn-lg btn-block">Graph</a>
+        </div>
+      <div class="col-sm-4">
+        <!-- second row middle button -->
+        {% if arguments is none %}
+          <a href="{{url_for('email')}}" role="button" class="btn btn-secondary btn-lg btn-block">Email</a>
+        {% else %}
+          <a href="{{url_for('email') + '/' + arguments}}" role="button" class="btn btn-secondary btn-lg btn-block">Email</a>    
+        {% endif %}
       </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
- <div class="col-sm"></div><!-- this is used for spacing purposes-->
- <div class="col-sm"></div><!-- this is used for spacing purposes--> 
-<!-- end -->
-</div>
-</div>
-</div>
-<!-- end of top row -->
-
-<br>
-<br>
-
-<!--start of second row-->
-<div class="container">
-  <div class="text-center">
-  <div class="row">
-    <div class="col-sm-4">
-	<!-- second row left button -->
-		<a href="{{url_for('graph')}}" role="button" class="btn btn-secondary btn-lg btn-block">Graph</a>
+      <div class="col-sm-4">
+        <!-- second row right button -->
+        {% if arguments is none %}
+          <a href="{{url_for('pdf')}}" role="button" class="btn btn-secondary btn-lg btn-block">PDF</a>
+        {% else %}
+          <a href="{{url_for('pdf') + "/" + arguments}}" role="button" class="btn btn-secondary btn-lg btn-block">PDF</a>
+        {% endif %}
+      </div>
     </div>
-    <div class="col-sm-4">
-  <!-- second row middle button -->
-  {% if arguments is none %}
-		<a href="{{url_for('email')}}" role="button" class="btn btn-secondary btn-lg btn-block">Email</a>
-  {% else %}
-    <a href="{{url_for('email') + '/' + arguments}}" role="button" class="btn btn-secondary btn-lg btn-block">Email</a>    
-  {% endif %}
-  </div>
-	<div class="col-sm-4">
-  <!-- second row right button -->
-  {% if arguments is none %}
-    <a href="{{url_for('pdf')}}" role="button" class="btn btn-secondary btn-lg btn-block">PDF</a>
-  {% else %}
-    <a href="{{url_for('pdf') + "/" + arguments}}" role="button" class="btn btn-secondary btn-lg btn-block">PDF</a>
-  {% endif %}
-    </div>
-  </div>
   </div>
 </div>
 <!-- end of second row -->
@@ -71,38 +87,37 @@
 
 <!-- dropdown to be populated with senior names from database-->
 <div class = "container">
- <div class="row text-center">
-  <div class="col-sm-3">
-	  <div class="dropdown">
-	    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-	      Senior Names
-	    </button>
-            <div class="dropdown-menu force-scroll">
-              <a class="dropdown-item" href="{{url_for('reports') + '/userid:A'}}">
-		   All
+  <div class="row text-center">
+    <div class="col-sm-3">
+      <div class="dropdown">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+          Senior Names
+        </button>
+        <div class="dropdown-menu force-scroll">
+          <a class="dropdown-item" href="{{url_for('reports') + '/userid:A'}}">
+            All
 	        </a>
-	      {% for i in user %}
-              <a class="dropdown-item" href="{{url_for('reports') + '/userid:' + i['userID']|string}}">
-		   {{ i["fname"] }} {{ i["lname"] }}
-	      </a>
-	      {% endfor %}
-          </div>
+          {% for i in user %}
+            <a class="dropdown-item" href="{{url_for('reports') + '/userid:' + i['userID']|string}}">
+              {{ i["fname"] }} {{ i["lname"] }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
     </div>
-	</div>
   <div class="col-sm-3"></div><!-- this is used for spacing purposes-->
   <div class="col-sm-3"></div><!-- this is used for spacing purposes--> 
   <div class="col-sm-3">
     <div class="dropdown">
       <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-          Constraints
+        Constraints
       </button>
-    <div class="dropdown-menu force-scroll">
-      <a class="dropdown-item" href="{{url_for('reports') + '/date:A'}}">All</a>
-      <a class="dropdown-item" href="{{url_for('reports') + '/date:M'}}">Monthly</a>
-      <a class="dropdown-item" href="{{url_for('reports') + '/date:W'}}">Weekly</a>
-      <a class="dropdown-item" href="{{url_for('reports') + '/date:D'}}">Daily</a>
-    </div>
-      
+      <div class="dropdown-menu force-scroll">
+        <a class="dropdown-item" href="{{url_for('reports') + '/date:A'}}">All</a>
+        <a class="dropdown-item" href="{{url_for('reports') + '/date:M'}}">Monthly</a>
+        <a class="dropdown-item" href="{{url_for('reports') + '/date:W'}}">Weekly</a>
+        <a class="dropdown-item" href="{{url_for('reports') + '/date:D'}}">Daily</a>
+      </div>
     </div>
   </div>
 </div>
@@ -115,33 +130,25 @@
 	<table class="table table-hover table-bordered">
     <thead>
       <tr>
-        <th>User</th>
-        <th>Task Name</th>
-        <th>Time Spent on Task</th>
-        <th>Date / Time</th>
+        <th onclick='sort_table(user_table, 0, asc1); asc1 *= -1; asc2 =1;asc3 =1;asc4 =1; document.getElementById("user_name").style.visibility="visible"; document.getElementById("user_task").style.visibility="hidden"; document.getElementById("user_time").style.visibility="hidden";  document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_name").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"'>User<img id="user_name" style="height:1em;"></th>
+        <th onclick='sort_table(user_table, 1, asc2); asc2 *= -1; asc1 =1;asc3 =1;asc4 =1; document.getElementById("user_task").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_time").style.visibility="hidden";  document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_task").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"'>Task Name<img id="user_task" style="height:1em;"></th>
+        <th onclick='sort_table(user_table, 2, asc3); asc3 *= -1; asc1 =1;asc2 =1;asc4 =1; document.getElementById("user_time").style.visibility="visible"; document.getElementById("user_task").style.visibility="hidden"; document.getElementById("user_name").style.visibility="hidden";  document.getElementById("user_date").style.visibility="hidden"; document.getElementById("user_time").src=(asc3==1)?"../static/img/up.png":"../static/img/down.png"'>Time Spent on Task<img id="user_time" style="height:1em;"></th>
+        <th onclick='sort_table(user_table, 3, asc4); asc4 *= -1; asc1 =1;asc2 =1;asc3 =1; document.getElementById("user_date").style.visibility="visible"; document.getElementById("user_task").style.visibility="hidden"; document.getElementById("user_time").style.visibility="hidden";  document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_date").src=(asc4==1)?"../static/img/up.png":"../static/img/down.png"'>Date / Time<img id="user_date" style="height:1em;"></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id='user_table'>
       {% for t in tasks %}
-      <tr>
-        <td>{{ t["userID"] }}</td>
-        <td>{{ t["title"] }}</td>
-        <td>{{ t["totalTime"] }}</td>
-        <td>{{ t["dateTimeCompleted"] }}</td>
-      </tr>
-      <tr>
-	{% endfor %}
+        <tr id='user_{{t.userID}}' >
+          <td>{{ t["userID"] }}</td>
+          <td>{{ t["title"] }}</td>
+          <td>{{ t["totalTime"] }}</td>
+          <td>{{ t["dateTimeCompleted"] }}</td>
+        </tr>
+	    {% endfor %}
     </tbody>
   </table>
  </div>
 </div>
 <!-- end of table -->
- 
-<br>
-  
-
- <!-- content goes here, above. -->
-
-
-
+<!-- content goes here, above. -->
 {% endblock content %}
