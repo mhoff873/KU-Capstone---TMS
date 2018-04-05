@@ -1,26 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="jumbotron text-center">
-  <h1>Graph</h1>
-</div>
+<div class="jumbotron text-center"><h1>Graphs</h1></div>
 
-<!-- content goes here, below. -->
-  
- <div class="col-sm"></div><!-- this is used for spacing purposes-->
- <div class="col-sm"></div><!-- this is used for spacing purposes--> 
-<!-- end -->
-</div>
-</div>
-</div>
-<!-- end of top row -->
-
-<br>
-<!-- text to be populated by querying database "......"-->
 <div class = "container">
 	<div class = "text-center">
-	<h3>Supervisor Overview for: {{current_user.fname + " " + current_user.lname}}</h3>
-	<h4>{{ constraint }}</h4>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <!-- <strong>Title</strong> --> {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+  
+    <div class="row">
+      <div class="col-sm-4">
+        <!-- second row left button -->
+        <a href="{{url_for('reports')}}" role="button" class="btn btn-secondary btn-lg btn-block">Reports</a>
+      </div>
+    </div>
+	  <h3>Supervisor Overview for: {{current_user.fname + " " + current_user.lname}}</h3>
+	  <h4>{{ constraint }}</h4>
 	</div>
 </div>
 <!-- end of text -->
@@ -29,83 +33,81 @@
  <div class="row text-center">
    <div class="col-sm-4">
     <!-- dropdown to be populated with senior names from database-->
-	<div class="dropdown">
+	  <div class="dropdown">
 	    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
 	      Senior Names
 	    </button>
-            <div class="dropdown-menu force-scroll">
+      <div class="dropdown-menu force-scroll">
 	      {% for i in user %}
-              <a class="dropdown-item" href="{{url_for('graph') + '?date=' + request.args.get('date')|string + '&userid=' + i['userID']|string}}">
-		   {{ i["fname"] }} {{ i["lname"] }}
-	      </a>
+          <a class="dropdown-item" href="{{url_for('graph') + '?date=' + request.args.get('date')|string + '&userid=' + i['userID']|string}}">
+		        {{ i["fname"] }} {{ i["lname"] }}
+	        </a>
 	      {% endfor %}
-          </div>
+      </div>
     </div>
     <!-- end dropdown -->
   </div>
-  
-    <div class="col-sm-4">
+  <div class="col-sm-4">
     <!-- dropdown for the time constraints-->
     <div class="dropdown">
       <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-          Constraints
+        Constraints
       </button>
-    <div class="dropdown-menu force-scroll">
-      <a class="dropdown-item" href="{{url_for('graph') + '?date=A' + '&task=' + request.args.get('task')|string + '&userid=' + request.args.get('userid')|string}}">All</a>
-      <a class="dropdown-item" href="{{url_for('graph') + '?date=M' + '&task=' + request.args.get('task')|string + '&userid=' + request.args.get('userid')|string}}">Monthly</a>
-      <a class="dropdown-item" href="{{url_for('graph') + '?date=W' + '&task=' + request.args.get('task')|string + '&userid=' + request.args.get('userid')|string}}">Weekly</a>
-      <a class="dropdown-item" href="{{url_for('graph') + '?date=D' + '&task=' + request.args.get('task')|string + '&userid=' + request.args.get('userid')|string}}">Daily</a>
-    </div>
+      <div class="dropdown-menu force-scroll">
+        <a class="dropdown-item" href="{{url_for('graph') + '?date=A' + '&task=' + request.args.get('task')|string + '&userid=' + request.args.get('userid')|string}}">All</a>
+        <a class="dropdown-item" href="{{url_for('graph') + '?date=M' + '&task=' + request.args.get('task')|string + '&userid=' + request.args.get('userid')|string}}">Monthly</a>
+        <a class="dropdown-item" href="{{url_for('graph') + '?date=W' + '&task=' + request.args.get('task')|string + '&userid=' + request.args.get('userid')|string}}">Weekly</a>
+        <a class="dropdown-item" href="{{url_for('graph') + '?date=D' + '&task=' + request.args.get('task')|string + '&userid=' + request.args.get('userid')|string}}">Daily</a>
+      </div>
     </div>
     <!-- end dropdown -->
-    </div>
-    
-    <div class="col-sm-4">
+  </div>
+  <div class="col-sm-4">
     <!-- dropdown to be populated with tasks from database-->
     <div class="dropdown">
 	    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
 	      Tasks
 	    </button>
-            <div class="dropdown-menu force-scroll">
+      <div class="dropdown-menu force-scroll">
 	      {% for t in task %}
-              <a class="dropdown-item" href="{{url_for('graph') + '?date=' + request.args.get('date')|string + '&task=' + t['taskID']|string}}">
-		   {{ t["title"] }}
-	      </a>
+          <a class="dropdown-item" href="{{url_for('graph') + '?date=' + request.args.get('date')|string + '&task=' + t['taskID']|string}}">
+		        {{ t["title"] }}
+          </a>
 	      {% endfor %}
-          </div>
+      </div>
     </div>
     <!-- end dropdown -->
 	</div>
-  </div>
 </div>
 <br>
 <div class = "container">
  <div class="row text-center">
     <!-- generate graph button -->
-        <a href="{{url_for('graph') + '/date=' + request.args.get('date')|string + '&task=' + request.args.get('task')|string + '&userid=' + request.args.get('userid')|string + '&submit=T'}}" role="button" class="btn btn-secondary btn-lg btn-block">Generate Graph</a>
+    <a href="{{url_for('graph') + '/date=' + request.args.get('date')|string + '&task=' + request.args.get('task')|string + '&userid=' + request.args.get('userid')|string + '&submit=T'}}" role="button" class="btn btn-secondary btn-lg btn-block">Generate Graph</a>
     <!-- end generate graph button -->
   </div>
 </div>
 <br>
-<div class = "container">
-  <div id="chart">
-   <embed type="image/svg+xml" src= {{ chart|safe }} />
-</div>
-</div>
-
-<br>
-<div class = "container">
- <div class="row text-left">
-    {% for s in statistics %}
-    {{ s }}
-    <br>
-    {% endfor %}
+{% if display %}
+  <div class = "container">
+    <div id="chart">
+      <embed type="image/svg+xml" src= {{ chart|safe }} />
+    </div>
   </div>
-</div>
+  <br>
+  <div class = "container">
+    <div class="text-left">
+      <h5>Summary Statistics:</h5>
+      <ul>
+        {% for s in statistics %}
+          <li>{{ s }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+{% endif %}
  <!-- content goes here, above. -->
-<br>
-<br>
-<br>
-
-
 {% endblock content %}
