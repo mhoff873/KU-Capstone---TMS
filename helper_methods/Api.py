@@ -337,6 +337,21 @@ def getTaskFromID(taskID):
         return None
     return str(task["title"])
 
+def getIDFromTask(task):
+    """
+    Description: get the task id given task name
+    Parameters: task - (string) name of the task
+    Return Value: (int) id of the task or none
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT task.taskID FROM task WHERE title="%s"' % (str(task),))
+    task = cur.fetchone()
+    if not task:
+        return None
+    return int(task["taskID"])
+
 
 def getNameFromID(userID):
     """
