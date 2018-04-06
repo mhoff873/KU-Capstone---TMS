@@ -2,7 +2,21 @@
 {% block content %}
 <br>
 <br>
+ <div class="container-fluid">
+    <div class="row">
+	<div class="col-sm-2">
+        <button type="button" class="btn btn-secondary">Back to Login Page</button>
+	</div>
+	<div class="col-sm-8">
     <h1>Update your Password</h1>
+	</div>
+	</div>
+</div>
+
+	<br>
+	<img src="http://unixweb.kutztown.edu/~csupp511/csc355/testing/images/tms2.png" class="rounded-circle" alt= "TMS">
+
+	<br><br>
 	<!-- everything is held within this container for responsiveness-->
 <div class="container">
   <div class="page_content">
@@ -15,25 +29,25 @@
             <h1><strong>You have submitted an invalid CSRF token!</strong></h1>
         {% endif %}
 		<div style="display: inline-block; min-width: 13em">
-		{{ form.email.label }}
+		{{ form.email.label (style="font-size: 1.5em;")}}
 		</div>
         {{ form.email }}
         <br>
 		<br>
 		<div style="display: inline-block; min-width: 13em">
-        {{ form.password.label }}
+        {{ form.password.label (style="font-size: 1.5em;")}}
 		</div>
         {{ form.password }}
         <br>
 		<br>
 		<div style="display: inline-block; min-width: 13em">
-        {{ form.confirm.label }}
+        {{ form.confirm.label (style="font-size: 1.5em;")}}
 		</div>
 		{{ form.confirm }}
 		<div>
         <br>
 		<br>
-        {{ form.submit (class='btn btn-secondary btn-md')}}
+        {{ form.submit (class='btn btn-secondary btn-lg')}}
     </form>
 	
 	</div>

@@ -61,7 +61,7 @@
 <div class="row">
   <div class="table-responsive col-md-12">
       <h2 class="sub-header text-center">Assigned Users</h2>
-      <table class="table table-hover table-bordered">
+      <table class="table table-hover table-bordered" style="font-size: 1em;">
         <thead id='user_table_header'>
           <tr>
             <th onclick='sort_table(user_table, 0, asc1); asc1 *= -1; asc2 =1;asc3 =1; document.getElementById("user_date").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_email").style.visibility="hidden";  document.getElementById("user_date").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"' >Assigned<img id="user_date" style="height:1em;"></th>
@@ -82,7 +82,7 @@
   </div>
   <div class="table-responsive col-md-12">
       <h2 class="sub-header text-center">Assigned Tasks</h2>
-      <table class="table table-hover table-bordered">
+      <table class="table table-hover table-bordered" style="font-size: 1em;">
         <thead>
           <tr>
             <th onclick='sort_table(task_table, 0, asc4); asc4 *= -1; asc5 =1;asc6 =1;asc7 =1; document.getElementById("task_date").style.visibility="visible"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_date").src=(asc4==1)?"../static/img/up.png":"../static/img/down.png";document.getElementById("task_progress").style.visibility="hidden";' >Assigned<img id="task_date" style="height:1em;"></th>
