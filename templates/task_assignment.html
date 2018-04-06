@@ -21,16 +21,16 @@
                 <form method="POST">
                     {{ form.csrf_token() }}
                     {{ form.assigned_users }}<br><br>
-                    {{ form.assign_task_button (class='btn btn-secondary btn-sm') }}
-                    {{ form.view_assigned_tasks_button (class='btn btn-secondary btn-sm') }}
+                    {{ form.assign_task_button (class='btn btn-secondary btn-md') }}
+                    {{ form.view_assigned_tasks_button (class='btn btn-secondary btn-md') }}
                     <br>
                     <br>
                     <br>
                     {% if form.assign_task_button.data %}
-                        {{ form.tasks }}&nbsp;{{ form.assign_button(class='btn btn-secondary btn-sm') }}
+                        {{ form.tasks }}&nbsp;{{ form.assign_button(class='btn btn-secondary btn-md') }}
                     {% endif %}
                     {% if form.view_assigned_tasks_button.data %}
-                        {{ form.tasks }}&nbsp;{{ form.remove_button(class='btn btn-secondary btn-sm') }}
+                        {{ form.tasks }}&nbsp;{{ form.remove_button(class='btn btn-secondary btn-md') }}
                     {% endif %}
                 </form>
             </div>
