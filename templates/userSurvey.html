@@ -4,7 +4,8 @@
 <div class="jumbotron text-center">
 	<h1>Survey Page</h1>
 </div>
-
+<div class="container">
+        <div class="page_content">
 {% with messages = get_flashed_messages(with_categories=true) %}
   <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
   {% if messages %}
@@ -17,8 +18,7 @@
   {% endif %}
 {% endwith %}
 
-<div class="container">
-        <div class="page_content">
+
 
 <form method="POST">
 	{{form.csrf_token}}
@@ -28,6 +28,7 @@
     <h4 class="sub-header text-center">You are completing a survey for the task: {{ task }}</h4>
     <br>
     {% for q in form.questions %}
+    {{q.questID}}
     {{q.csrf_token}}
     <div style="display: inline-block; min-width: 28em">
 	{{q.stock_question.label}}
@@ -39,13 +40,10 @@
         </div>
     {% endif %}
     
-    {{q.radio.choices}}
-    
-    
     {% for r in q.responses %}
     {{r.csrf_token}}
     <div style="display: inline-block; min-width: 13em">
-    {{r.response.label}}
+    <input type="radio" name="{{q.questID.data}}" value={{r.response.label}}> {{r.response.label}} <br>
     </div>
     <br>
     {% endfor %}
@@ -54,6 +52,8 @@
     {% endfor %}
     <br>
 	{{form.save}}
+    {{form.userID}}
+    {{form.taskID}}
 <br>
 <br>
 	

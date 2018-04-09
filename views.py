@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, redirect,url_for, flash, session
+from flask import render_template, request, jsonify, redirect,url_for, flash, session, json
 
 from app import app
 from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
@@ -69,13 +69,14 @@ def getAllCompletedTasksByUser(uname):
     results = Api.getAllCompletedTasksByUser(uname)
     return jsonify(results)
 
-# change to post then
-@app.route("/api/user/PostLoggedInIp/<data>", methods=['GET'])
-def postLoggedInIp(data):
-    results = Api.postLoggedInIp(data)
+@app.route("/api/user/PostLoggedInIp", methods=['POST'])
+def postLoggedInIp():
+    ip = request.form.get('IpAddress')
+    signIn = request.form.get('SignedIn')
+    user = request.form.get('Username')
+    results = Api.postLoggedInIp(ip,user,signIn)
     return jsonify(results)
-
-
+# end URL dispatching for iPaws
 
 # supervisor dashboard
 @app.route('/dashboard', methods=['GET'])
@@ -320,33 +321,60 @@ def survey_results():
         # print(taskID_to_title[formID_to_taskID[f]]) # prints the title of the task
         # print(formID_to_title[f]) # prints the title of the surveyForm
         das_struct.append({'formID':f,'taskTitle':taskID_to_title[formID_to_taskID[f]],'surveyTitle':formID_to_title[f],'userName':formID_to_name[f],'date':formID_to_date[f]})
-        
+    
     # print(das_struct)
     return render_template("surveyResults.html", result_struct=das_struct)
-    
-    
-    
+     
 # display survey to user
-#@app.route("/userSurvey/<userID>/<taskID>", methods=["GET"])
-# def userSurvey(userID,taskID):
-    # form = CreateASurvey()
-    # form.title.data = "test"
-    # # get survey for the task
-    # SF, SQ = Api.getSurvey(Api.getAssignedSurvey(taskID))
-    # # iterate over each question to append
-    # for q in SQ:
-        # questions = form.questions.append_entry()
-        # questions.stock_question.label = q['questText']
-        # questions.stock_question.data = ""
-        # questions.radio.choices = [("1","1"),("2","2"),("3","3"),("4","4"),("5","5")]
-        # if q['questType'] == 'multiple choice':
-            # for m in q['surveyMultQuest']:
-                # responses = questions.responses.append_entry()
-                # responses.response.label = m['questText']
-            
-    # print(SF)
-    # print(SQ)
-    # return render_template("userSurvey.html", form=form, task=Api.getTaskFromID(taskID))
+# https://tmst.kutztown.edu:5002/userSurvey/test.com/654706
+@app.route("/userSurvey/<username>/<taskID>", methods=["GET","POST"])
+def userSurvey(username=None,taskID=None):
+    """
+    Description: hangle the rendering of the surveu page for the users
+    Parameters: username - (string) email of the user
+                taskID - (int) id of the task
+    Return Value: rendered form for the user
+    Author: Tyler Lance
+    """
+    userID = Api.getIdFromEmail(username)
+    # if the form was posted then pull the form data
+    if request.method == 'POST':
+        form = CreateASurvey(request.form)
+        # VALIDATE FORM HERE
+        # check if the data was submitted
+        if form.save.data:
+            flash("Your survey has been submitted.", "success")
+            # pull the data from the form so that it can be prepared to be stored
+            SR = {'userID': form.userID.data, 'formID': Api.getAssignedSurvey(form.taskID.data), 'name': Api.getNameFromID(form.userID.data), 'timeSpent': 0, 'email': "", 'ipAddr': request.remote_addr, 'ageGroup': 0, 'results': "", 'comments': ""}
+            SQR = []
+            for q in form.questions:
+                dict = {}
+                if q.stock_question.data == "" or q.stock_question.data is None:
+                    dict = {'questID': q.questID.data, 'response': request.form[q.questID.data]}
+                # if it was an open ended question
+                else:
+                    dict = {'questID': q.questID.data, 'response': q.stock_question.data}
+                SQR.append(dict)
+            Api.postSurveyResults(SR, SQR)
+        return render_template("userSurveyCompleted.html")
+    form = CreateASurvey()
+    form.userID.data = int(userID)
+    form.taskID.data = int(taskID)
+    # get survey for the task
+    if Api.getAssignedSurvey(taskID) is not None:
+        SF, SQ = Api.getSurvey(Api.getAssignedSurvey(taskID))
+        # iterate over each question to append
+        for q in SQ:
+            questions = form.questions.append_entry()
+            questions.questID.data = q['questID']
+            questions.stock_question.label = q['questText']
+            questions.stock_question.data = ""
+            if q['questType'] == 'multiple choice':
+                for m in q['surveyMultQuest']:
+                    responses = questions.responses.append_entry()
+                    responses.response.label = m['questText']
+    return render_template("userSurvey.html", form=form, task=Api.getTaskFromID(taskID))
+    
 # Reports related stuff below
 def generate_report(arguments=None):
     """
@@ -630,12 +658,12 @@ def email(arguments=None):
 def surveys(arguments=None,formID=None):
     # check if archive survey
     if arguments == 'A':
-        Api.archiveSurvey(formID,0)
-        flash('The survey was successfully archived.', 'success')
+        if Api.archiveSurvey(formID,0):
+	        flash('The survey was successfully archived.', 'success')
     # check if unarchive survey
     elif arguments == 'U':
-        Api.archiveSurvey(formID,1)
-        flash('The survey was successfully unarchived.', 'success')
+        if Api.archiveSurvey(formID,1):
+            flash('The survey was successfully unarchived.', 'success')
     # check if edit survey
     elif arguments == 'E':
         # redirect to the survey creation form and pass the formID so it can generate the form
@@ -871,8 +899,7 @@ def task_assignment():
                                             form.tasks.data)
         return render_template("task_assignment.html", form=form)
     return render_template("task_assignment.html", form=form)
-
-
+    
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
 @login_required

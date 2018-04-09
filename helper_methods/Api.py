@@ -365,11 +365,6 @@ def postSurveyResults(SR, SQR):
     Return Value: (bool) results if the data was able to be stored
     Author: Tyler Lance
     """
-    # hard coded data for testing and to understand the function parameters, remove when implementing
-    SR = {'userID': 4, 'formID': 12, 'name': "", 'timeSpent': 45000, 'email': "test.com", 'ipAddr': "123.123.123",
-          'ageGroup': 50, 'results': "response", 'comments': ""}
-    SQR = [{'questID': 1, 'response': "sucked"}, {'questID': 2, 'response': "still sucked"}]
-
     cur = mysql.connection.cursor()
     # if name is empty get name from users table
     if not SR['name']:
@@ -379,14 +374,10 @@ def postSurveyResults(SR, SQR):
     # if email is empty get name from users table
     if not SR['email']:
         cur.execute('SELECT email FROM users WHERE userID=%d' % (int(SR['userID']),))
-        SR['email'] = cur.fetchone()
+        res = cur.fetchone()
+        SR['email'] = res['email']
     # get the current date and time in the format needed in the database
     SR['date'] = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
-    # testing - to display query
-    # print('''INSERT INTO surveyResults (`userID`,`formID`,`name`,`timeSpent`,`email`,`ipAddr`,`ageGroup`,`results`,`date`,`comments`)
-    #        values(%d,%d,"%s",%d,"%s","%s",%d,"%s","%s","%s")''' % (int(SR['userID']),int(SR['formID']),str(SR['name']),int(SR['timeSpent']),str(SR['email']),str(SR['ipAddr']),int(SR['ageGroup']),str(SR['results']),str(SR['date']),str(SR['comments']),))
-
     # insert into the surveyResults table
     cur.execute('''INSERT INTO surveyResults (`userID`,`formID`,`name`,`timeSpent`,`email`,`ipAddr`,`ageGroup`,`results`,`date`,`comments`) 
             values(%d,%d,"%s",%d,"%s","%s",%d,"%s","%s","%s")''' % (
@@ -399,10 +390,6 @@ def postSurveyResults(SR, SQR):
     id = cur.fetchone()
     # iterate over the question response list
     for r in SQR:
-        # testing - to display query
-        # print('''INSERT INTO surveyQuestResults (`resultID`,`questID`,`response`)
-        #        values(%d,%d,"%s")''' %(int(id['LAST_INSERT_ID()']),int(r['questID']),str(r['response']),))
-
         cur.execute('''INSERT INTO surveyQuestResults (`resultID`,`questID`,`response`)
                 values(%d,%d,"%s")''' % (int(id['LAST_INSERT_ID()']), int(r['questID']), str(r['response']),))
         # execute the query
@@ -494,12 +481,8 @@ def archiveSurvey(formID, value):
     """
     cur = mysql.connection.cursor()
     # update the value in the table
-    cur.execute('''UPDATE `surveyForm`
-                SET `isActive`=%d
-                WHERE surveyForm.formID=%d''' % (int(value),int(formID),))
-    print('''UPDATE `surveyForm`
-                SET `isActive`=%d
-                WHERE surveyForm.formID=%d''' % (int(value),int(formID),))
+    cur.execute('''UPDATE `surveyForm` SET isActive=%d WHERE formID=%d''' % (int(value),int(formID),))
+    print('''UPDATE `surveyForm` SET isActive=%d WHERE formID=%d''' % (int(value),int(formID),))
     mysql.connection.commit()
     return True
     
@@ -527,7 +510,7 @@ def getSurvey(formID):
     r = cur.fetchall()
     SQ = []
     for d in r:
-        dict = {'questType': d['questType'], 'questText': d['questText'], 'isActive': d['isActive'], 'questOrder': d['questOrder']}
+        dict = {'questID': d['questID'], 'questType': d['questType'], 'questText': d['questText'], 'isActive': d['isActive'], 'questOrder': d['questOrder']}
         lstMult = []
         cur.execute('SELECT * FROM surveyMultQuest WHERE questID=%d' % (int(d['questID']),))
         r2 = cur.fetchall()

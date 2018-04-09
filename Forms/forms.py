@@ -9,7 +9,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateField, SubmitField, \
     BooleanField, FieldList, FormField, FileField, RadioField, SelectField, \
-    TextAreaField
+    TextAreaField, HiddenField
 from wtforms.validators import InputRequired, EqualTo, Email, DataRequired
 
 
@@ -182,6 +182,7 @@ class SurveyQuestion(FlaskForm):
     add_response = SubmitField("Add Response")
     isActive = BooleanField("Active", default=1)
     responses = FieldList(FormField(SurveyResponses), min_entries=0)
+    questID = HiddenField("")
     #question_up = SubmitField('Move Question â†‘')
     #question_down = SubmitField('Move Question â†“')
     @staticmethod
@@ -198,6 +199,8 @@ class CreateASurvey(FlaskForm):
     add_question = SubmitField("Add Question")
     title = StringField('Survey Name:', [InputRequired()])
     description = StringField('Description:', [InputRequired()])
+    userID = HiddenField("")
+    taskID = HiddenField("")
     @staticmethod
     def process_data(data):
         return data

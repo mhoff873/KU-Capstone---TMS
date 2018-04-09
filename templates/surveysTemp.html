@@ -25,6 +25,9 @@ function changeValue(option)
       <div class="col-sm-4">
         <a href="{{url_for('surveys')}}"role="button" class="btn btn-secondary btn-lg btn-block">Manage Surveys</a>
       </div>
+	  <div class="col-sm-4">
+        <a href="{{url_for('survey_results')}}" role="button" class="btn btn-secondary btn-lg btn-block">Survey Results</a>
+      </div>
     </div>
     <br>
     <form action="{{ url_for('surveyCreation') }}" method="POST">
