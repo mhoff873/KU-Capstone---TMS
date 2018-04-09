@@ -276,54 +276,9 @@ def prepareSurveyCreationform(form):
 @app.route("/survey_results/", methods=["GET", "POST"])
 @login_required
 def survey_results():
-    survey_forms = SurveyForm.query.all() # the entire form table using the formID get the formTitle
-    survey_results = SurveyResult.query.all() # the entire result table. get the formID and the name
-    surveys_assigned = SurveyAssigned.query.all() # the entire assigned table
-    all_the_flippin_tasks = Task.query.all() # all the flippin tasks
-
-    das_struct = []
-    
-    formID_to_name = {} # result table map
-    formID_to_title = {} # surveyForm table map
-    formID_to_taskID = {} # assigned table map
-    taskID_to_title = {} # task table map
-    formID_to_date = {}
-    
-    formIDs=[] # list of all formIDs from the result table
-    
-    # formIDs have unique titles in the surveyForms table
-    for s in survey_forms:
-        formID_to_title[s.formID]=s.formTitle
-        # print(formID_to_title[s.formID])
-        
-    # taskIDs have unique titles in the task table
-    for t in all_the_flippin_tasks:
-        taskID_to_title[t.taskID]=t.title
-        # print(taskID_to_title[t.taskID])
-    
-    # formIDs have unique names in the result table
-    for f in survey_results:
-        formID_to_name[f.formID]=f.name
-        formID_to_date[f.formID] = f.date
-        # print(formID_to_name[f.formID])
-        
-    # formID to taskID mapping from the assigned table
-    for a in surveys_assigned:
-        formID_to_taskID[a.formID]=a.taskID
-        formIDs.append(a.formID)
-        # print(formID_to_taskID[a.formID])
-        
-    # print(formIDs)
-    
-    # building das_struct
-    for f in formIDs:
-        # print(formID_to_name[f]) # prints name of the result
-        # print(taskID_to_title[formID_to_taskID[f]]) # prints the title of the task
-        # print(formID_to_title[f]) # prints the title of the surveyForm
-        das_struct.append({'formID':f,'taskTitle':taskID_to_title[formID_to_taskID[f]],'surveyTitle':formID_to_title[f],'userName':formID_to_name[f],'date':formID_to_date[f]})
-    
+    print(Api.getResultsByID(current_user.supervisorID))
     # print(das_struct)
-    return render_template("surveyResults.html", result_struct=das_struct)
+    return render_template("surveyResults.html",data=Api.getResultsByID(current_user.supervisorID))
      
 # display survey to user
 # https://tmst.kutztown.edu:5002/userSurvey/test.com/654706

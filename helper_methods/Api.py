@@ -768,3 +768,20 @@ def getPathForTaskImage(taskID):
 
 
     return str(img)
+
+def getResultsByID(supervisorID):
+    """
+    Description: Returns survey results given the supervisor ID
+    Parameters: supervisorID - (int) supervisorID
+    Return Value: 
+    Author: David Yocum
+    """
+    cur = mysql.connection.cursor()
+    # query the database to get all survey results for a supervisor.
+    cur.execute('SELECT surveyForm.formID,surveyResults.date,users.fname,users.lname,surveyForm.formTitle, task.Title FROM `assigned`,`task`,`surveyResults`,`users`,`surveyForm` WHERE surveyForm.formID = assigned.formID AND assigned.taskID = task.taskID AND surveyResults.formID = surveyForm.formID AND surveyResults.userID = users.userID AND users.supervisorID = %d' % (int(supervisorID),))
+    results = cur.fetchall()
+    if not results:
+        return None
+    # sort the list by date so that the newest entries appear first
+    results = sorted(list(results),key=lambda k: k['date'], reverse=True)
+    return results
