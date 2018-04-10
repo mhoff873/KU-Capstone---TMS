@@ -63,11 +63,11 @@
 	  <!--birthday field-->
 	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
-	  
+
       {{ EditUser.birthday.label (style="font-size: 1.5em;")}}
-	  
+
 	  {{ EditUser.birthday (class="form-control")}}
-	  
+
       </div>
 	  </div>
 	  </div>
@@ -104,6 +104,7 @@
 	  </div>
       <br>
       <br>
+      <p>* Denotes required field</p>
       {{ EditUser.submit (class="btn btn-secondary btn-lg")}}
 	  <br>
 	  <br>
@@ -119,4 +120,3 @@
 </div><!-- /.container -->
 
 {% endblock content %}
-

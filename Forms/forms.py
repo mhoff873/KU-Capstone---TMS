@@ -54,18 +54,33 @@ class CreateUser(FlaskForm):
 
 
 # Requirement 29, 30
-class EditUser(FlaskForm):
+class EditSuper(FlaskForm):
     #person = StringField("Person being editted (ie: email)", [Email(), InputRequired()])
     #is_supervisor = BooleanField("Is Supervisor?")
-    password = StringField("Password", [InputRequired()])
+    password = StringField("*Password", [InputRequired()])
     phone = StringField("Phone")
-    fname = StringField("First Name", [InputRequired()])
+    fname = StringField("*First Name", [InputRequired()])
     mname = StringField("Middle Name")
-    lname = StringField("Last Name", [InputRequired()])
-    gender = StringField("Gender", [InputRequired()])
-    birthday = DateField("Birthday", format="%Y-%m-%d")
-    affiliation = StringField("Affiliation", [InputRequired()])
-    ethnicity = StringField("Ethnicity", [InputRequired()])
+    lname = StringField("*Last Name", [InputRequired()])
+    gender = RadioField ("*Gender", choices = [("1","Male"),("2","Female")])
+    birthday = DateField("*Birthday", format="%Y-%m-%d")
+    affiliation = StringField("*Affiliation", [InputRequired()])
+    ethnicity = StringField("*Ethnicity", [InputRequired()])
+    picture = StringField("Picture")
+    submit = SubmitField("Submit Edit")
+
+
+class EditSenior(FlaskForm):
+    #person = StringField("Person being editted (ie: email)", [Email(), InputRequired()])
+    #is_supervisor = BooleanField("Is Supervisor?")
+    phone = StringField("Phone")
+    fname = StringField("*First Name", [InputRequired()])
+    mname = StringField("Middle Name")
+    lname = StringField("*Last Name", [InputRequired()])
+    gender = RadioField ("*Gender", choices = [("1","Male"),("2","Female")])
+    birthday = DateField("*Birthday", format="%Y-%m-%d")
+    affiliation = StringField("*Affiliation", [InputRequired()])
+    ethnicity = StringField("*Ethnicity", [InputRequired()])
     picture = StringField("Picture")
     submit = SubmitField("Submit Edit")
 
@@ -166,7 +181,7 @@ class TaskAssignmentForm(FlaskForm):
     @staticmethod
     def process_data(data):
         return data
-        
+
 # Yocums create survey form 3/6/18 4:53pm
 
 class SurveyResponses(FlaskForm):
@@ -191,7 +206,7 @@ class SurveyQuestion(FlaskForm):
 
 class CreateASurvey(FlaskForm):
     save = SubmitField("Save")
-    delete = SubmitField("Delete")  
+    delete = SubmitField("Delete")
     #taskButton = ButtonField("Tasks")
     activate_a_survey = BooleanField("Active", default=1)
     #assign_a_survey = BooleanField("Assign")

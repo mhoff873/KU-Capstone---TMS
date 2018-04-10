@@ -1,7 +1,7 @@
 from flask import render_template, request, jsonify, redirect,url_for, flash, session
 
 from app import app
-from Forms.forms import CreateAccount,CreateSupervisor, EditUser, AddUser, AssignUser, \
+from Forms.forms import CreateAccount,CreateSupervisor, EditSenior, EditSuper, AddUser, AssignUser, \
     CreateTaskForm, ChangePassword, LoginForm, CreateUser, CreateASurvey, TaskAssignmentForm
 from helper_methods import UserMgmt,  TaskHelper, Update, Login, Library, TaskAssignmentHelper, Api
 from database import *
@@ -666,8 +666,9 @@ def logout_account():
 @app.route('/supervisor_account', methods=['GET', "POST"])
 @login_required
 def supervisor_account():
-    eUser = EditUser()
+    eUser = EditSuper()
     if eUser.validate_on_submit():
+        print(eUser.gender.data)
         UserMgmt.edit_supervisor(eUser, current_user)
         return dashboard()
     return render_template('supervisor_account.html',EditUser=eUser)
@@ -998,10 +999,7 @@ def edit_task(task_id=None, claim=None):
 @app.route("/user_account/<user>", methods=["GET", "POST"])
 @login_required
 def user_account(user):
-    eUser = EditUser()
-    # DO NOT REMOVE NEXT LINE!!!! PASSWORD WILL SHOW IN FORM. DUNNO WHY :)
-    eUser.password.data = ""
-    # DO NOT REMOVE ABOVE LINE!!!! SERIOUSLY...
+    eUser = EditSenior()
     if eUser.validate_on_submit():
         UserMgmt.edit_user(eUser, user)
         return dashboard()
