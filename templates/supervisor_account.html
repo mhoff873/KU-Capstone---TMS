@@ -17,6 +17,9 @@
   <!-- Edit user info -->
   <form method="POST">
       {{ EditUser.csrf_token }}
+      {% for fieldName, errorMessage in ErrorItems %}
+        <p>{{ fieldName }} - {{ errorMessage }}</p>
+      {% endfor %}
 	  <!--first name field-->
 	  <div class="row">
 	  <div class="col-sm-4">

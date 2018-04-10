@@ -57,7 +57,7 @@ class CreateUser(FlaskForm):
 class EditSuper(FlaskForm):
     #person = StringField("Person being editted (ie: email)", [Email(), InputRequired()])
     #is_supervisor = BooleanField("Is Supervisor?")
-    password = StringField("*Password", [InputRequired()])
+#    password = StringField("*Password", [InputRequired()])
     phone = StringField("Phone")
     fname = StringField("*First Name", [InputRequired()])
     mname = StringField("Middle Name")
@@ -77,7 +77,7 @@ class EditSenior(FlaskForm):
     fname = StringField("*First Name", [InputRequired()])
     mname = StringField("Middle Name")
     lname = StringField("*Last Name", [InputRequired()])
-    gender = RadioField ("*Gender", choices = [("1","Male"),("2","Female")])
+    gender = RadioField ("*Gender", choices = [(1,"Male"),(2,"Female")])
     birthday = DateField("*Birthday", format="%Y-%m-%d")
     affiliation = StringField("*Affiliation", [InputRequired()])
     ethnicity = StringField("*Ethnicity", [InputRequired()])

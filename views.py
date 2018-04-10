@@ -666,12 +666,14 @@ def logout_account():
 @app.route('/supervisor_account', methods=['GET', "POST"])
 @login_required
 def supervisor_account():
+    supervisor = Supervisor.query.filter_by(supervisorID=current_user.supervisorID).first()
     eUser = EditSuper()
+    UserMgmt.populateFieldsSupervisor(supervisor, eUser)
     if eUser.validate_on_submit():
-        print(eUser.gender.data)
-        UserMgmt.edit_supervisor(eUser, current_user)
+        UserMgmt.edit_supervisor(eUser, supervisor)
+        print("\n\n", type(eUser.gender.data))
         return dashboard()
-    return render_template('supervisor_account.html',EditUser=eUser)
+    return render_template('supervisor_account.html',EditUser=eUser, ErrorItems=eUser.errors.items())
 
 
 # login page

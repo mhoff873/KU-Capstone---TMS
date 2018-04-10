@@ -68,14 +68,14 @@ def create_supervisor(form):
     db.session.commit()
 
 
-def edit_supervisor(form, current_user):
+def edit_supervisor(form, supervisor):
     """
     Allows the admin to edit a supervisor.
     :param form: Form submitted to edit the user/supervisor info.
     :return: N/A
     """
-    user = Supervisor.query.filter_by(email=current_user.email).first()
-    user.password = bcrypt.hashpw((form.password.data).encode("utf8"), bcrypt.gensalt())
+    user = Supervisor.query.filter_by(supervisorID=supervisor.supervisorID).first()
+    #user.password = bcrypt.hashpw((form.password.data).encode("utf8"), bcrypt.gensalt())
     user.phone = form.phone.data
     user.fname = form.fname.data
     user.mname = form.mname.data
@@ -149,3 +149,16 @@ def assign_user(superID, userID):
     else:
         errors += "Could not find specified supervisor!"
     return "Successfully assigned user to supervisor!" if errors == "" else errors
+
+
+def populateFieldsSupervisor(supervisor, form):
+    #form.password.data = supervisor.password
+    form.phone.data = supervisor.phone
+    form.fname.data = supervisor.fname
+    form.mname.data = supervisor.mname
+    form.lname.data = supervisor.lname
+    form.gender.data = supervisor.gender
+    form.birthday.data = supervisor.birthday
+    form.affiliation.data = supervisor.affiliation
+    form.ethnicity.data = supervisor.ethnicity
+    form.picture.data = supervisor.picture
