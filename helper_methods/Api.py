@@ -778,10 +778,27 @@ def getResultsByID(supervisorID):
     """
     cur = mysql.connection.cursor()
     # query the database to get all survey results for a supervisor.
-    cur.execute('SELECT surveyForm.formID,surveyResults.date,users.fname,users.lname,surveyForm.formTitle, task.Title FROM `assigned`,`task`,`surveyResults`,`users`,`surveyForm` WHERE surveyForm.formID = assigned.formID AND assigned.taskID = task.taskID AND surveyResults.formID = surveyForm.formID AND surveyResults.userID = users.userID AND users.supervisorID = %d' % (int(supervisorID),))
+    cur.execute('SELECT surveyResults.resultID,surveyForm.formID,surveyResults.date,users.fname,users.lname,surveyForm.formTitle, task.Title FROM `assigned`,`task`,`surveyResults`,`users`,`surveyForm` WHERE surveyForm.formID = assigned.formID AND assigned.taskID = task.taskID AND surveyResults.formID = surveyForm.formID AND surveyResults.userID = users.userID AND users.supervisorID = %d' % (int(supervisorID),))
     results = cur.fetchall()
     if not results:
         return None
     # sort the list by date so that the newest entries appear first
     results = sorted(list(results),key=lambda k: k['date'], reverse=True)
+    return results
+    
+def getResponsesByID(resultID):
+    """
+    Description: Returns survey results and questions given for a survey result
+    Parameters: resultID - (int) id of the survey result
+    Return Value: 
+    Author: David Yocum
+    """
+    cur = mysql.connection.cursor()
+    # query the database to get all survey results for a supervisor.
+    cur.execute('SELECT questText,response,questOrder FROM surveyResults,surveyQuestResults,surveyQuest WHERE surveyResults.resultID = %d AND surveyResults.resultID = surveyQuestResults.resultID AND surveyQuestResults.questID = surveyQuest.questID' % (int(resultID),))
+    results = cur.fetchall()
+    if not results:
+        return None
+    # sort the list by date so that the newest entries appear first
+    results = sorted(list(results),key=lambda k: k['questOrder'], reverse=False)
     return results

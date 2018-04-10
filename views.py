@@ -276,10 +276,15 @@ def prepareSurveyCreationform(form):
 @app.route("/survey_results/", methods=["GET", "POST"])
 @login_required
 def survey_results():
-    print(Api.getResultsByID(current_user.supervisorID))
-    # print(das_struct)
     return render_template("surveyResults.html",data=Api.getResultsByID(current_user.supervisorID))
-     
+
+@app.route("/displayResult", methods=["GET", "POST"])
+@app.route("/displayResult/", methods=["GET", "POST"])
+@app.route("/displayResult/<resultID>", methods=["GET", "POST"])
+@login_required
+def displayResult(resultID=None):
+    return render_template("displayResult.html",data=Api.getResultsByID(current_user.supervisorID), resultID=resultID, question=Api.getResponsesByID(resultID))
+    
 # display survey to user
 # https://tmst.kutztown.edu:5002/userSurvey/test.com/654706
 @app.route("/userSurvey/<username>/<taskID>", methods=["GET","POST"])

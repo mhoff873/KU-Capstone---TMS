@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="jumbotron text-center">
+	<h1>Result Page</h1>
+</div>
+<div class="container">
+        <div class="page_content">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <!-- <strong>Title</strong> --> {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="row">
+      <div class="col-sm-4">
+        <a href="{{url_for('surveyCreation')}}" role="button" class="btn btn-secondary btn-lg btn-block">Create Survey</a>
+      </div>
+      <div class="col-sm-4">
+        <a href="{{url_for('surveys')}}" role="button" class="btn btn-secondary btn-lg btn-block">Survey Management</a>
+      </div>
+	  <div class="col-sm-4">
+        <a href="{{url_for('survey_results')}}" role="button" class="btn btn-secondary btn-lg btn-block">Survey Results</a>
+      </div>
+    </div>
+<br>
+<br>
+    <!-- Task Name -->
+
+<table class="table table-hover">
+<thead>
+<th onclick='sort_table(result_table, 0, asc1);asc1 *= -1; asc2=1; asc3=1; asc4=1; document.getElementById("taskname").style.visibility="visible"; document.getElementById("surveyname").style.visibility="hidden"; document.getElementById("user").style.visibility="hidden"; document.getElementById("dates").style.visibility="hidden";document.getElementById("taskname").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"'>Task Name<img id="taskname" style="height:1em;"></th>
+<th onclick='sort_table(result_table, 1, asc2);asc2 *= -1; asc1=1; asc3=1; asc4=1; document.getElementById("surveyname").style.visibility="visible";document.getElementById("taskname").style.visibility="hidden"; document.getElementById("user").style.visibility="hidden"; document.getElementById("dates").style.visibility="hidden";document.getElementById("surveyname").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"'>Survey Name<img id="surveyname" style="height:1em;"></th>
+<th onclick='sort_table(result_table, 2, asc3);asc3 *= -1; asc2=1; asc1=1; asc4=1; document.getElementById("user").style.visibility="visible";document.getElementById("taskname").style.visibility="hidden"; document.getElementById("surveyname").style.visibility="hidden"; document.getElementById("dates").style.visibility="hidden";document.getElementById("user").src=(asc3==1)?"../static/img/up.png":"../static/img/down.png"'>User<img id="user" style="height:1em;"></th>
+<th onclick='sort_table(result_table, 3, asc4);asc4 *= -1; asc3=1; asc2=1; asc1=1; document.getElementById("dates").style.visibility="visible";document.getElementById("taskname").style.visibility="hidden"; document.getElementById("surveyname").style.visibility="hidden"; document.getElementById("user").style.visibility="hidden";document.getElementById("dates").src=(asc4==1)?"../static/img/up.png":"../static/img/down.png"'>Date Completed<img id="dates" style="height:1em;"></th>
+</thead>
+<tbody id='result_table'>
+         {% for r in data %} 
+         {% if r['resultID']|string() == resultID|string() %}
+          <tr id='result_{{r["formID"]}}'>
+            <td>{{r["Title"]}}</td>
+            <td>{{r["formTitle"]}}</td>
+            <td>{{r["fname"] + " " + r["lname"]}}</td>
+            <td>{{r["date"]}}</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+</tbody>
+</table>
+
+<table class="table table-hover">
+<thead>
+<th>Question</th>
+<th>Response</th>
+</thead>
+<tbody id='result_table'>
+    {% for q in question %} 
+
+    <tr>
+<td>{{q["questText"]}}</td>
+<td>{{q["response"]}}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+        </div>
+    </div><!-- /.container -->
+
+{% endblock content %}

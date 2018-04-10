@@ -71,6 +71,8 @@
 <th onclick='sort_table(result_table, 1, asc2);asc2 *= -1; asc1=1; asc3=1; asc4=1; document.getElementById("surveyname").style.visibility="visible";document.getElementById("taskname").style.visibility="hidden"; document.getElementById("user").style.visibility="hidden"; document.getElementById("dates").style.visibility="hidden";document.getElementById("surveyname").src=(asc2==1)?"../static/img/up.png":"../static/img/down.png"'>Survey Name<img id="surveyname" style="height:1em;"></th>
 <th onclick='sort_table(result_table, 2, asc3);asc3 *= -1; asc2=1; asc1=1; asc4=1; document.getElementById("user").style.visibility="visible";document.getElementById("taskname").style.visibility="hidden"; document.getElementById("surveyname").style.visibility="hidden"; document.getElementById("dates").style.visibility="hidden";document.getElementById("user").src=(asc3==1)?"../static/img/up.png":"../static/img/down.png"'>User<img id="user" style="height:1em;"></th>
 <th onclick='sort_table(result_table, 3, asc4);asc4 *= -1; asc3=1; asc2=1; asc1=1; document.getElementById("dates").style.visibility="visible";document.getElementById("taskname").style.visibility="hidden"; document.getElementById("surveyname").style.visibility="hidden"; document.getElementById("user").style.visibility="hidden";document.getElementById("dates").src=(asc4==1)?"../static/img/up.png":"../static/img/down.png"'>Date Completed<img id="dates" style="height:1em;"></th>
+<th>
+</th>
 </thead>
 <tbody id='result_table'>
          {% for r in data %} 
@@ -79,6 +81,7 @@
             <td>{{r["formTitle"]}}</td>
             <td>{{r["fname"] + " " + r["lname"]}}</td>
             <td>{{r["date"]}}</td>
+            <td><a href="{{url_for('displayResult') + r['resultID']|string}}" role="button" class="btn btn-secondary btn-sm btn-block">Result</td>
           </tr>
            {% endfor %}
 </tbody>
