@@ -5,7 +5,7 @@
     Purpose:          Library functions and forms dealing with the library.
 """
 
-from Forms.models import Task, Supervisor
+from Forms.models import Task, Supervisor, Keyword
 from flask_wtf import FlaskForm
 from wtforms import TextField, StringField, PasswordField, DateField, SubmitField, \
     BooleanField, FieldList, FormField, FileField
@@ -22,6 +22,14 @@ def get_tasks(supervisorID=None):
     else:
         tasks = Task.query.filter_by(supervisorID=supervisorID).all()
     return tasks
+
+
+def get_keywords():
+    """
+    Gets all keywords in database.
+    :return: List of keyword objects
+    """
+    return Keyword.query.all()
 
 
 def get_supervisors():
@@ -72,15 +80,25 @@ def search(argument):
     alltasks = get_tasks()
     if argument == "*":
         return alltasks
+
     tasks = []
-    if len(argument) == 1:
-        for task in alltasks:
-            if argument.lower() == (task.title).lower()[0]:
+
+    # Get all keywords and search using keywords
+    keywords = get_keywords()
+    for task in alltasks:
+        for keyword in keywords:
+            if (keyword.word).lower() == (argument).lower() and task.taskID == keyword.taskID:
                 tasks.append(task)
-    else:
-        for task in alltasks:
-            if argument.lower() in (task.title).lower():
-                tasks.append(task)
+                break
+
+    #if len(argument) == 1:
+    #    for task in alltasks:
+    #        if argument.lower() == (task.title).lower()[0]:
+    #            tasks.append(task)
+    #else:
+    #    for task in alltasks:
+    #        if argument.lower() in (task.title).lower():
+    #            tasks.append(task)
     return tasks
 
 
