@@ -617,7 +617,6 @@ def getAssignedUsers(superID):
     userData = cur.fetchall()
     return list(userData)
 
-
 def getCompletedTasksByUsers(date, users):
     """
     Description: get data of the completed tasks of a user or users
@@ -651,7 +650,6 @@ def getCompletedTasksByUsers(date, users):
         lstUser.append(userDict)
     return lstUser
 
-
 def getCompletedTasksByID(date, ID):
     """
     Description: get data of the completed tasks
@@ -681,7 +679,6 @@ def getCompletedTasksByID(date, ID):
     lstTask = sorted(lstTask, key=lambda k: k['dateTimeCompleted'], reverse=True)
     return lstTask
 
-
 def getCompletedStepsByID(ID):
     """
     Description: get data of the completed steps given a task id
@@ -702,7 +699,6 @@ def getCompletedStepsByID(ID):
     # sort the order by the list order of the steps, rather than the time they were completed
     lstStep = sorted(list(lstStep), key=lambda k: k['listOrder'])
     return lstStep
-
 
 def getTasksCreatedByID(superID):
     """
@@ -726,7 +722,6 @@ def getTasksCreatedByID(superID):
         lstTasks.append(dictTask)
     return lstTasks
 
-
 def getUncompletedTaskByID(userID, taskID):
     """
     Description: get the number of uncompleted tasks by a user
@@ -744,7 +739,6 @@ def getUncompletedTaskByID(userID, taskID):
     if not data:
         return None
     return int(data["count(completedTasks.taskID)"])
-
 
 def getPathForTaskImage(taskID):
     """
@@ -765,6 +759,38 @@ def getPathForTaskImage(taskID):
         img = "default/" + ((path["title"])[:1]).upper() + ".png"
     else:
         img = path["image"]
-
-
     return str(img)
+
+def getResultsByID(supervisorID):
+    """
+    Description: Returns survey results given the supervisor ID
+    Parameters: supervisorID - (int) supervisorID
+    Return Value: 
+    Author: David Yocum
+    """
+    cur = mysql.connection.cursor()
+    # query the database to get all survey results for a supervisor.
+    cur.execute('SELECT surveyResults.resultID,surveyForm.formID,surveyResults.date,users.fname,users.lname,surveyForm.formTitle, task.Title FROM `assigned`,`task`,`surveyResults`,`users`,`surveyForm` WHERE surveyForm.formID = assigned.formID AND assigned.taskID = task.taskID AND surveyResults.formID = surveyForm.formID AND surveyResults.userID = users.userID AND users.supervisorID = %d' % (int(supervisorID),))
+    results = cur.fetchall()
+    if not results:
+        return []
+    # sort the list by date so that the newest entries appear first
+    results = sorted(list(results),key=lambda k: k['date'], reverse=True)
+    return results
+    
+def getResponsesByID(resultID):
+    """
+    Description: Returns survey results and questions given for a survey result
+    Parameters: resultID - (int) id of the survey result
+    Return Value: 
+    Author: David Yocum
+    """
+    cur = mysql.connection.cursor()
+    # query the database to get all survey results for a supervisor.
+    cur.execute('SELECT questText,response,questOrder FROM surveyResults,surveyQuestResults,surveyQuest WHERE surveyResults.resultID = %d AND surveyResults.resultID = surveyQuestResults.resultID AND surveyQuestResults.questID = surveyQuest.questID' % (int(resultID),))
+    results = cur.fetchall()
+    if not results:
+        return None
+    # sort the list by date so that the newest entries appear first
+    results = sorted(list(results),key=lambda k: k['questOrder'], reverse=False)
+    return results
