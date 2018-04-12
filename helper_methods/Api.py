@@ -198,8 +198,7 @@ def getAllCompletedTasksByUser(uname):
     return lst
 
 
-# Posts a completed step by adding it to the database
-def postMainStepCompleted(taskID, stepID, user, numUsed, time, ip):
+def postMainStepCompleted(taskID, stepID, user, numUsed, time, ip):     
     """
     Description: submit to the database a completed main step
     Parameters: taskID - (int) task id
@@ -216,42 +215,36 @@ def postMainStepCompleted(taskID, stepID, user, numUsed, time, ip):
     # get the current date and time in the format needed in the database
     date = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     # send query to the database
-    cur.execute(
-        '''SELECT completedTasks.completedTaskID FROM completedTasks WHERE completedTasks.userID=%d AND completedTasks.taskID=%d''' % (
-        int(user), int(taskID),))
+    cur.execute('''SELECT completedTasks.completedTaskID 
+        FROM completedTasks 
+        WHERE completedTasks.userID=%d AND completedTasks.taskID=%d AND completedTasks.dateTimeCompleted IS NULL''' % (int(user),int(taskID),))
     cTaskID = cur.fetchall()
-
     # if task has not been added to task completed table and the main steps have not been added to completed staps table
     if not cTaskID:
         # get all mainsteps for the task
         cur.execute('SELECT mainSteps.mainStepID FROM mainSteps WHERE mainSteps.taskID=%d' % (int(taskID),))
         r2 = cur.fetchall()
         # add the record into the completed tasks table
-        cur.execute(
-            'INSERT INTO completedTasks (`taskID`,`userID`,`totalTime`,`dateStarted`,`detailedStepsUsed`,`ipAddr`) values(%d,%d,%d,"%s",%d,"%s")' % (
-            int(taskID), int(user), int(time), str(date), 0, str(ip),))
+        cur.execute('''INSERT INTO completedTasks (`taskID`,`userID`,`totalTime`,`dateStarted`,`detailedStepsUsed`,`ipAddr`) 
+            values(%d,%d,%d,"%s",%d,"%s")''' % (int(taskID),int(user),int(time),str(date),0,str(ip),))
         mysql.connection.commit()
 
         # get last insert id for the completedTasks
         cur.execute('SELECT LAST_INSERT_ID()')
-        cTaskID = cur.fetchall()
-        cTaskID = cTaskID[0]
+        cTaskID = cur.fetchone()
         cTaskID = cTaskID['LAST_INSERT_ID()']
         # add the steps into the completed steps table
         for i in r2:
             # add the records into the completed steps table
-            cur.execute(
-                'INSERT INTO completedSteps (`completedTaskID`,`mainStepID`,`detailedStepsUsed`,`timeSpent`) values(%d,%d,%d,%d)' % (
-                int(cTaskID), int(i['mainStepID']), 0, 0,))
+            cur.execute('''INSERT INTO completedSteps (`completedTaskID`,`mainStepID`,`detailedStepsUsed`,`timeSpent`) 
+                values(%d,%d,%d,%d)''' % (int(cTaskID),int(i['mainStepID']),0,0,))
             mysql.connection.commit()
     else:
-        cTaskID = cTaskID[0]
-        cTaskID = cTaskID['completedTaskID']
-
+        cTaskID=cTaskID[0]
+        cTaskID=cTaskID['completedTaskID']
     # update the step in the table
-    cur.execute(
-        'UPDATE completedSteps SET `detailedStepsUsed`=%d,`timeSpent`=%d,`dateTimeCompleted`="%s" WHERE `completedTaskID`=%d AND `mainStepID`=%d' % (
-        int(numUsed), int(time), str(date), int(cTaskID), int(stepID),))
+    cur.execute('''UPDATE completedSteps SET `detailedStepsUsed`=%d,`timeSpent`=%d,`dateTimeCompleted`="%s" 
+        WHERE `completedTaskID`=%d AND `mainStepID`=%d''' % (int(numUsed),int(time),str(date),int(cTaskID),int(stepID),))
     mysql.connection.commit()
     return 0
 
@@ -274,7 +267,7 @@ def postTaskCompleted(taskID, user, time, numUsed):
     # send query to the database
     cur.execute('''UPDATE `completedTasks`
                 SET `dateTimeCompleted`="%s", `totalTime`=%d, `detailedStepsUsed`=%d
-                WHERE completedTasks.userID=%d AND completedTasks.taskID=%d''' % (
+                WHERE completedTasks.userID=%d AND completedTasks.taskID=%d AND completedTasks.dateTimeCompleted is NULL''' % (
     str(date), int(time), int(numUsed), int(user), int(taskID),))
     mysql.connection.commit()
     return 0
@@ -351,7 +344,7 @@ def getNameFromID(userID):
     data = cur.fetchone()
     if not data:
         return None
-    return str(data['fname'] + ' ' + data['lname'])
+    return str(str(data['fname']) + ' ' + str(data['lname']))
 
 
 def postSurveyResults(SR, SQR):
@@ -365,11 +358,6 @@ def postSurveyResults(SR, SQR):
     Return Value: (bool) results if the data was able to be stored
     Author: Tyler Lance
     """
-    # hard coded data for testing and to understand the function parameters, remove when implementing
-    SR = {'userID': 4, 'formID': 12, 'name': "", 'timeSpent': 45000, 'email': "test.com", 'ipAddr': "123.123.123",
-          'ageGroup': 50, 'results': "response", 'comments': ""}
-    SQR = [{'questID': 1, 'response': "sucked"}, {'questID': 2, 'response': "still sucked"}]
-
     cur = mysql.connection.cursor()
     # if name is empty get name from users table
     if not SR['name']:
@@ -379,14 +367,10 @@ def postSurveyResults(SR, SQR):
     # if email is empty get name from users table
     if not SR['email']:
         cur.execute('SELECT email FROM users WHERE userID=%d' % (int(SR['userID']),))
-        SR['email'] = cur.fetchone()
+        res = cur.fetchone()
+        SR['email'] = res['email']
     # get the current date and time in the format needed in the database
     SR['date'] = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
-    # testing - to display query
-    # print('''INSERT INTO surveyResults (`userID`,`formID`,`name`,`timeSpent`,`email`,`ipAddr`,`ageGroup`,`results`,`date`,`comments`)
-    #        values(%d,%d,"%s",%d,"%s","%s",%d,"%s","%s","%s")''' % (int(SR['userID']),int(SR['formID']),str(SR['name']),int(SR['timeSpent']),str(SR['email']),str(SR['ipAddr']),int(SR['ageGroup']),str(SR['results']),str(SR['date']),str(SR['comments']),))
-
     # insert into the surveyResults table
     cur.execute('''INSERT INTO surveyResults (`userID`,`formID`,`name`,`timeSpent`,`email`,`ipAddr`,`ageGroup`,`results`,`date`,`comments`) 
             values(%d,%d,"%s",%d,"%s","%s",%d,"%s","%s","%s")''' % (
@@ -399,10 +383,6 @@ def postSurveyResults(SR, SQR):
     id = cur.fetchone()
     # iterate over the question response list
     for r in SQR:
-        # testing - to display query
-        # print('''INSERT INTO surveyQuestResults (`resultID`,`questID`,`response`)
-        #        values(%d,%d,"%s")''' %(int(id['LAST_INSERT_ID()']),int(r['questID']),str(r['response']),))
-
         cur.execute('''INSERT INTO surveyQuestResults (`resultID`,`questID`,`response`)
                 values(%d,%d,"%s")''' % (int(id['LAST_INSERT_ID()']), int(r['questID']), str(r['response']),))
         # execute the query
@@ -423,14 +403,6 @@ def postSurveyForm(SF, SQ):
     Return Value: (bool) results if the data was able to be stored
     Author: Tyler Lance
     """
-    # hard coded data for testing and to understand the function parameters, remove when implementing
-    # query will fail if the form record is not deleted because the formTitle is a secondary key
-    SF = {'supervisorID': 4, 'formTitle': "title example", 'description': "form description", 'isActive': 1}
-    SQ = [{'questType': "multiple choice", 'questText': "How did it go?", 'isActive': 1, 'questOrder': 1,
-           'surveyMultQuest': [{'questText': "Excellent", 'questOrder': 1}, {'questText': "Poor", 'questOrder': 2}]},
-          {'formID': 1, 'questType': "open ended", 'questText': "How was the survey?", 'isActive': 1, 'questOrder': 2,
-           'surveyMultQuest': ""}]
-
     # get the current date and time in the format needed in the database
     SF['dateCreated'] = str(datetime.now().strftime('%Y-%m-%d'))
     SF['dateModified'] = str(datetime.now().strftime('%Y-%m-%d'))
@@ -442,7 +414,7 @@ def postSurveyForm(SF, SQ):
     if formid:
         # testing - print message that title already exists in db and survey could not be added
         print("TITLE EXISTS IN DB - False was returned and the data was not inserted.")
-        return 1
+        return True
     # insert the record into the form table
     cur.execute('''INSERT INTO surveyForm (`supervisorID`,`formTitle`,`description`,`dateCreated`,`dateModified`,`isActive`) 
             values(%d,"%s","%s","%s","%s",%d)''' % (
@@ -469,9 +441,161 @@ def postSurveyForm(SF, SQ):
             cur.execute('''INSERT INTO surveyMultQuest (`questID`,`questText`,`questOrder`)
                 values(%d,"%s",%d)''' % (int(questID['LAST_INSERT_ID()']), str(m['questText']), int(m['questOrder']),))
             mysql.connection.commit()
-    return 0
+    return False
 
+def deleteSurvey(formID):
+    """
+    Description: delete survey given the form
+    Parameters: formID - (int) id of the form
+    Return Value: none
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT questID FROM surveyQuest WHERE formID=%d' % (int(formID),))
+    r = cur.fetchall()
+    # iterate over the multi questions and questions table to delete the records
+    for q in r:
+        cur.execute('''DELETE FROM surveyMultQuest WHERE questID=%d''' % (int(q['questID']),))
+        mysql.connection.commit()
+        cur.execute('''DELETE FROM surveyQuest WHERE questID=%d''' % (int(q['questID']),))
+        mysql.connection.commit()
+    # delete the form
+    cur.execute('''DELETE FROM surveyForm WHERE formID=%d''' % (int(formID),))
+    mysql.connection.commit()
+    return True
 
+def archiveSurvey(formID, value):
+    """
+    Description: archive survey given the form, toggles from 1 to 0 or 0 to 1
+    Parameters: formID - (int) id of the form
+    Return Value: none
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # update the value in the table
+    cur.execute('''UPDATE `surveyForm` SET isActive=%d WHERE formID=%d''' % (int(value),int(formID),))
+    print('''UPDATE `surveyForm` SET isActive=%d WHERE formID=%d''' % (int(value),int(formID),))
+    mysql.connection.commit()
+    return True
+    
+def getSurvey(formID):
+    """
+    Description: returns the data necessary for generating a form
+    Parameters: formID - (int) id of the form
+    Return Value: SF - (dict) dictionary containing data for the form laid out as:
+                SF = {'supervisorID':4,'formTitle':"title example",'description':"form description",'isActive':1}
+                SQ - (list) list containing each question and multiple choice questions if necessary, laid out as:
+                SQ = [{'questType':"multiple choice",'questText':"How did it go?",'isActive':1,'questOrder':1,
+                'surveyMultQuest':[{'questText':"Excellent",'questOrder':1},{'questText':"Poor",'questOrder':2}]},
+                {'formID':1,'questType':"open ended",'questText':"How was the survey?",'isActive':1,
+                'questOrder':2,'surveyMultQuest':[]}]
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get data relevant to the form and create the first dictionary
+    cur.execute('SELECT * FROM surveyForm WHERE formID=%d' % (int(formID),))
+    r = cur.fetchone()
+    SF = {'supervisorID': r['supervisorID'], 'formTitle': r['formTitle'], 'description': r['description'], 'isActive': r['isActive']}
+    
+    # get the questions and the multiple choice responses
+    cur.execute('SELECT * FROM surveyQuest WHERE formID=%d' % (int(formID),))
+    r = cur.fetchall()
+    SQ = []
+    for d in r:
+        dict = {'questID': d['questID'], 'questType': d['questType'], 'questText': d['questText'], 'isActive': d['isActive'], 'questOrder': d['questOrder']}
+        lstMult = []
+        cur.execute('SELECT * FROM surveyMultQuest WHERE questID=%d' % (int(d['questID']),))
+        r2 = cur.fetchall()
+        for d2 in r2:
+            lstDict = {'questText': d2['questText'], 'questOrder': d2['questOrder']}
+            lstMult.append(lstDict)
+        lstMult = sorted(lstMult, key=lambda k: k['questOrder'])
+        dict['surveyMultQuest'] = lstMult
+        SQ.append(dict)
+        SQ = sorted(SQ, key=lambda k: k['questOrder'])
+    return (SF, SQ)
+    
+def getCreatedTasks(superID):
+    """
+    Description: get list of tasks created by the supervisor
+    Parameters: superID - (int) id of the supervisor
+    Return Value: (list) contains a dictionary containing the task id and task name
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT taskID,title FROM task WHERE supervisorID=%d' % (int(superID),))
+    r = cur.fetchall()
+    if not r:
+        return []
+    return list(r)
+    
+def getAssignedTask(formID):
+    """
+    Description: gets task name assigned to survey
+    Parameters: formID - (int) id of the survey
+    Return Value: (string) name of the task
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT task.title FROM task,assigned WHERE task.taskID=assigned.taskID AND formID=%d' % (int(formID),))
+    r = cur.fetchone()
+    if not r:
+        return None
+    return r['title']
+    
+def getAssignedSurvey(taskID):
+    """
+    Description: gets survey id assigned to task
+    Parameters: taskID - (int) id of the task
+    Return Value: (int) id of the survey form
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT formID FROM assigned WHERE taskID=%d' % (int(taskID),))
+    r = cur.fetchone()
+    if not r:
+        return None
+    return int(r['formID'])
+    
+def updateTask(taskID, formID, superID):
+    """
+    Description: update table to assign a survey to a task
+    Parameters: formID - (int) id of the form
+                taskID - (int) id of the task
+                superID - (int) id of the supervisor
+    Return Value: none
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # remove form and task from the table because they should only be assigned to one another
+    cur.execute('''DELETE FROM `assigned` WHERE taskID=%d''' % (int(taskID),))
+    mysql.connection.commit()
+    cur.execute('''DELETE FROM `assigned` WHERE formID=%d''' % (int(formID),))
+    mysql.connection.commit()
+    # insert those values into the table
+    cur.execute('''INSERT INTO `assigned`(supervisorID,taskID,formID) VALUES (%d,%d,%d)''' % (int(superID),int(taskID),int(formID),))
+    mysql.connection.commit()
+    return True
+    
+def getTaskFromID(taskID):
+    """
+    Description: get the task name given the task if
+    Parameters: taskID - (int) id of the task
+    Return Value: (string) name of the task
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT task.title FROM task WHERE taskID=%d' % (int(taskID),))
+    task = cur.fetchone()
+    if not task:
+        return None
+    return str(task["title"])
+    
 def getAssignedUsers(superID):
     """
     Description: get data of the users assigned to the supervisor
@@ -486,8 +610,7 @@ def getAssignedUsers(superID):
     userData = cur.fetchall()
     return list(userData)
 
-
-def getCompletedTasksByUsers(date, users):
+def getTasksByUsers(date, users):
     """
     Description: get data of the completed tasks of a user or users
     Parameters: users - (list) list of userIDs to pull tasks for
@@ -503,23 +626,22 @@ def getCompletedTasksByUsers(date, users):
     for u in users:
         # query the database to get the data on completed tasks that occur after the provided date
         cur.execute(
-            'SELECT completedTasks.completedTaskID, task.taskID, task.title, completedTasks.totalTime, completedTasks.dateStarted, completedTasks.dateTimeCompleted, completedTasks.detailedStepsUsed, completedTasks.ipAddr FROM task, completedTasks WHERE completedTasks.taskId=task.taskID AND completedTasks.dateTimeCompleted>="%s" AND completedTasks.userID = %d' % (
-            str(date), int(u),))
+            'SELECT completedTasks.completedTaskID, task.taskID, task.title, completedTasks.totalTime, completedTasks.dateStarted, completedTasks.dateTimeCompleted, completedTasks.detailedStepsUsed, completedTasks.ipAddr FROM task, completedTasks WHERE (completedTasks.taskId=task.taskID AND completedTasks.dateTimeCompleted>="%s" AND completedTasks.userID = %d) OR (completedTasks.taskId=task.taskID AND completedTasks.dateTimeCompleted IS NULL AND completedTasks.userID = %d)' % (
+            str(date), int(u), int(u),))
         taskData = cur.fetchall()
         lstTask = []
         # iterate over the data to get the completed steps
         for t in taskData:
+            if t["dateTimeCompleted"] is None:
+                t["dateTimeCompleted"]='Uncompleted'
             taskDict = {'taskID': t['taskID'], 'title': t['title'], 'totalTime': t['totalTime'],
                         'dateStarted': t['dateStarted'], 'dateTimeCompleted': t['dateTimeCompleted'],
                         'detailedStepsUsed': t['detailedStepsUsed'], 'ipAddr': t['ipAddr']}
             taskDict['detailedSteps'] = getCompletedStepsByID(t['completedTaskID'])
             lstTask.append(taskDict)
-        # sort by date time completed
-        lstTask = sorted(lstTask, key=lambda k: k['dateTimeCompleted'], reverse=True)
         userDict = {'userID': u, 'completedTasks': lstTask}
         lstUser.append(userDict)
     return lstUser
-
 
 def getCompletedTasksByID(date, ID):
     """
@@ -550,7 +672,6 @@ def getCompletedTasksByID(date, ID):
     lstTask = sorted(lstTask, key=lambda k: k['dateTimeCompleted'], reverse=True)
     return lstTask
 
-
 def getCompletedStepsByID(ID):
     """
     Description: get data of the completed steps given a task id
@@ -571,7 +692,6 @@ def getCompletedStepsByID(ID):
     # sort the order by the list order of the steps, rather than the time they were completed
     lstStep = sorted(list(lstStep), key=lambda k: k['listOrder'])
     return lstStep
-
 
 def getTasksCreatedByID(superID):
     """
@@ -595,7 +715,6 @@ def getTasksCreatedByID(superID):
         lstTasks.append(dictTask)
     return lstTasks
 
-
 def getUncompletedTaskByID(userID, taskID):
     """
     Description: get the number of uncompleted tasks by a user
@@ -613,7 +732,6 @@ def getUncompletedTaskByID(userID, taskID):
     if not data:
         return None
     return int(data["count(completedTasks.taskID)"])
-
 
 def getPathForTaskImage(taskID):
     """
@@ -634,6 +752,38 @@ def getPathForTaskImage(taskID):
         img = "default/" + ((path["title"])[:1]).upper() + ".png"
     else:
         img = path["image"]
-
-
     return str(img)
+
+def getResultsByID(supervisorID):
+    """
+    Description: Returns survey results given the supervisor ID
+    Parameters: supervisorID - (int) supervisorID
+    Return Value: 
+    Author: David Yocum
+    """
+    cur = mysql.connection.cursor()
+    # query the database to get all survey results for a supervisor.
+    cur.execute('SELECT surveyResults.resultID,surveyForm.formID,surveyResults.date,users.fname,users.lname,surveyForm.formTitle, task.Title FROM `assigned`,`task`,`surveyResults`,`users`,`surveyForm` WHERE surveyForm.formID = assigned.formID AND assigned.taskID = task.taskID AND surveyResults.formID = surveyForm.formID AND surveyResults.userID = users.userID AND users.supervisorID = %d' % (int(supervisorID),))
+    results = cur.fetchall()
+    if not results:
+        return []
+    # sort the list by date so that the newest entries appear first
+    results = sorted(list(results),key=lambda k: k['date'], reverse=True)
+    return results
+    
+def getResponsesByID(resultID):
+    """
+    Description: Returns survey results and questions given for a survey result
+    Parameters: resultID - (int) id of the survey result
+    Return Value: 
+    Author: David Yocum
+    """
+    cur = mysql.connection.cursor()
+    # query the database to get all survey results for a supervisor.
+    cur.execute('SELECT questText,response,questOrder FROM surveyResults,surveyQuestResults,surveyQuest WHERE surveyResults.resultID = %d AND surveyResults.resultID = surveyQuestResults.resultID AND surveyQuestResults.questID = surveyQuest.questID' % (int(resultID),))
+    results = cur.fetchall()
+    if not results:
+        return None
+    # sort the list by date so that the newest entries appear first
+    results = sorted(list(results),key=lambda k: k['questOrder'], reverse=False)
+    return results

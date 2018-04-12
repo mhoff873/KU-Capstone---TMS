@@ -1,41 +1,102 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="jumbotron text-center">
-	<h1>Survey Creation Page</h1>
-</div>
-
-<a href="{{url_for('surveys')}}">SurveyManagement</a>
-<a href="{{url_for('survey_results')}}">View All Results</a>
-
-<form method="POST">
-	{{form.csrf_token}}
-
-<br>
-	{{form.save}}
-	{{form.delete}}
-	{{form.activate_a_survey.label}}
-	{{form.activate_a_survey}}
-	{{form.assign_a_survey.label}}
-	{{form.assign_a_survey}}
-	<br>
+<script>
+function changeValue(option)
+{   
+    document.getElementById('button').textContent = option;
+}
+</script>
+<div class="jumbotron text-center"><h1>Survey Creation</h1></div>
+<div class="container">
+  <div class="page_content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <!-- <strong>Title</strong> --> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="row">
+      <div class="col-sm-4">
+        <a href="{{url_for('surveys')}}"role="button" class="btn btn-secondary btn-lg btn-block">Manage Surveys</a>
+      </div>
+	  <div class="col-sm-4">
+        <a href="{{url_for('survey_results')}}" role="button" class="btn btn-secondary btn-lg btn-block">Survey Results</a>
+      </div>
+    </div>
+    <br>
+    <form action="{{ url_for('surveyCreation') }}" method="POST">
+	  {{form.csrf_token}}
+      <!-- Survey Name -->
+      <div style="display: inline-block; min-width: 13em">
+        {{ form.title.label }}
+      </div>
+      <div style="display: inline-block; min-width: 13em">
+        {{ form.title (class="form-control") }}
+      </div>
+      <br>
+      <!-- Survey Description -->
+      <div style="display: inline-block; min-width: 13em">
+        {{ form.description.label }}
+      </div>
+      <div style="display: inline-block; min-width: 13em">
+        {{ form.description (class="form-control") }}
+      </div>
+      <br>
+      <!-- commented out option to display dropdown for tasks to assign - not working
+      <div style="display: inline-block;>
+        <div class="dropdown">
+          <div class="dropdown-toggle" data-toggle="dropdown" id="button">
+            Tasks
+          </div>
+          <div class="dropdown-menu force-scroll">
+            {% for t in task %}
+            <a class="dropdown-item" onclick="changeValue('{{t["title"]}}');">
+              {{ t["title"] }}
+            </a>
+              {% endfor %}
+          </div>
+        </div> 
+    -->
+      {{form.activate_a_survey.label}} 
+	  {{form.activate_a_survey}} 
+      <hr>
+	  {% for q in form.questions %}
+        {{q.csrf_token}}
+        <div style="display: inline-block; min-width: 13em">
+	      {{q.stock_question.label}}
+        </div>
+        <div style="display: inline-block; min-width: 13em">
+	      {{q.stock_question (class="form-control")}}
+        </div>
+        {{q.isActive.label}}
+        {{q.isActive}}
         <br>
-	{{form.delete}}
-	{% for q in form.questions %}
-	{{q.stock_question.label}}
-	{{q.stock_question}}
-	{{q.delete_a_question}}
-	{{q.rearrange_a_question}}
-	<br>
-	<br>
-    {% endfor %}
-
-	{{form.add_question}}
-<br>
-<br>
-
-</form>
-
-
-
+        {% for r in q.responses %}
+          {{r.csrf_token}}
+          <div style="display: inline-block; min-width: 13em">
+	        {{r.response.label}}
+          </div>
+          <div style="display: inline-block; min-width: 13em">
+	        {{r.response (class="form-control")}}
+          </div>
+          {{r.delete_response (class="btn btn-secondary btn-sm")}}
+          <br>
+        {% endfor %}
+        <br>
+        {{q.delete_a_question (class="btn btn-secondary btn-sm")}}
+        {{q.add_response (class="btn btn-secondary btn-sm")}}
+        <hr>
+      {% endfor %}
+	  {{form.add_question (class="btn btn-secondary btn-sm")}}
+      {{form.save (class="btn btn-secondary btn-sm")}}
+      {{form.delete (class="btn btn-secondary btn-sm")}} 
+    </form>
+  </div>
+</div><!-- /.container -->
 {% endblock content %}

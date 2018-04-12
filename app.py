@@ -9,9 +9,9 @@ A requirements.txt file when used for python applications allows for the bulk-
 installation of all libraries the app uses. It is called via:
 ```$ pip install -r requirements.txt```
 """
-from flask import Flask
+from flask import Flask, session
 from flask_cors import CORS # Needed for API requests
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 # from flask_sslify import SSLify
 
 
@@ -23,7 +23,7 @@ CORS(app)  # This allows Cross site access. Temp solution
 # the toolbar is only enabled in debug mode:
 app.debug = True
 # set a 'SECRET_KEY' to enable the Flask session cookies
-app.config['SECRET_KEY'] = 'nunyabusiness'
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-app.config['DEBUG_TB_PROFILER_ENABLED'] = True
-toolbar = DebugToolbarExtension(app)
+# app.config['SECRET_KEY'] = 'nunyabusiness'
+# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+# app.config['DEBUG_TB_PROFILER_ENABLED'] = True
+# toolbar = DebugToolbarExtension(app)

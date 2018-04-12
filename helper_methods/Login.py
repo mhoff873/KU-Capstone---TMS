@@ -10,16 +10,19 @@ import bcrypt
 import database
 from Forms.models import User, Supervisor, Admin
 from flask_login import login_user
+import app
 
-determined_role="unknown"
+#determined_role="unknown"
 
 # Login Manager id loader. Functions for Superisors
 @database.login_manager.user_loader
 def load_user(id):
-    if (globals()['determined_role']=="supervisor"):
-        return Supervisor.query.get(int(id))
-    if (globals()['determined_role']=="admin"):
-        return Admin.query.get(int(id))
+    if ('role' in app.session):
+        if (app.session['role']=="supervisor"):
+            return Supervisor.query.get(int(id))
+        if (app.session['role']=="admin"):
+            return Admin.query.get(int(id))
+    return None
         
 # requirement 38
 # root function for login verification
@@ -40,10 +43,10 @@ def requestHash(submittedEmail):
     p = None
     p = (Supervisor.query.filter_by(email=submittedEmail).first())
     if (p):
-        globals()['determined_role']="supervisor"
+        app.session['role']="supervisor"
         return p
     p = (Admin.query.filter_by(username=submittedEmail).first())
     if (p):
-        globals()['determined_role']="admin"
+        app.session['role']="admin"
         return p
     return None

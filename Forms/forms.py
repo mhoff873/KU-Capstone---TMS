@@ -9,7 +9,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateField, SubmitField, \
     BooleanField, FieldList, FormField, FileField, RadioField, SelectField, \
-    TextAreaField
+    TextAreaField, HiddenField
 from wtforms.validators import InputRequired, EqualTo, Email, DataRequired
 
 
@@ -54,18 +54,33 @@ class CreateUser(FlaskForm):
 
 
 # Requirement 29, 30
-class EditUser(FlaskForm):
+class EditSuper(FlaskForm):
     #person = StringField("Person being editted (ie: email)", [Email(), InputRequired()])
     #is_supervisor = BooleanField("Is Supervisor?")
-    password = StringField("Password", [InputRequired()])
+#    password = StringField("*Password", [InputRequired()])
     phone = StringField("Phone")
-    fname = StringField("First Name", [InputRequired()])
+    fname = StringField("*First Name", [InputRequired()])
     mname = StringField("Middle Name")
-    lname = StringField("Last Name", [InputRequired()])
-    gender = StringField("Gender", [InputRequired()])
-    birthday = DateField("Birthday", format="%Y-%m-%d")
-    affiliation = StringField("Affiliation", [InputRequired()])
-    ethnicity = StringField("Ethnicity", [InputRequired()])
+    lname = StringField("*Last Name", [InputRequired()])
+    gender = RadioField ("*Gender", choices = [("male","Male"),("female","Female"),("other","Other")])
+    birthday = DateField("*Birthday", format="%Y-%m-%d")
+    affiliation = StringField("*Affiliation", [InputRequired()])
+    ethnicity = StringField("*Ethnicity", [InputRequired()])
+    picture = StringField("Picture")
+    submit = SubmitField("Submit Edit")
+
+
+class EditSenior(FlaskForm):
+    #person = StringField("Person being editted (ie: email)", [Email(), InputRequired()])
+    #is_supervisor = BooleanField("Is Supervisor?")
+    phone = StringField("Phone")
+    fname = StringField("*First Name", [InputRequired()])
+    mname = StringField("Middle Name")
+    lname = StringField("*Last Name", [InputRequired()])
+    gender = RadioField ("*Gender", choices = [("male","Male"),("female","Female"),("other","Other")])
+    birthday = DateField("*Birthday", format="%Y-%m-%d")
+    affiliation = StringField("*Affiliation", [InputRequired()])
+    ethnicity = StringField("*Ethnicity", [InputRequired()])
     picture = StringField("Picture")
     submit = SubmitField("Submit Edit")
 
@@ -168,17 +183,40 @@ class TaskAssignmentForm(FlaskForm):
         
 # Yocums create survey form 3/6/18 4:53pm
 
+class SurveyResponses(FlaskForm):
+    response = StringField('Response:', [InputRequired()])
+    delete_response = SubmitField("Delete")
+    @staticmethod
+    def process_data(data):
+        return data
+
 class SurveyQuestion(FlaskForm):
-	stock_question = RadioField ("Did You Have Fun?", choices = [("1","1"),("2","2"),("3","3"),("4","4"),("5","5")])
-	delete_a_question = SubmitField("Delete Question")
-	rearrange_a_question = SubmitField("Rearrange Question")
+    #radio = RadioField ("test", choices = [("1","1"),("2","2"),("3","3"),("4","4"),("5","5")])
+    stock_question = StringField('Question:', [InputRequired()])
+    delete_a_question = SubmitField("Delete Question")
+    add_response = SubmitField("Add Response")
+    isActive = BooleanField("Active", default=1)
+    responses = FieldList(FormField(SurveyResponses), min_entries=0)
+    questID = HiddenField("")
+    questType = HiddenField("")
+    #question_up = SubmitField('Move Question â†‘')
+    #question_down = SubmitField('Move Question â†“')
+    @staticmethod
+    def process_data(data):
+        return data
 
 class CreateASurvey(FlaskForm):
-	save = SubmitField("Save")
-	delete = SubmitField("Delete")  
-	activate_a_survey = BooleanField("Activate")
-	assign_a_survey = BooleanField("Assign")
-	questions = FieldList(FormField(SurveyQuestion), min_entries=2)
-	add_question = SubmitField("Add a New Question")
-        
-        
+    save = SubmitField("Save")
+    delete = SubmitField("Delete")  
+    #taskButton = ButtonField("Tasks")
+    activate_a_survey = BooleanField("Active", default=1)
+    #assign_a_survey = BooleanField("Assign")
+    questions = FieldList(FormField(SurveyQuestion), min_entries=0)
+    add_question = SubmitField("Add Question")
+    title = StringField('Survey Name:', [InputRequired()])
+    description = StringField('Description:', [InputRequired()])
+    userID = HiddenField("")
+    taskID = HiddenField("")
+    @staticmethod
+    def process_data(data):
+        return data
