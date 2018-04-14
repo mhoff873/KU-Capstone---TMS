@@ -27,7 +27,7 @@
       <h2 class="sub-header text-center">Assigned Users</h2>
       <a id="hide_users" style='width:20%;'onclick='document.getElementById("hide_users").style.display="none";document.getElementById("user_table").style.display="none"; document.getElementById("show_users").style.display="inherit";'role="button" class="btn btn-secondary btn-sm btn-block"><span>Collapse User List</span></a>
       <a id="show_users" style='display: none;width:20%;' onclick='document.getElementById("show_users").style.display="none";document.getElementById("user_table").style.display="table"; document.getElementById("hide_users").style.display="inherit";' role="button" class="btn btn-secondary btn-sm btn-block"><span>Display User List</span></a>
-      <table id="user_table" class="table table-hover table-bordered">
+      <table id="user_table" class="table table-hover table-bordered" style="font-size: 1em;">
         <thead id='user_table_header'>
           <tr>
             <th onclick='sort_table(user_body, 0, asc1); asc1 *= -1; asc2 =1;asc3 =1; document.getElementById("user_date").style.visibility="visible"; document.getElementById("user_name").style.visibility="hidden"; document.getElementById("user_email").style.visibility="hidden";  document.getElementById("user_date").src=(asc1==1)?"../static/img/up.png":"../static/img/down.png"' >Assigned<img id="user_date" style="height:1em;"></th>
@@ -51,7 +51,7 @@
       <a id="hide_tasks" style='width:20%;'onclick='document.getElementById("hide_tasks").style.display="none";document.getElementById("task_table").style.display="none"; document.getElementById("show_tasks").style.display="inherit";' role="button" class="btn btn-secondary btn-sm btn-block"><span>Collapse Task List</span></a>
       <a id="show_tasks" style='display: none;width:20%;' onclick='document.getElementById("show_tasks").style.display="none";document.getElementById("task_table").style.display="table"; document.getElementById("hide_tasks").style.display="inherit";' role="button" class="btn btn-secondary btn-sm btn-block"><span>Display Task List</span></a>
  
-      <table id="task_table" class="table table-hover table-bordered">
+      <table id="task_table" class="table table-hover table-bordered" style="font-size: 1em;">
         <thead>
           <tr>
             <th onclick='sort_table(task_body, 0, asc4); asc4 *= -1; asc5 =1;asc6 =1; document.getElementById("task_date").style.visibility="visible"; document.getElementById("task_title").style.visibility="hidden"; document.getElementById("task_description").style.visibility="hidden"; document.getElementById("task_date").src=(asc4==1)?"../static/img/up.png":"../static/img/down.png";' >Assigned<img id="task_date" style="height:1em;"></th>

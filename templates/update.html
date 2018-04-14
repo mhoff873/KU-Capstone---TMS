@@ -2,16 +2,15 @@
 {% block content %}
 <br>
 <br>
- <div class="container-fluid">
-    <div class="row">
-	<div class="col-sm-2">
-        <button type="button" class="btn btn-secondary">Back to Login Page</button>
-	</div>
-	<div class="col-sm-8">
-    <h1>Update your Password</h1>
-	</div>
+ <div class="container">
+	<div class="row">
+		<div class="col-sm"><a href="{{url_for('login')}}">
+			<button type="button" class="btn btn-secondary">Back to Login Page</button></a></div>
+		<div class="col-sm"><h1>Update your Password</h1></div>
+		<div class="col-sm"></div>
 	</div>
 </div>
+
 
 	<br>
 	<img src="http://unixweb.kutztown.edu/~csupp511/csc355/testing/images/tms2.png" class="rounded-circle" alt= "TMS">

@@ -20,12 +20,12 @@
             <h1><strong>You have submitted an invalid CSRF token!</strong></h1>
         {% endif %}
         <div style="display: inline-block; min-width: 13em">
-        {{ form.email.label }}
+        {{ form.email.label (style="font-size: 1.5em;")}}
         {{ form.email (class="form-control")}}
         </div>
         <br>
         <div style="display: inline-block; min-width: 13em">
-        {{ form.password.label }}
+        {{ form.password.label (style="font-size: 1.5em;")}}
         {{ form.password (class="form-control")}}
       </div>
         <br>

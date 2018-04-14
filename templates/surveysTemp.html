@@ -34,7 +34,7 @@ function changeValue(option)
 	  {{form.csrf_token}}
       <!-- Survey Name -->
       <div style="display: inline-block; min-width: 13em">
-        {{ form.title.label }}
+        {{ form.title.label (style="font-size: 1.5em;")}}
       </div>
       <div style="display: inline-block; min-width: 13em">
         {{ form.title (class="form-control") }}
@@ -42,7 +42,7 @@ function changeValue(option)
       <br>
       <!-- Survey Description -->
       <div style="display: inline-block; min-width: 13em">
-        {{ form.description.label }}
+        {{ form.description.label (style="font-size: 1.5em;")}}
       </div>
       <div style="display: inline-block; min-width: 13em">
         {{ form.description (class="form-control") }}
@@ -63,24 +63,24 @@ function changeValue(option)
           </div>
         </div> 
     -->
-      {{form.activate_a_survey.label}} 
+      {{form.activate_a_survey.label(style="font-size: 1.5em;")}} 
 	  {{form.activate_a_survey}} 
       <hr>
 	  {% for q in form.questions %}
         {{q.csrf_token}}
         <div style="display: inline-block; min-width: 13em">
-	      {{q.stock_question.label}}
+	      {{q.stock_question.label (style="font-size: 1.5em;")}}
         </div>
         <div style="display: inline-block; min-width: 13em">
 	      {{q.stock_question (class="form-control")}}
         </div>
-        {{q.isActive.label}}
+        {{q.isActive.label (style="font-size: 1.5em;")}}
         {{q.isActive}}
         <br>
         {% for r in q.responses %}
           {{r.csrf_token}}
           <div style="display: inline-block; min-width: 13em">
-	        {{r.response.label}}
+	        {{r.response.label (style="font-size: 1.5em;")}}
           </div>
           <div style="display: inline-block; min-width: 13em">
 	        {{r.response (class="form-control")}}
