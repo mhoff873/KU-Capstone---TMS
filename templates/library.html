@@ -13,7 +13,7 @@
                 <div class="col-sm">
                     <!-- Supervisor Dropdown -->
                     <div class="dropdown">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                        <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" data-toggle="dropdown">
                             Supervisor
                         </button>
                         <div class="dropdown-menu force-scroll">
@@ -69,62 +69,47 @@
         <!--end of inline search bar-->
         <br>
 		<!-- Below are where the tasks are displayed -->
-        <div class="container-fluid">
-            <div class="row">
-                <!-- start content here -->
-                {% for task in tasks %}
-                    <div class="col-sm-4">
-                    
-                        <!-- This temporarily is used to show description -->
-                        <!--<div onclick="alert('{{ task.description }}')">--> 
-						<!--card sizing below-->
-                            <div class="card border-dark mb-3 text-center" style="width:175px">
-								<img class="card-img-top" src="../static/img/{{img[task.taskID|int]|string}}" alt="Card Image Cap">
-                                <div class="card-body">
-                                <p class="card-text">{{ task.title }}</p>
-								
-									<!-- Button trigger modal -->
-									<div class= text-center>
-										<button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModalCenter">
-										"Claim/Edit"
-										</button>
-									</div>
-
-									<!-- Modal -->
-									<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-										<div class="modal-dialog modal-dialog-centered" role="document">
-										
-											<div class="modal-content">
-												<div class="modal-header">
-											
-													<h5 class="modal-title">Claim / Edit: {{ task.title }}</h5>
-													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-													<span aria-hidden="true">&times;</span>
-													</button>
-										
-												</div>
-												<div class="modal-body">
-												Would you like to claim or edit this task?
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-dismiss="modal">Claim</button>
-													<a href="{{url_for('edit_task',task_id=task.taskID)}}">
-													<button type="button" class="btn btn-success">Edit</button></a>
-												</div>
-											</div>
-										</div>
-									</div>
-								
-								</div>
-                            </div>
-                       
-                    </div>
-                {% endfor %}
-                <br>
-                <!-- end content here -->
-            </div>
-        </div>
+<div class="container">
+<div class="row">
+{% for task in tasks %}
+  <div class="col-12 col-sm-6 col-md-4">
+    <div class="card border-dark mb-3 text-center">
+	<img class="card-img-top h-50" src="../static/img/{{img[task.taskID|int]|string}}" alt="Card Image Cap">
+      <div class="card-block">
+        <h3 class="card-title">{{ task.title }}</h3>
+        <!--<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>-->
+		<!-- Button trigger modal -->
+		<div class= text-center>
+			<button type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
+				Edit Task
+			</button>
+		</div>
+        <!-- Modal -->
+		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit:{{ task.title }}</h3>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<h5>Would you like to edit this task?</h5>
+					</div>
+					<div class="modal-footer">
+						<!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Claim</button>-->
+						<a href="{{url_for('edit_task',task_id=task.taskID)}}">
+						<button type="button" class="btn btn-success btn-lg">Edit</button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+      </div>
     </div>
-</div>
-<!-- end of container -->
+  </div>
+{% endfor %}
+</div>  
+</div><!-- end of container -->
 {% endblock content %}
