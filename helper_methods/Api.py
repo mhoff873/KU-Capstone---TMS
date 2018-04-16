@@ -745,11 +745,14 @@ def getPathForTaskImage(taskID):
     # query the database to get the data on the completed steps
     cur.execute('SELECT task.image, task.title FROM task WHERE task.taskID = %d' % (int(taskID),))
     path = cur.fetchone()
-    if not path:
-        return None
     # check if no image exists, if so pull the default image
     if path["image"] == "" or path["image"] == None:
-        img = "default/" + ((path["title"])[:1]).upper() + ".png"
+        # if no image exists and no title
+        if len(path["title"]) == 0:
+            img = "default/A.png"
+        # if title exists then pull first letter of the title and make it uppercase
+        else:
+            img = "default/" + ((path["title"])[:1]).upper() + ".png"
     else:
         img = path["image"]
     return str(img)
