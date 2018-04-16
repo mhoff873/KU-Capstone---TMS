@@ -27,3 +27,6 @@ MAIL_SUPPRESS_SEND = False
 # Database Configs
 SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://tmstadmin:humedavid@localhost:3306/tmst_db'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+# File Uploads
+UPLOAD_FOLDER = './static/img'

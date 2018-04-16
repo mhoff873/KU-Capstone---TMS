@@ -429,7 +429,7 @@ def create_task():
     # Now on to the boring stuff
     if form.save.data:
         """Save task."""
-        new_task = TaskHelper.create_task(form)
+        new_task = TaskHelper.create_task(form, request.files)
         flash('Your task was successfully saved!', 'info')
         return redirect(url_for('edit_task', task_id=new_task.taskID))
     if form.add_main_step.data:
@@ -482,7 +482,7 @@ def edit_task(task_id=None):
 
     if form.save.data:
         """Save task as draft."""
-        task = TaskHelper.create_task(form)
+        task = TaskHelper.create_task(form, request.files)
         flash('Your task was successfully saved!', 'info')
         return render_template('edit_task.html', form=form, task_id=task.taskID)
     if form.add_main_step.data:

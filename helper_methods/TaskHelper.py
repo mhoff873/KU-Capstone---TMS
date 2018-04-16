@@ -3,6 +3,7 @@ Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
 """
 import speech_recognition as speech_rec
 from flask_login import current_user
+from werkzeug.utils import secure_filename
 
 from Forms.forms import CreateTaskForm
 from Forms.models import Task, MainStep, DetailedStep, Supervisor, Admin, \
@@ -11,7 +12,7 @@ from database import db
 
 
 # Req 1
-def create_task(form):
+def create_task(form, files):
     """
     Author: David Schaeffer, February 2018 <dscha959@live.kutztown.edu>
     Extracts data from form entering it into our Task, MainStep, DetailedStep
@@ -49,6 +50,10 @@ def create_task(form):
         new_main_step.stepText = main_step.stepText.data
         new_main_step.listOrder = i+1
         new_main_step.image = main_step.image.data
+        if main_step.image.data in files:
+            print('Image found in request files.')
+            print(files)
+            print(main_step.image.data)
         try:
             db.session.add(new_main_step)
             db.session.commit()
