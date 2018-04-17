@@ -177,7 +177,7 @@ def logout_account():
 @app.route('/supervisor_account/<superID>', methods=['GET', "POST"])
 @login_required
 def supervisor_account(superID=None):
-    if super:
+    if superID:
         supervisor = Supervisor.query.filter_by(supervisorID=superID).first()
     else:
         supervisor = Supervisor.query.filter_by(supervisorID=current_user.supervisorID).first()
