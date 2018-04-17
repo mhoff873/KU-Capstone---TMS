@@ -80,8 +80,11 @@ def create_task(form, files):
     if form.keywords.data is not '':
         keywords = form.keywords.data.split(',')
         for keyword in keywords:
-            new_keyword = Keyword(new_task.taskID, keyword)
-            db.session.add(new_keyword)
+            if not Keyword.query.filter_by(taskID=new_task.taskID, word=keyword).exists():
+                new_keyword = Keyword(new_task.taskID, keyword)
+                db.session.add(new_keyword)
+    else:
+        Keyword.query.filter_by(taskID=new_task.taskID).remove()
     db.session.commit()
     return new_task
 
