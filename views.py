@@ -177,7 +177,7 @@ def logout_account():
 @app.route('/supervisor_account/<superID>', methods=['GET', "POST"])
 @login_required
 def supervisor_account(superID=None):
-    if super:
+    if superID:
         supervisor = Supervisor.query.filter_by(supervisorID=superID).first()
     else:
         supervisor = Supervisor.query.filter_by(supervisorID=current_user.supervisorID).first()
@@ -258,7 +258,8 @@ def create_user():
     if form.validate_on_submit():
         email = form.email.data
         UserMgmt.create_user(form)
-        return user_account(email)
+        user = User.query.filter_by(email=email).first()
+        return user_account(user.userID)
     return render_template("createUser.html", form=form)
 
 
