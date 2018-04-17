@@ -258,7 +258,8 @@ def create_user():
     if form.validate_on_submit():
         email = form.email.data
         UserMgmt.create_user(form)
-        return user_account(email)
+        user = User.query.filter_by(email=email).first()
+        return user_account(user.userID)
     return render_template("createUser.html", form=form)
 
 
