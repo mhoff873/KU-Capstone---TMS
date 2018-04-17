@@ -474,14 +474,13 @@ def edit_task(task_id=None):
     :return: the rendered task editing page
     """
     if task_id is not None:
-        print('TASK ID: ', task_id)
         form = TaskHelper.get_task(task_id)
         return render_template('edit_task.html', form=form)
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
     for file in request.files:
-        print(file)
-        print(file.filename)
+        print('File: ', file)
+        print('Filename: ', file.filename)
     if form.save.data:
         """Save task as draft."""
         task = TaskHelper.create_task(form, request.files)

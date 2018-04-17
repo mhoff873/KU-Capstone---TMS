@@ -78,7 +78,6 @@ def create_task(form, files):
                 print(e)
                 db.session.commit()
     keywords = form.keywords.data.split(',')
-    print('Keywords: ', keywords)
     for keyword in keywords:
         new_keyword = Keyword(new_task.taskID, keyword)
         db.session.add(new_keyword)
@@ -105,7 +104,6 @@ def get_task(task_id: int):
     for word in keywords_for_task:
         keywords_string += word.word + ', '
     form.keywords.process_data(keywords_string)
-    print(form.data)
     return form
 
 
