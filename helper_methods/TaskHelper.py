@@ -77,10 +77,11 @@ def create_task(form, files):
             except Exception as e:
                 print(e)
                 db.session.commit()
-    keywords = form.keywords.data.split(',')
-    for keyword in keywords:
-        new_keyword = Keyword(new_task.taskID, keyword)
-        db.session.add(new_keyword)
+    if form.keywords.data is not '':
+        keywords = form.keywords.data.split(',')
+        for keyword in keywords:
+            new_keyword = Keyword(new_task.taskID, keyword)
+            db.session.add(new_keyword)
     db.session.commit()
     return new_task
 

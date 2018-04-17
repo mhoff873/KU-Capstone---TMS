@@ -477,6 +477,7 @@ def edit_task(task_id=None):
         form = TaskHelper.get_task(task_id)
         return render_template('edit_task.html', form=form)
     # Below code runs on POST requests.
+    print('Type of request: ', request.method)
     form = CreateTaskForm(request.form)
     print('Files exist: ', request.files)
     for file in request.files:
