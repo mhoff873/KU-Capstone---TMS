@@ -47,13 +47,14 @@ def create_task(form, files):
         else:
             new_main_step = MainStep(main_step.title.data)
         new_main_step.taskID = new_task.taskID
+        new_main_step.requiredInfo = main_step.requiredItem.data
         new_main_step.stepText = main_step.stepText.data
         new_main_step.listOrder = i+1
         new_main_step.image = main_step.image.data
-        if main_step.image.data in files:
-            print('Image found in request files.')
-            print(files)
-            print(main_step.image.data)
+        # if main_step.image.data in files:
+        #     print('Image found in request files.')
+        #     print(files)
+        #     print(main_step.image.data)
         try:
             db.session.add(new_main_step)
             db.session.commit()
