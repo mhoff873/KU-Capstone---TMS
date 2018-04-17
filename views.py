@@ -478,6 +478,7 @@ def edit_task(task_id=None):
         return render_template('edit_task.html', form=form)
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
+    print('Files exist: ', request.files)
     for file in request.files:
         print('File: ', file)
         print('Filename: ', file.filename)
