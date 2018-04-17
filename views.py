@@ -479,10 +479,7 @@ def edit_task(task_id=None):
     # Below code runs on POST requests.
     print('Type of request: ', request.method)
     form = CreateTaskForm(request.form)
-    print('Files exist: ', request.files)
-    for file in request.files:
-        print('File: ', file)
-        print('Filename: ', file.filename)
+
     if form.save.data:
         """Save task as draft."""
         task = TaskHelper.create_task(form, request.files)
