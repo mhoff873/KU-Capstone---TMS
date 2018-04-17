@@ -101,6 +101,7 @@ def get_task(task_id: int):
         for detailed_step in detailed_steps:
             form.main_steps[i].detailed_steps.append_entry(detailed_step)
     keywords_for_task = Keyword.query.filter_by(taskID=task_id).all()
+    print('These keywords were found for this task: ', keywords_for_task)
     if keywords_for_task is not '':
         keywords_string = ''
         for word in keywords_for_task:
