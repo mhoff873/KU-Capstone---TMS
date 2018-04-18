@@ -18,8 +18,8 @@
                         </button>
                         <div class="dropdown-menu force-scroll">
                             {% for supervisor in supervisors %}
-                            <a class="dropdown-item" href="/library/alpha:{{ supervisor.supervisorID }}">
-                                {{ supervisor.fname }} {{ supervisor.lname }}
+                            <a class="dropdown-item" style="font-size: 1.5em;" href="/library/alpha:{{ supervisor.supervisorID }}">
+                               {{ supervisor.fname }} {{ supervisor.lname }}
                             </a> {% endfor %}
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                             Sort
                         </button>
-                        <div class="dropdown-menu">
+                        <div class="dropdown-menu" style="font-size: 1.5em;">
                             <a class="dropdown-item" href="/library/alpha:{{ selectedID }}">
                                 Alphabetical
                             </a>
@@ -72,7 +72,7 @@
 <div class="container">
 <div class="row">
 {% for task in tasks %}
-  <div class="col-12 col-sm-6 col-md-4">
+  <div class="col-12 col-sm-12 col-md-4">
     <div class="card border-dark mb-3 text-center">
 	<img class="card-img-top h-50" src="../static/img/{{img[task.taskID|int]|string}}" alt="Card Image Cap">
       <div class="card-block">
@@ -89,7 +89,7 @@
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h3 class="modal-title">Edit:{{ task.title }}</h3>
+						<h3 class="modal-title">Edit: {{ task.title }}</h3>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
