@@ -12,8 +12,10 @@
         <div class="row">
             <div class="table-responsive col-md-12">
                 <h2 class="sub-header text-center" style="overflow-y:hidden;">Supervisors</h2>
-                    <a id="hide_supers" style='width:20%;'onclick='document.getElementById("hide_supers").style.display="none";document.getElementById("super_table").style.display="none"; document.getElementById("show_supers").style.display="inherit";' role="button" class="btn btn-secondary btn-sm btn-block"><span>Collapse Supervisor List</span></a>
-                    <a id="show_supers" style='display: none;width:20%;' onclick='document.getElementById("show_supers").style.display="none";document.getElementById("super_table").style.display="table"; document.getElementById("hide_supers").style.display="inherit";' role="button" class="btn btn-secondary btn-sm btn-block"><span>Display Supervisor List</span></a>
+                    <a id="hide_supers" style='width:20%;'onclick='document.getElementById("hide_supers").style.display="none";document.getElementById("super_table").style.display="none"; document.getElementById("show_supers").style.display="inherit";'> 
+					<button type="button" class="btn btn-secondary btn-sm">Collapse Supervisor List</button></a>
+                    <a id="show_supers" style='display: none;width:20%;' onclick='document.getElementById("show_supers").style.display="none";document.getElementById("super_table").style.display="table"; document.getElementById("hide_supers").style.display="inherit";'> 
+					<button type="button" class="btn btn-secondary btn-sm">Display Supervisor List</button></a>
                       <table id="super_table" class="table table-hover table-bordered">
                         <thead id='supervisor_table_header'>
                           <tr>
@@ -36,8 +38,10 @@
             </div>
             <div class="table-responsive col-md-12">
                 <h2 class="sub-header text-center" style="overflow-y: hidden;">Users</h2>
-                    <a id="hide_users" style='width:20%;'onclick='document.getElementById("hide_users").style.display="none";document.getElementById("user_table").style.display="none"; document.getElementById("show_users").style.display="inherit";'role="button" class="btn btn-secondary btn-sm btn-block"><span>Collapse User List</span></a>
-                    <a id="show_users" style='display: none;width:20%;' onclick='document.getElementById("show_users").style.display="none";document.getElementById("user_table").style.display="table"; document.getElementById("hide_users").style.display="inherit";' role="button" class="btn btn-secondary btn-sm btn-block"><span>Display Supervisor List</span></a>
+                    <a id="hide_users" style='width:20%;'onclick='document.getElementById("hide_users").style.display="none";document.getElementById("user_table").style.display="none"; document.getElementById("show_users").style.display="inherit";'>
+					<button type="button" class="btn btn-secondary btn-sm">Collapse User List</button></a>
+                    <a id="show_users" style='display: none;width:20%;' onclick='document.getElementById("show_users").style.display="none";document.getElementById("user_table").style.display="table"; document.getElementById("hide_users").style.display="inherit";'> 
+					<button type="button" class="btn btn-secondary btn-sm">Display User List</button></a>
                       <table id="user_table" class="table table-hover table-bordered">
                         <thead id='user_table_header'>
                           <tr>
