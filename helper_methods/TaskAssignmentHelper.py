@@ -65,8 +65,9 @@ def delete_request(userID, taskID):
     :return: None
     """
     request = Request.query.filter_by(userID=userID, taskID=taskID).first()
-    db.session.delete(request)
-    db.session.commit()
+    if request:
+        db.session.delete(request)
+        db.session.commit()
 
 
 def assign_to_all_users(supervisor_id, task_id):
