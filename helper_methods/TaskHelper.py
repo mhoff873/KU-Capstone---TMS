@@ -85,7 +85,8 @@ def create_task(form, files):
                 db.session.add(new_keyword)
     else:
         keywords = Keyword.query.filter_by(taskID=new_task.taskID).all()
-        db.session.delete(keywords)
+        for word in keywords:
+            db.session.delete(word)
     db.session.commit()
     return new_task
 
