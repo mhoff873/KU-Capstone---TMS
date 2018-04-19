@@ -6,7 +6,7 @@ Created on Thu Feb 15 13:35:26 2018
 @author: nathan
 """
 from Forms.models import User, Supervisor
-from database import db
+from database import *
 import bcrypt
 
 
@@ -74,18 +74,41 @@ def edit_supervisor(form, supervisor):
     :param form: Form submitted to edit the user/supervisor info.
     :return: N/A
     """
-    user = Supervisor.query.filter_by(supervisorID=supervisor.supervisorID).first()
-    #user.password = bcrypt.hashpw((form.password.data).encode("utf8"), bcrypt.gensalt())
-    user.phone = form.phone.data
-    user.fname = form.fname.data
-    user.mname = form.mname.data
-    user.lname = form.lname.data
-    user.gender = form.gender.data
-    user.birthday = form.birthday.data
-    user.affiliation = form.affiliation.data
-    user.ethnicity = form.ethnicity.data
-    user.picture = form.picture.data
-    db.session.commit()
+    query = """
+            UPDATE supervisors
+            SET '%s'=%s
+            WHERE email='%s'
+            """
+    email = supervisor.email
+    cursor = mysql.connection.cursor()
+    if form.phone.data:        
+        cursor.execute(query.format("phone",form.phone.data, email))
+        
+    if form.fname.data:
+        cursor.execute(query.format("fname", form.fname.data, email))
+
+    if form.mname.data:
+        cursor.execute(query.format("mname", form.mname.data, email))
+
+    if form.lname.data:
+        cursor.execute(query.format("lname", form.lname.data, email))   
+
+    if form.gender.data:
+        cursor.execute(query.format("gender", form.gender.data, email))
+        
+    if form.birthday.data:
+        cursor.execute(query.format("birthday", form.birthday.data, email))
+
+    if form.affiliation.data:
+        cursor.execute(query.format("affiliation", form.affiliation.data, email))
+    
+    if form.ethnicity.data:
+        cursor.execute(query.format("ethnicity", form.ethnicity.data, email))
+
+    if form.picture.data:
+        cursor.execute(query.format("picture", form.picture.data, email))
+
+    mysql.connection.commit()
 
 
 def edit_user(form, user):
@@ -94,17 +117,40 @@ def edit_user(form, user):
     :param form: Form submitted to edit the user/supervisor info.
     :return: N/A
     """
-    user = User.query.filter_by(email=user).first()
-    user.phone = form.phone.data
-    user.fname = form.fname.data
-    user.mname = form.mname.data
-    user.lname = form.lname.data
-    user.gender = form.gender.data
-    user.birthday = form.birthday.data
-    user.affiliation = form.affiliation.data
-    user.ethnicity = form.ethnicity.data
-    user.picture = form.picture.data
-    db.session.commit()
+    query = """
+            UPDATE users
+            SET '%s'=%s
+            WHERE email='%s'
+            """
+    cursor = mysql.connection.cursor()
+    if form.phone.data:        
+        cursor.execute(query.format("phone",form.phone.data, email))
+        
+    if form.fname.data:
+        cursor.execute(query.format("fname", form.fname.data, email))
+
+    if form.mname.data:
+        cursor.execute(query.format("mname", form.mname.data, email))
+
+    if form.lname.data:
+        cursor.execute(query.format("lname", form.lname.data, email))   
+
+    if form.gender.data:
+        cursor.execute(query.format("gender", form.gender.data, email))
+        
+    if form.birthday.data:
+        cursor.execute(query.format("birthday", form.birthday.data, email))
+
+    if form.affiliation.data:
+        cursor.execute(query.format("affiliation", form.affiliation.data, email))
+    
+    if form.ethnicity.data:
+        cursor.execute(query.format("ethnicity", form.ethnicity.data, email))
+
+    if form.picture.data:
+        cursor.execute(query.format("picture", form.picture.data, email))
+
+    mysql.connection.commit()
 
 
 # Requirement 32
