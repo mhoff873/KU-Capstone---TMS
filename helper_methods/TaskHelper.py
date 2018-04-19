@@ -23,6 +23,9 @@ def create_task(form, files):
     print(files)
     for file in files:
         print('File: ', file)
+    if 'main_steps-0-image' in files:
+        print('Found our image.')
+        print(files['main_steps-0-image'])
     existing_task = Task.query.filter_by(title=form.title.data).first()
     if existing_task is not None:
         new_task = existing_task
@@ -64,6 +67,7 @@ def create_task(form, files):
         except Exception as e:
             print(e)
             db.session.commit()
+        #if 'main_steps-{}-image'.format(i) in files
         for j, detailed_step in enumerate(main_step.detailed_steps.entries):
             existing_detailed_step = DetailedStep.query.filter_by(title=detailed_step.title.data).first()
             if existing_detailed_step is not None:
