@@ -1,6 +1,7 @@
 """
 Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
 """
+import os
 import speech_recognition as speech_rec
 from flask_login import current_user
 from werkzeug.utils import secure_filename
@@ -8,6 +9,7 @@ from werkzeug.utils import secure_filename
 from Forms.forms import CreateTaskForm
 from Forms.models import Task, MainStep, DetailedStep, Supervisor, Admin, \
     Keyword
+from app import app
 from database import db
 
 
@@ -46,6 +48,10 @@ def create_task(form, files):
     except Exception as e:
         print(e)
         db.session.commit()
+    if 'image' in files:
+        file = files['image']
+        file.filename = 'T={}'.format(new_task.taskID)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
     for i, main_step in enumerate(form.main_steps.entries):
         existing_main_step = MainStep.query.filter_by(title=main_step.title.data).first()
         if existing_main_step is not None:
@@ -69,7 +75,8 @@ def create_task(form, files):
             db.session.commit()
         if 'main_steps-{}-image'.format(i) in files:
             file = files['main_steps-{}-image'.format(i)]
-            print(type(file))
+            file.filename = 'M={}'.format(new_main_step.mainStepID)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
         for j, detailed_step in enumerate(main_step.detailed_steps.entries):
             existing_detailed_step = DetailedStep.query.filter_by(title=detailed_step.title.data).first()
             if existing_detailed_step is not None:
@@ -86,6 +93,11 @@ def create_task(form, files):
             except Exception as e:
                 print(e)
                 db.session.commit()
+            if 'main_steps-{}-detailed_steps-{}-image'.format(i, j) in files:
+                file = files['main_steps-{}-detailed_steps-{}-image'.format(i, j)]
+                file.filename = 'D={}'.format(new_detailed_step.detailedStepID)
+                file.save(
+                    os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
     if form.keywords.data is not '':
         keywords = form.keywords.data.split(',')
         for keyword in keywords:
