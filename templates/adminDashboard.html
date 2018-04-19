@@ -23,13 +23,13 @@
                           </tr>
                         </thead>
                         <tbody id='supervisor_table'>
-                        {% for s in supervisor_list %} 
+                        {% for s in supervisor_list %}
                           <tr id='supervisor_{{s.supervisorID}}' >
                             <td>{{s.dateCreated}}</td>
                             <td>{{s.fname}} {{s.lname}}</td>
                             <td>{{s.email}}</td>
                             <td style="border:none"><a href="{{url_for('supervisor_account',superID=s.supervisorID)}}" role="button" class="btn btn-secondary btn-sm btn-block">Edit</a></td>
-                          </tr> 
+                          </tr>
                         {% endfor %}
                         </tbody>
                     </table>
@@ -47,13 +47,13 @@
                           </tr>
                         </thead>
                         <tbody id='user_body'>
-                        {% for u in user_list %} 
+                        {% for u in user_list %}
                           <tr id='user_{{u.userID}}' >
                             <td>{{u.dateCreated}}</td>
                             <td>{{u.fname}} {{u.lname}}</td>
                             <td>{{u.email}}</td>
-                            <td style="border:none"><a href="{{url_for('user_account',user_ID=u.userID)}}" role="button" class="btn btn-secondary btn-sm btn-block">Edit</a></td>
-                          </tr> 
+                            <td style="border:none"><a href="{{url_for('user_account',userID=u.userID)}}" role="button" class="btn btn-secondary btn-sm btn-block">Edit</a></td>
+                          </tr>
                         {% endfor %}
                         </tbody>
                     </table>
