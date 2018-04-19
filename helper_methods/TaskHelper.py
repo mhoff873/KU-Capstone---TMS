@@ -67,7 +67,9 @@ def create_task(form, files):
         except Exception as e:
             print(e)
             db.session.commit()
-        #if 'main_steps-{}-image'.format(i) in files
+        if 'main_steps-{}-image'.format(i) in files:
+            file = files['main_steps-{}-image'.format(i)]
+            print(type(file))
         for j, detailed_step in enumerate(main_step.detailed_steps.entries):
             existing_detailed_step = DetailedStep.query.filter_by(title=detailed_step.title.data).first()
             if existing_detailed_step is not None:
