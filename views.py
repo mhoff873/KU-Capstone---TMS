@@ -419,7 +419,7 @@ def create_task():
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
 
-    # HERE BE SPEECH!
+    # HERE BE SPEECH! JK, it's in the template
     # if form.voice_button_title.data:
     #     form.title.process_data(TaskHelper.get_audio_transcript())
     #     return render_template('create_task.html', form=form)
