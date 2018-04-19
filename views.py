@@ -467,25 +467,30 @@ def create_task():
 
 @app.route('/edit_task', methods=['GET', 'POST'])
 @app.route('/edit_task/<int:task_id>/', methods=['GET', 'POST'])
-@login_required
-def edit_task(task_id=None):
+@app.route('/edit_task/<int:task_id>/<claim>', methods=['GET', 'POST'])
+#@login_required
+def edit_task(task_id=None, claim=None):
     """
     Author: David Schaeffer March 2018, <dscha959@live.kutztown.edu>
     Called when a supervisor wishes to edit an existing task.
     :return: the rendered task editing page
     """
     if task_id is not None:
-        print('TASK ID: ', task_id)
         form = TaskHelper.get_task(task_id)
+        form.claim.data = claim
         return render_template('edit_task.html', form=form)
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
-
     if form.save.data:
         """Save task as draft."""
+        if form.claim.data is not '': # task is being claimed - name cannot be same
+             if Api.getIDFromTask(form.title.data) is not None: # the title is already in the db
+                  flash('Task name is already in use!', 'info')
+                  return render_template('edit_task.html', form=form)
         task = TaskHelper.create_task(form)
         flash('Your task was successfully saved!', 'info')
         return render_template('edit_task.html', form=form, task_id=task.taskID)
+
     if form.add_main_step.data:
         """Add new main step."""
         form.main_steps.append_entry()
