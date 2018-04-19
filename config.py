@@ -29,4 +29,4 @@ SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://tmstadmin:humedavid@localhost:
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # File Uploads
-UPLOADED_FILES_DEST = './static/img'
+UPLOAD_FOLDER = './static/img'
