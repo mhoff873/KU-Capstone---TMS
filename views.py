@@ -182,11 +182,10 @@ def supervisor_account(superID=None):
     else:
         supervisor = Supervisor.query.filter_by(supervisorID=current_user.supervisorID).first()
     eUser = EditSuper()
-    UserMgmt.populateFieldsSupervisor(supervisor, eUser)
     if eUser.validate_on_submit():
         UserMgmt.edit_supervisor(eUser, supervisor)
-        print("\n\n", type(eUser.gender.data))
         return dashboard()
+    UserMgmt.populateFieldsSupervisor(supervisor, eUser)
     return render_template('supervisor_account.html',EditUser=eUser, ErrorItems=eUser.errors.items())
 
 #User Account

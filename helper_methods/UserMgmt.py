@@ -76,37 +76,39 @@ def edit_supervisor(form, supervisor):
     """
     query = """
             UPDATE supervisors
-            SET '%s'=%s
+            SET %s='%s'
             WHERE email='%s'
             """
     email = supervisor.email
     cursor = mysql.connection.cursor()
     if form.phone.data:        
-        cursor.execute(query.format("phone",form.phone.data, email))
+        cursor.execute(query % ("phone", form.phone.data, email))
+        print(query % ("phone", form.phone.data, email))
         
     if form.fname.data:
-        cursor.execute(query.format("fname", form.fname.data, email))
+        cursor.execute(query %("fname", form.fname.data, email))
+        print(query %("fname", form.fname.data, email))
 
     if form.mname.data:
-        cursor.execute(query.format("mname", form.mname.data, email))
+        cursor.execute(query % ("mname", form.mname.data, email))
 
     if form.lname.data:
-        cursor.execute(query.format("lname", form.lname.data, email))   
+        cursor.execute(query %("lname", form.lname.data, email))   
 
     if form.gender.data:
-        cursor.execute(query.format("gender", form.gender.data, email))
+        cursor.execute(query % ("gender", form.gender.data, email))
         
     if form.birthday.data:
-        cursor.execute(query.format("birthday", form.birthday.data, email))
+        cursor.execute(query % ("birthday", form.birthday.data, email))
 
     if form.affiliation.data:
-        cursor.execute(query.format("affiliation", form.affiliation.data, email))
+        cursor.execute(query % ("affiliation", form.affiliation.data, email))
     
     if form.ethnicity.data:
-        cursor.execute(query.format("ethnicity", form.ethnicity.data, email))
+        cursor.execute(query % ("ethnicity", form.ethnicity.data, email))
 
     if form.picture.data:
-        cursor.execute(query.format("picture", form.picture.data, email))
+        cursor.execute(query % ("picture", form.picture.data, email))
 
     mysql.connection.commit()
 
@@ -119,8 +121,8 @@ def edit_user(form, user):
     """
     query = """
             UPDATE users
-            SET '%s'=%s
-            WHERE email='%s'
+            SET %s=%s
+            WHERE email=%s
             """
     cursor = mysql.connection.cursor()
     if form.phone.data:        
