@@ -394,13 +394,13 @@ def task_assignment():
     if form.remove_button.data:
         if form.assigned_users.data == 'all_users':
             flash('Task has been removed from all users.', 'info')
-            if form.tasks.data:  # fix mrr post sprint 3 #1
+            if form.tasks.choices:  # fix mrr post sprint 3 #1
                 TaskAssignmentHelper.remove_from_all_users(
                     current_user.supervisorID,
                     form.tasks.data)
             return render_template("task_assignment.html", form=form)
         flash('Task has been removed from user.', 'info')
-        if form.tasks.data:  # fix mrr post sprint 3 #1
+        if form.tasks.choices:  # fix mrr post sprint 3 #1
             TaskAssignmentHelper.delete_request(form.assigned_users.data,
                                                 form.tasks.data)
         return render_template("task_assignment.html", form=form)
