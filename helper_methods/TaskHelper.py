@@ -20,6 +20,8 @@ def create_task(form, files):
     :param form: The CreateTaskForm.
     :return: The newly created task.
     """
+    for file in files:
+        print('File: ', file)
     existing_task = Task.query.filter_by(title=form.title.data).first()
     if existing_task is not None:
         new_task = existing_task

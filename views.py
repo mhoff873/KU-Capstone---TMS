@@ -419,14 +419,6 @@ def create_task():
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
 
-    # HERE BE SPEECH! JK, it's in the template
-    # if form.voice_button_title.data:
-    #     form.title.process_data(TaskHelper.get_audio_transcript())
-    #     return render_template('create_task.html', form=form)
-    # if form.voice_button_description.data:
-    #     form.description.process_data(TaskHelper.get_audio_transcript())
-    #     return render_template('create_task.html', form=form)
-    # Now on to the boring stuff
     if form.save.data:
         """Save task."""
         new_task = TaskHelper.create_task(form, request.files)
@@ -479,7 +471,7 @@ def edit_task(task_id=None):
     # Below code runs on POST requests.
     print('Type of request: ', request.method)
     form = CreateTaskForm(request.form)
-    print('Files found in request:\n', request.files)
+
     if form.save.data:
         """Save task as draft."""
         task = TaskHelper.create_task(form, request.files)
