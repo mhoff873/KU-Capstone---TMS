@@ -399,7 +399,7 @@ def task_assignment():
                     current_user.supervisorID,
                     form.tasks.data)
             return render_template("task_assignment.html", form=form)
-        if form.tasks:  # fix mrr post sprint 3 #1
+        if form.tasks.data:  # fix mrr post sprint 3 #1
             flash('Task has been removed from user.', 'info')
             TaskAssignmentHelper.delete_request(form.assigned_users.data,
                                                 form.tasks.data)
