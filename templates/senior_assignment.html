@@ -36,7 +36,7 @@
         										<input type="search" class="form-control" id="#" placeholder="Search" autofocus="autofocus">
         									</form>
                                             {% for supervisor in supervisors %}
-                                            <a class="dropdown-item" href="{{url_for('senior_assignment')}}{{supervisor.supervisorID}}:-1">
+                                            <a class="dropdown-item" style="font-size: 1.3em;" href="{{url_for('senior_assignment')}}{{supervisor.supervisorID}}:-1">
                                                     {{ supervisor.fname }} {{ supervisor.lname }}
                                             </a>
                                             {% endfor %}
@@ -60,11 +60,11 @@
         									</form>
                                             {% for user in users if user.userID != userID %}
                                                 {% if superID is none %}
-                                                    <a class="dropdown-item" href="{{url_for('senior_assignment')}}-1:{{user.userID}}">
+                                                    <a class="dropdown-item" style="font-size: 1.3em;" href="{{url_for('senior_assignment')}}-1:{{user.userID}}">
                                                         {{ user.fname }} {{ user.lname }}
                                                     </a>
                                                 {% else %}
-                                                    <a class="dropdown-item" href="{{url_for('senior_assignment')}}{{superID}}:{{user.userID}}">
+                                                    <a class="dropdown-item" style="font-size: 1.3em;" href="{{url_for('senior_assignment')}}{{superID}}:{{user.userID}}">
                                                         {{ user.fname }} {{ user.lname }}
                                                     </a>
                                                 {% endif %}

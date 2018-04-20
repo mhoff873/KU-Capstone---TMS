@@ -106,7 +106,7 @@ def getTaskDetails(taskid):
     """
     cur = mysql.connection.cursor()
     # query to gather the details about each step
-    cur.execute('''SELECT mainSteps.listOrder, mainSteps.title, mainSteps.mainStepID, mainSteps.stepText, mainSteps.video, mainSteps.audio, mainSteps.requiredItem 
+    cur.execute('''SELECT mainSteps.image, mainSteps.listOrder, mainSteps.title, mainSteps.mainStepID, mainSteps.stepText, mainSteps.video, mainSteps.audio, mainSteps.requiredItem 
         FROM mainSteps, task 
         WHERE task.taskID =mainSteps.taskID AND task.taskID = %d''' % (int(taskid),))
     step = cur.fetchall()
@@ -314,7 +314,21 @@ def getIdFromEmail(uname):
         return None
     return int(userid['userID'])
 
-
+def getIDFromTask(task):
+    """
+    Description: get the task id given task name
+    Parameters: task - (string) name of the task
+    Return Value: (int) id of the task or none
+    Author: Tyler Lance
+    """
+    cur = mysql.connection.cursor()
+    # get the userid of the user given the email
+    cur.execute('SELECT task.taskID FROM task WHERE title="%s"' % (str(task),))
+    task = cur.fetchone()
+    if not task:
+        return None
+    return int(task["taskID"])
+    
 def getTaskFromID(taskID):
     """
     Description: get the task name given the task if
@@ -642,7 +656,7 @@ def getTasksByUsers(date, users):
         userDict = {'userID': u, 'completedTasks': lstTask}
         lstUser.append(userDict)
     return lstUser
-
+    
 def getCompletedTasksByID(date, ID):
     """
     Description: get data of the completed tasks
@@ -745,11 +759,14 @@ def getPathForTaskImage(taskID):
     # query the database to get the data on the completed steps
     cur.execute('SELECT task.image, task.title FROM task WHERE task.taskID = %d' % (int(taskID),))
     path = cur.fetchone()
-    if not path:
-        return None
     # check if no image exists, if so pull the default image
     if path["image"] == "" or path["image"] == None:
-        img = "default/" + ((path["title"])[:1]).upper() + ".png"
+        # if no image exists and no title
+        if len(path["title"]) == 0:
+            img = "default/tmsscreenshot.png"
+        # if title exists then pull first letter of the title and make it uppercase
+        else:
+            img = "default/" + ((path["title"])[:1]).upper() + ".png"
     else:
         img = path["image"]
     return str(img)

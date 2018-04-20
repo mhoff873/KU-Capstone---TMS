@@ -1,17 +1,20 @@
 """
 Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
 """
+import os
 import speech_recognition as speech_rec
 from flask_login import current_user
+from werkzeug.utils import secure_filename
 
 from Forms.forms import CreateTaskForm
 from Forms.models import Task, MainStep, DetailedStep, Supervisor, Admin, \
     Keyword
+from app import app
 from database import db
 
 
 # Req 1
-def create_task(form):
+def create_task(form, files):
     """
     Author: David Schaeffer, February 2018 <dscha959@live.kutztown.edu>
     Extracts data from form entering it into our Task, MainStep, DetailedStep
@@ -19,6 +22,12 @@ def create_task(form):
     :param form: The CreateTaskForm.
     :return: The newly created task.
     """
+    print(files)
+    for file in files:
+        print('File: ', file)
+    if 'main_steps-0-image' in files:
+        print('Found our image.')
+        print(files['main_steps-0-image'])
     existing_task = Task.query.filter_by(title=form.title.data).first()
     if existing_task is not None:
         new_task = existing_task
@@ -29,16 +38,23 @@ def create_task(form):
     elif current_user.role == "admin":
         new_task.supervisorID = current_user.adminID
     new_task.description = form.description.data
+    print("NAME OF IMAGE: ", form.image.name)
     new_task.image = form.image.data
     # 0 = false, 1 = true
     new_task.activated = form.activation.data
     new_task.published = form.publish.data
+    if 'image' in files and files['image'] is not None:
+        file = files['image']
+        file.filename = 'T={}'.format(new_task.taskID)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+        new_task.image = file.filename
     try:  # try/excepts to catch IntegrityErrors, if it exists, we update.
         db.session.add(new_task)
         db.session.commit()
     except Exception as e:
         print(e)
         db.session.commit()
+    
     for i, main_step in enumerate(form.main_steps.entries):
         existing_main_step = MainStep.query.filter_by(title=main_step.title.data).first()
         if existing_main_step is not None:
@@ -46,15 +62,26 @@ def create_task(form):
         else:
             new_main_step = MainStep(main_step.title.data)
         new_main_step.taskID = new_task.taskID
+        new_main_step.requiredInfo = main_step.requiredItem.data
         new_main_step.stepText = main_step.stepText.data
         new_main_step.listOrder = i+1
         new_main_step.image = main_step.image.data
+        # if main_step.image.data in files:
+        #     print('Image found in request files.')
+        #     print(files)
+        #     print(main_step.image.data)
+        if 'main_steps-{}-image'.format(i) in files:
+            file = files['main_steps-{}-image'.format(i)]
+            file.filename = 'M={}'.format(new_main_step.mainStepID)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+            new_main_step.image = file.filename
         try:
             db.session.add(new_main_step)
             db.session.commit()
         except Exception as e:
             print(e)
             db.session.commit()
+        
         for j, detailed_step in enumerate(main_step.detailed_steps.entries):
             existing_detailed_step = DetailedStep.query.filter_by(title=detailed_step.title.data).first()
             if existing_detailed_step is not None:
@@ -65,21 +92,33 @@ def create_task(form):
             new_detailed_step.stepText = detailed_step.stepText.data
             new_detailed_step.listOrder = i+1
             new_detailed_step.image = detailed_step.image.data
+            if 'main_steps-{}-detailed_steps-{}-image'.format(i, j) in files:
+                file = files['main_steps-{}-detailed_steps-{}-image'.format(i, j)]
+                file.filename = 'D={}'.format(new_detailed_step.detailedStepID)
+                file.save(
+                    os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+                new_detailed_step.image = file.filename
             try:
                 db.session.add(new_detailed_step)
                 db.session.commit()
             except Exception as e:
                 print(e)
                 db.session.commit()
-    keywords = form.keywords.data.split(',')
-    print('Keywords: ', keywords)
-    for keyword in keywords:
-        new_keyword = Keyword(new_task.taskID, keyword)
-        db.session.add(new_keyword)
+            
+    if form.keywords.data is not '':  #keywords cannot be blank
+        keywords = form.keywords.data.split(',')
+        for keyword in keywords:
+            k = Keyword.query.filter_by(taskID=new_task.taskID, word=keyword).first()
+            if k is None : #and not k.exists()
+                new_keyword = Keyword(new_task.taskID, keyword)
+                db.session.add(new_keyword)
+    else:
+        keywords = Keyword.query.filter_by(taskID=new_task.taskID).all()
+        for word in keywords:
+            db.session.delete(word)
     db.session.commit()
     return new_task
-
-
+ 
 def get_task(task_id: int):
     """
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
