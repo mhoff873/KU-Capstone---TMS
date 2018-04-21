@@ -18,7 +18,7 @@
                         </button>
                         <div class="dropdown-menu force-scroll">
                             {% for supervisor in supervisors %}
-                            <a class="dropdown-item" style="font-size: 1.5em;" href="{{ url_for('library', arguments='alpha:{{ supervisor.supervisorID }} }}">
+                            <a class="dropdown-item" style="font-size: 1.5em;" href="/library/alpha:{{ supervisor.supervisorID }}">
                                {{ supervisor.fname }} {{ supervisor.lname }}
                             </a> {% endfor %}
                         </div>
@@ -55,9 +55,9 @@
                                 <div style="display: inline-block; min-width: 20em">
                                     {{ search.csrf_token }}
                                     {{ search.search }}
-                                   
+
                                     {{ search.submit }}
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -124,6 +124,6 @@
     </div>
   </div>
 {% endfor %}
-</div>  
+</div>
 </div><!-- end of container -->
 {% endblock content %}
