@@ -18,7 +18,7 @@
                         </button>
                         <div class="dropdown-menu force-scroll">
                             {% for supervisor in supervisors %}
-                            <a class="dropdown-item" style="font-size: 1.5em;" href="/library/alpha:{{ supervisor.supervisorID }}">
+                            <a class="dropdown-item" style="font-size: 1.5em;" href="{{ url_for('library', arguments='alpha:'+supervisor.supervisorID|string) }}">
                                {{ supervisor.fname }} {{ supervisor.lname }}
                             </a> {% endfor %}
                         </div>
@@ -31,16 +31,16 @@
                             Sort
                         </button>
                         <div class="dropdown-menu" style="font-size: 1.5em;">
-                            <a class="dropdown-item" href="/library/alpha:{{ selectedID }}">
+                            <a class="dropdown-item" href="{{ url_for('library', arguments='alpha:'+selectedID|string) }}">
                                 Alphabetical
                             </a>
-                            <a class="dropdown-item" href="/library/alpha-rev:{{ selectedID }}">
+                            <a class="dropdown-item" href="{{ url_for('library', arguments='alpha-rev:'+selectedID|string) }}">
                                 Alphabetical (Reverse)
                             </a>
-                            <a class="dropdown-item" href="/library/chrono:{{ selectedID }}">
+                            <a class="dropdown-item" href="{{ url_for('library', arguments='chrono:'+selectedID|string) }}">
                                 Chronological
                            </a>
-                            <a class="dropdown-item" href="/library/chrono-rev:{{ selectedID }}">
+                            <a class="dropdown-item" href="{{ url_for('library', arguments='chrono-rev:'+selectedID|string) }}">
                                 Chronological (Reverse)
                             </a>
                         </div>
