@@ -18,7 +18,7 @@
                         </button>
                         <div class="dropdown-menu force-scroll">
                             {% for supervisor in supervisors %}
-                            <a class="dropdown-item" style="font-size: 1.5em;" href="/library/alpha:{{ supervisor.supervisorID }}">
+                            <a class="dropdown-item" style="font-size: 1.5em;" href="{{ url_for('library', arguments='alpha:{{ supervisor.supervisorID }} }}">
                                {{ supervisor.fname }} {{ supervisor.lname }}
                             </a> {% endfor %}
                         </div>
