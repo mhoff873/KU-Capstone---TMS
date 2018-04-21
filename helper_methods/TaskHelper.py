@@ -22,32 +22,31 @@ def create_task(form, files):
     :param form: The CreateTaskForm.
     :return: The newly created task.
     """
-    print(files)
-    for file in files:
-        print('File: ', file)
-    if 'main_steps-0-image' in files:
-        print('Found our image.')
-        print(files['main_steps-0-image'])
+
     existing_task = Task.query.filter_by(title=form.title.data).first()
-    if existing_task is not None:
-        new_task = existing_task
+    if existing_task is not None: 
+        new_task = existing_task 
     else:
         new_task = Task(form.title.data)
-    if current_user.role == "supervisor":
         new_task.supervisorID = current_user.supervisorID
-    elif current_user.role == "admin":
-        new_task.supervisorID = current_user.adminID
+        db.session.add(new_task)
+        db.session.flush()
+        db.session.refresh(new_task)
+    
+    # supervisor claims a task
+    new_task.supervisorID = current_user.supervisorID
+    # rest of task informataion is set from the form
     new_task.description = form.description.data
-    print("NAME OF IMAGE: ", form.image.name)
     new_task.image = form.image.data
-    # 0 = false, 1 = true
     new_task.activated = form.activation.data
     new_task.published = form.publish.data
+    # task image is named and saved
     if 'image' in files and files['image'] is not None:
         file = files['image']
         file.filename = 'T={}'.format(new_task.taskID)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
         new_task.image = file.filename
+        
     try:  # try/excepts to catch IntegrityErrors, if it exists, we update.
         db.session.add(new_task)
         db.session.commit()
@@ -61,15 +60,16 @@ def create_task(form, files):
             new_main_step = existing_main_step
         else:
             new_main_step = MainStep(main_step.title.data)
+            db.session.add(new_main_step)
+            db.session.flush()
+            db.session.refresh(new_main_step)
+        
         new_main_step.taskID = new_task.taskID
         new_main_step.requiredInfo = main_step.requiredItem.data
         new_main_step.stepText = main_step.stepText.data
         new_main_step.listOrder = i+1
         new_main_step.image = main_step.image.data
-        # if main_step.image.data in files:
-        #     print('Image found in request files.')
-        #     print(files)
-        #     print(main_step.image.data)
+        
         if 'main_steps-{}-image'.format(i) in files:
             file = files['main_steps-{}-image'.format(i)]
             file.filename = 'M={}'.format(new_main_step.mainStepID)
@@ -88,6 +88,9 @@ def create_task(form, files):
                 new_detailed_step = existing_detailed_step
             else:
                 new_detailed_step = DetailedStep(detailed_step.title.data)
+                db.session.add(new_detailed_step)
+                db.session.flush()
+                db.session.refresh(new_detailed_step)
             new_detailed_step.mainStepID = new_main_step.mainStepID
             new_detailed_step.stepText = detailed_step.stepText.data
             new_detailed_step.listOrder = i+1
