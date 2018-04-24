@@ -504,22 +504,22 @@ def edit_task(task_id=None):
     if form.add_main_step.data:
         """Add new main step."""
         form.main_steps.append_entry()
-        return render_template('edit_task.html', form=form)
+        return render_template('edit_task.html', form=form, task_id=task.taskID)
     for i, main_step in enumerate(form.main_steps):
         # Handling of main step deletion as well as detailed steps
         # addition and deletion which reside inside main steps
         if main_step.main_step_removal.data:
             """User removes a main step."""
             form.main_steps.entries.pop(i)
-            return render_template('edit_task.html', form=form)
+            return render_template('edit_task.html', form=form, task_id=task.taskID)
         if main_step.add_detailed_step.data:
             """User adds detailed step to a main step."""
             main_step.detailed_steps.append_entry()
-            return render_template('edit_task.html', form=form)
+            return render_template('edit_task.html', form=form, task_id=task.taskID)
         for j, detailed_step in enumerate(main_step.detailed_steps):
             if detailed_step.detailed_step_removal.data:
                 main_step.detailed_steps.entries.pop(j)
-                return render_template('edit_task.html', form=form)
-    return render_template('edit_task.html', form=form)
+                return render_template('edit_task.html', form=form, task_id=task.taskID)
+    return render_template('edit_task.html', form=form, task_id=task.taskID)
 
 
