@@ -50,7 +50,7 @@
 
                 <!-- Image -->
                 {% if task_image %}
-                    <img src="{{ url_for(task_image) }}" alt="Task Image">
+                    <img src="{{ task_image }}" alt="Task Image">
                 {% endif %}
                 <div style="display: inline-block; min-width: 13em">
                     {{ form.image.label (style="font-size: 1.5em;") }}
