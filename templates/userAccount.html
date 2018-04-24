@@ -23,7 +23,7 @@
 	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
 	  {{ EditUser.fname.label (style="font-size: 1.5em;")}}
-      {{ EditUser.fname (class="form-control")}}
+      {{ EditUser.fname (class="form-control", placeholder="* required")}}
       </div>
 	  </div>
 	  <br>
@@ -39,7 +39,7 @@
 	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
       {{ EditUser.lname.label (style="font-size: 1.5em;")}}
-      {{ EditUser.lname (class="form-control")}}
+      {{ EditUser.lname (class="form-control", placeholder="* required")}}
       </div>
 	  </div>
 	  </div>
@@ -49,7 +49,7 @@
 	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
 	  {{ EditUser.phone.label (style="font-size: 1.5em;")}}
-      {{ EditUser.phone (class="form-control")}}
+      {{ EditUser.phone (class="form-control", placeholder="xxxxxxxxxx")}}
       </div>
 	  </div>
       <br>
@@ -65,7 +65,7 @@
 	  <div class="col-sm-4">
       <div style="display: inline-block; min-width: 13em">
       {{ EditUser.birthday.label (style="font-size: 1.5em;")}}
-      {{ EditUser.birthday (class="form-control")}}
+      {{ EditUser.birthday (class="form-control", placeholder="yyyy/mm/dd")}}
       </div>
 	  </div>
 	  </div>
@@ -92,9 +92,7 @@
       <div style="display: inline-block; min-width: 13em">
       {{ EditUser.picture.label (style="font-size: 1.5em;")}}
       		<div class="form-group">
-			<!--<label for="exampleInputFile">File input</label>-->
 			<input type="file" class="form-control-file"  id="exampleInputFile" aria-describedby="fileHelp">
-			<!--<small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>-->
 			</div>
       </div>
 	  </div>
