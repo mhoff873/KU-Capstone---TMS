@@ -476,15 +476,15 @@ def edit_task(task_id=None):
     if task_id is not None:
         print('TASK ID: ', task_id)
         task_image = None
-        with open(os.path.join(app.config['UPLOAD_FOLDER'], 'T={}'.format(task_id)), 'b') as task_image:
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], 'T={}'.format(task_id)), 'rb') as task_image:
             task_image = task_image.read()
         main_step_images = []  # Contains tuples: (step number, step image)
         detailed_step_images = []  # Contains dict of tuples: 'main step number': (detailed step number, step image)
         for i, main_step in enumerate(TaskHelper.get_main_steps_for_task(task_id)):
-            with open(os.path.join(app.config['UPLOAD_FOLDER'], 'M={}'.format(main_step.mainStepID)), 'b') as main_step_image:
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], 'M={}'.format(main_step.mainStepID)), 'rb') as main_step_image:
                 main_step_images.append((i+1, main_step_image.read()))
             for j, detailed_step in enumerate(TaskHelper.get_detailed_steps_for_main_step(main_step.mainStepID)):
-                with open(os.path.join(app.config['UPLOAD_FOLDER'], 'D={}'.format(detailed_step.detailedStepID)), 'b') as detailed_step_image:
+                with open(os.path.join(app.config['UPLOAD_FOLDER'], 'D={}'.format(detailed_step.detailedStepID)), 'rb') as detailed_step_image:
                     detailed_step_images.append({i+1: (j+1, detailed_step_image.read())})
         form = TaskHelper.get_form_filled_with_task(task_id)
         return render_template('edit_task.html', form=form,
