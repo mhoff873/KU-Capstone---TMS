@@ -52,6 +52,7 @@
                 {% if task_image %}
                     <img src="../../static/img/{{ task_image }}" alt="Task Image" style="max-height: 100px; max-width: 100px; border-radius: 3px">
                 {% endif %}
+                <br>
                 <div style="display: inline-block; min-width: 13em">
                     {{ form.image.label (style="font-size: 1.5em;") }}
                 </div>
@@ -83,6 +84,10 @@
                         <br><br>
                         {{ main_step.audio.label (style="font-size: 1.5em;") }}{{ main_step.audio }}
                         <br><br>
+                        {% if main_step_ids[loop.index] %}
+                            <img src="../../static/img/{{ main_step_ids[loop.index] }}" alt="Task Image" style="max-height: 100px; max-width: 100px; border-radius: 3px">
+                        {% endif %}
+                        <br>
                         {{ main_step.image.label (style="font-size: 1.5em;") }}{{ main_step.image }}
                         <br><br>
                         {{ main_step.video.label (style="font-size: 1.5em;") }}{{ main_step.video }}
@@ -102,6 +107,10 @@
                                 <img onclick="startDictation('detailed_step_stepText')"
                                      src="//i.imgur.com/cHidSVu.gif"/>
                                 {{ detailed_step.stepText(id="detailed_step_stepText", style="height: 100px; width:100%") }}
+                                <br>
+                                {% if task_image %}
+                                    <img src="../../static/img/{{ task_image }}" alt="Task Image" style="max-height: 100px; max-width: 100px; border-radius: 3px">
+                                {% endif %}
                                 <br>
                                 {{ detailed_step.image.label (style="font-size: 1.5em;") }}{{ detailed_step.image }}
                                 <br>

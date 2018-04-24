@@ -477,13 +477,13 @@ def edit_task(task_id=None):
         print('TASK ID: ', task_id)
         task_image = 'T={}'.format(task_id)
         print('Task image: ', task_image)
-        main_step_ids = []  # Contains tuples: (step number, step id)
-        detailed_step_ids = []  # Contains dict of tuples: 'main step number': (detailed step number, step id)
+        main_step_ids = []  # Dict of main step IDs. keys are the main step number: 1, 2, 3, etc. NOT IDS
+        detailed_step_ids = []  # Dict of dict of detailed step IDs. {'main step number': {detailed step number: detailedStepID} }
         for i, main_step in enumerate(TaskHelper.get_main_steps_for_task(task_id)):
-            main_step_ids.append((i+1, 'M={}'.format(main_step.mainStepID)))
+            main_step_ids[i+1] = 'M={}'.format(main_step.mainStepID)
             print('Main Step image: ', main_step.mainStepID)
             for j, detailed_step in enumerate(TaskHelper.get_detailed_steps_for_main_step(main_step.mainStepID)):
-                detailed_step_ids.append({i+1: (j+1, 'D={}'.format(detailed_step.detailedStepID))})
+                detailed_step_ids[i+1] = {j+1: 'D={}'.format(detailed_step.detailedStepID)}
                 print('Detailed Step image: ', detailed_step.detailedStepID)
         form = TaskHelper.get_form_filled_with_task(task_id)
         return render_template('edit_task.html', form=form,
