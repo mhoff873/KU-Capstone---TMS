@@ -10,4 +10,4 @@ Team PM: 5007
 
 
 if __name__ == "__main__":
-    app.run(ssl_context=('cert.pem', 'key.pem'), port=5010, host="0.0.0.0")
+    app.run(ssl_context=('cert.pem', 'key.pem'), port=5000, host="0.0.0.0")
