@@ -473,6 +473,7 @@ def edit_task(task_id=None):
     Called when a supervisor wishes to edit an existing task.
     :return: the rendered task editing page
     """
+    print('EDIT TASK REQUEST IS: ', request.method)
     if request.method == 'GET':
         if task_id is not None:
             print('TASK ID: ', task_id)
