@@ -474,6 +474,7 @@ def edit_task(task_id=None):
     :return: the rendered task editing page
     """
     print('EDIT TASK REQUEST IS: ', request.method)
+    print('TASK ID IS: ', task_id)
     if request.method == 'GET':
         if task_id is not None:
             print('TASK ID: ', task_id)
