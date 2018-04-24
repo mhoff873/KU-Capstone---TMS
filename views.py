@@ -486,7 +486,7 @@ def edit_task(task_id=None):
                 detailed_step_ids[i+1] = {j+1: 'D={}'.format(detailed_step.detailedStepID)}
                 print('Detailed Step image: ', detailed_step.detailedStepID)
         form = TaskHelper.get_form_filled_with_task(task_id)
-        return render_template('edit_task.html', form=form,
+        return render_template('edit_task.html', task_id=task_id, form=form,
                                task_image=task_image,
                                main_step_ids=main_step_ids,
                                detailed_step_ids=detailed_step_ids)
