@@ -121,8 +121,36 @@ def create_task(form, files):
             db.session.delete(word)
     db.session.commit()
     return new_task
- 
+
+
 def get_task(task_id: int):
+    """
+    Author: David Schaeffer, April 2018 <dscha959@live.kutztown.edu>
+    :param task_id: ID of task
+    :return: Task object containing task data
+    """
+    return Task.query.filter_by(taskID=task_id).first()
+
+
+def get_main_steps_for_task(task_id: int):
+    """
+    Author: David Schaeffer, April 2018 <dscha959@live.kutztown.edu>
+    :param task_id: ID of task
+    :return: Main steps pertaining to a task
+    """
+    return MainStep.query.filter_by(taskID=task_id).all()
+
+
+def get_detailed_steps_for_main_step(main_step_id: int):
+    """
+    Author: David Schaeffer, April 2018 <dscha959@live.kutztown.edu>
+    :param main_step_id: ID of main step
+    :return: Detailed steps pertaining to a main step
+    """
+    return DetailedStep.query.filter_by(mainStepID=main_step_id).all()
+
+
+def get_form_filled_with_task(task_id: int):
     """
     Author: David Schaeffer, March 2018 <dscha959@live.kutztown.edu>
     :param task_id: ID of task we will be displaying
