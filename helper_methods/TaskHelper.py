@@ -40,7 +40,6 @@ def create_task(form, files):
     new_task.image = form.image.data
     new_task.activated = form.activation.data
     new_task.published = form.publish.data
-        
     try:  # try/excepts to catch IntegrityErrors, if it exists, we update.
         db.session.add(new_task)
         db.session.commit()
@@ -59,9 +58,6 @@ def create_task(form, files):
             new_main_step = existing_main_step
         else:
             new_main_step = MainStep(main_step.title.data)
-            db.session.add(new_main_step)
-            db.session.flush()
-            db.session.refresh(new_main_step)
         new_main_step.taskID = new_task.taskID
         new_main_step.requiredInfo = main_step.requiredItem.data
         new_main_step.stepText = main_step.stepText.data
@@ -84,9 +80,6 @@ def create_task(form, files):
                 new_detailed_step = existing_detailed_step
             else:
                 new_detailed_step = DetailedStep(detailed_step.title.data)
-                db.session.add(new_detailed_step)
-                db.session.flush()
-                db.session.refresh(new_detailed_step)
             new_detailed_step.mainStepID = new_main_step.mainStepID
             new_detailed_step.stepText = detailed_step.stepText.data
             new_detailed_step.listOrder = i+1
