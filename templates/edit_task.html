@@ -50,7 +50,7 @@
 
                 <!-- Image -->
                 {% if task_image %}
-                    <img src="../../static/img/{{ task_image }}" alt="Task Image">
+                    <img src="../../static/img/{{ task_image }}" alt="Task Image" style="max-height: 100px; max-width: 100px; border-radius: 3px">
                 {% endif %}
                 <div style="display: inline-block; min-width: 13em">
                     {{ form.image.label (style="font-size: 1.5em;") }}
