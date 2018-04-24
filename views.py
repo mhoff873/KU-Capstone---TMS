@@ -495,42 +495,56 @@ def edit_task(task_id=None):
                                    detailed_step_ids=detailed_step_ids)
     # Below code runs on POST requests.
     form = CreateTaskForm(request.form)
-    if task_id is not None:
-        print('TASK ID: ', task_id)
-        task_image = 'T={}'.format(task_id)
-        print('Task image: ', task_image)
-        main_step_ids = []  # Dict of main step IDs. keys are the main step number: 1, 2, 3, etc. NOT IDS
-        detailed_step_ids = []  # Dict of dict of detailed step IDs. {'main step number': {detailed step number: detailedStepID} }
-        for i, main_step in enumerate(TaskHelper.get_main_steps_for_task(task_id)):
-            main_step_ids[i+1] = 'M={}'.format(main_step.mainStepID)
-            print('Main Step image: ', main_step.mainStepID)
-            for j, detailed_step in enumerate(TaskHelper.get_detailed_steps_for_main_step(main_step.mainStepID)):
-                detailed_step_ids[i+1] = {j+1: 'D={}'.format(detailed_step.detailedStepID)}
-                print('Detailed Step image: ', detailed_step.detailedStepID)
+    print('TASK ID: ', task_id)
+    task_image = 'T={}'.format(task_id)
+    print('Task image: ', task_image)
+    main_step_ids = []  # Dict of main step IDs. keys are the main step number: 1, 2, 3, etc. NOT IDS
+    detailed_step_ids = []  # Dict of dict of detailed step IDs. {'main step number': {detailed step number: detailedStepID} }
+    for i, main_step in enumerate(TaskHelper.get_main_steps_for_task(task_id)):
+        main_step_ids[i+1] = 'M={}'.format(main_step.mainStepID)
+        print('Main Step image: ', main_step.mainStepID)
+        for j, detailed_step in enumerate(TaskHelper.get_detailed_steps_for_main_step(main_step.mainStepID)):
+            detailed_step_ids[i+1] = {j+1: 'D={}'.format(detailed_step.detailedStepID)}
+            print('Detailed Step image: ', detailed_step.detailedStepID)
     if form.save.data:
         """Save task as draft."""
         task = TaskHelper.create_task(form, request.files)
         flash('Your task was successfully saved!', 'info')
-        return render_template('edit_task.html', form=form, task_id=task.taskID)
+        return render_template('edit_task.html', task_id=task.taskID, form=form,
+                                   task_image=task_image,
+                                   main_step_ids=main_step_ids,
+                                   detailed_step_ids=detailed_step_ids)
     if form.add_main_step.data:
         """Add new main step."""
         form.main_steps.append_entry()
-        return render_template('edit_task.html', form=form, task_id=task_id)
+        return render_template('edit_task.html', task_id=task_id, form=form,
+                                   task_image=task_image,
+                                   main_step_ids=main_step_ids,
+                                   detailed_step_ids=detailed_step_ids)
     for i, main_step in enumerate(form.main_steps):
         # Handling of main step deletion as well as detailed steps
         # addition and deletion which reside inside main steps
         if main_step.main_step_removal.data:
             """User removes a main step."""
             form.main_steps.entries.pop(i)
-            return render_template('edit_task.html', form=form, task_id=task_id)
+            return render_template('edit_task.html', task_id=task_id, form=form,
+                                   task_image=task_image,
+                                   main_step_ids=main_step_ids,
+                                   detailed_step_ids=detailed_step_ids)
         if main_step.add_detailed_step.data:
             """User adds detailed step to a main step."""
             main_step.detailed_steps.append_entry()
-            return render_template('edit_task.html', form=form, task_id=task_id)
+            return render_template('edit_task.html', task_id=task_id, form=form,
+                                   task_image=task_image,
+                                   main_step_ids=main_step_ids,
+                                   detailed_step_ids=detailed_step_ids)
         for j, detailed_step in enumerate(main_step.detailed_steps):
             if detailed_step.detailed_step_removal.data:
                 main_step.detailed_steps.entries.pop(j)
-                return render_template('edit_task.html', form=form, task_id=task_id)
+                return render_template('edit_task.html', task_id=task_id, form=form,
+                                   task_image=task_image,
+                                   main_step_ids=main_step_ids,
+                                   detailed_step_ids=detailed_step_ids)
     return render_template('edit_task.html', form=form, task_id=task_id)
 
 
