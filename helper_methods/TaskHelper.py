@@ -164,7 +164,6 @@ def get_form_filled_with_task(task_id: int):
     for word in keywords_for_task:
         keywords_string += word.word + ', '
     form.keywords.process_data(keywords_string)
-    print(form.data)
     return form
 
 
