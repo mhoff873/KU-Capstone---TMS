@@ -58,13 +58,15 @@ def create_task(form, files):
         existing_main_step = MainStep.query.filter_by(title=main_step.title.data).first()
         if existing_main_step is not None:
             new_main_step = existing_main_step
+            new_main_step.taskID = new_task.taskID
         else:
             new_main_step = MainStep(main_step.title.data)
+            new_main_step.taskID = new_task.taskID
             db.session.add(new_main_step)
             db.session.flush()
             db.session.refresh(new_main_step)
         
-        new_main_step.taskID = new_task.taskID
+        #new_main_step.taskID = new_task.taskID
         new_main_step.requiredInfo = main_step.requiredItem.data
         new_main_step.stepText = main_step.stepText.data
         new_main_step.listOrder = i+1
@@ -86,12 +88,14 @@ def create_task(form, files):
             existing_detailed_step = DetailedStep.query.filter_by(title=detailed_step.title.data).first()
             if existing_detailed_step is not None:
                 new_detailed_step = existing_detailed_step
+                new_detailed_step.mainStepID = new_main_step.mainStepID
             else:
                 new_detailed_step = DetailedStep(detailed_step.title.data)
+                new_detailed_step.mainStepID = new_main_step.mainStepID
                 db.session.add(new_detailed_step)
                 db.session.flush()
                 db.session.refresh(new_detailed_step)
-            new_detailed_step.mainStepID = new_main_step.mainStepID
+            
             new_detailed_step.stepText = detailed_step.stepText.data
             new_detailed_step.listOrder = i+1
             new_detailed_step.image = detailed_step.image.data
