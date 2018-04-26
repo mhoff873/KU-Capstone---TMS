@@ -22,7 +22,6 @@ def create_task(form, files):
     :param form: The CreateTaskForm.
     :return: The newly created task.
     """
-
     existing_task = Task.query.filter_by(title=form.title.data).first()
     if existing_task is not None: 
         new_task = existing_task 
@@ -32,7 +31,6 @@ def create_task(form, files):
         db.session.add(new_task)
         db.session.flush()
         db.session.refresh(new_task)
-    
     # supervisor claims a task
     new_task.supervisorID = current_user.supervisorID
     # rest of task informataion is set from the form
@@ -40,20 +38,18 @@ def create_task(form, files):
     new_task.image = form.image.data
     new_task.activated = form.activation.data
     new_task.published = form.publish.data
-    # task image is named and saved
-    if 'image' in files and files['image'] is not None:
-        file = files['image']
-        file.filename = 'T={}'.format(new_task.taskID)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-        new_task.image = file.filename
-        
     try:  # try/excepts to catch IntegrityErrors, if it exists, we update.
         db.session.add(new_task)
         db.session.commit()
     except Exception as e:
         print(e)
         db.session.commit()
-    
+    # task image is named and saved
+    if 'image' in files and files['image'] is not None:
+        file = files['image']
+        file.filename = 'T={}'.format(new_task.taskID)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+        new_task.image = file.filename
     for i, main_step in enumerate(form.main_steps.entries):
         existing_main_step = MainStep.query.filter_by(title=main_step.title.data).first()
         if existing_main_step is not None:
@@ -65,13 +61,6 @@ def create_task(form, files):
             db.session.add(new_main_step)
             db.session.flush()
             db.session.refresh(new_main_step)
-        
-        #new_main_step.taskID = new_task.taskID
-        new_main_step.requiredInfo = main_step.requiredItem.data
-        new_main_step.stepText = main_step.stepText.data
-        new_main_step.listOrder = i+1
-        new_main_step.image = main_step.image.data
-        
         if 'main_steps-{}-image'.format(i) in files:
             file = files['main_steps-{}-image'.format(i)]
             file.filename = 'M={}'.format(new_main_step.mainStepID)
@@ -83,7 +72,11 @@ def create_task(form, files):
         except Exception as e:
             print(e)
             db.session.commit()
-        
+        # new_main_step.taskID = new_task.taskID
+        new_main_step.requiredInfo = main_step.requiredItem.data
+        new_main_step.stepText = main_step.stepText.data
+        new_main_step.listOrder = i + 1
+        new_main_step.image = main_step.image.data
         for j, detailed_step in enumerate(main_step.detailed_steps.entries):
             existing_detailed_step = DetailedStep.query.filter_by(title=detailed_step.title.data).first()
             if existing_detailed_step is not None:
@@ -99,18 +92,18 @@ def create_task(form, files):
             new_detailed_step.stepText = detailed_step.stepText.data
             new_detailed_step.listOrder = i+1
             new_detailed_step.image = detailed_step.image.data
-            if 'main_steps-{}-detailed_steps-{}-image'.format(i, j) in files:
-                file = files['main_steps-{}-detailed_steps-{}-image'.format(i, j)]
-                file.filename = 'D={}'.format(new_detailed_step.detailedStepID)
-                file.save(
-                    os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-                new_detailed_step.image = file.filename
             try:
                 db.session.add(new_detailed_step)
                 db.session.commit()
             except Exception as e:
                 print(e)
                 db.session.commit()
+            if 'main_steps-{}-detailed_steps-{}-image'.format(i, j) in files:
+                file = files['main_steps-{}-detailed_steps-{}-image'.format(i, j)]
+                file.filename = 'D={}'.format(new_detailed_step.detailedStepID)
+                file.save(
+                    os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+                new_detailed_step.image = file.filename
             
     if form.keywords.data is not '':  #keywords cannot be blank
         keywords = form.keywords.data.split(',')
