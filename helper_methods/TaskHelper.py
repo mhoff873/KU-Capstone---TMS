@@ -38,18 +38,21 @@ def create_task(form, files):
     new_task.image = form.image.data
     new_task.activated = form.activation.data
     new_task.published = form.publish.data
-    try:  # try/excepts to catch IntegrityErrors, if it exists, we update.
-        db.session.add(new_task)
-        db.session.commit()
-    except Exception as e:
-        print(e)
-        db.session.commit()
+    
     # task image is named and saved
     if 'image' in files and files['image'] is not None:
         file = files['image']
         file.filename = 'T={}'.format(new_task.taskID)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
         new_task.image = file.filename
+        
+    try:  # try/excepts to catch IntegrityErrors, if it exists, we update.
+        db.session.add(new_task)
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        db.session.commit()
+
     for i, main_step in enumerate(form.main_steps.entries):
         existing_main_step = MainStep.query.filter_by(title=main_step.title.data).first()
         if existing_main_step is not None:
@@ -92,18 +95,21 @@ def create_task(form, files):
             new_detailed_step.stepText = detailed_step.stepText.data
             new_detailed_step.listOrder = i+1
             new_detailed_step.image = detailed_step.image.data
-            try:
-                db.session.add(new_detailed_step)
-                db.session.commit()
-            except Exception as e:
-                print(e)
-                db.session.commit()
+            
             if 'main_steps-{}-detailed_steps-{}-image'.format(i, j) in files:
                 file = files['main_steps-{}-detailed_steps-{}-image'.format(i, j)]
                 file.filename = 'D={}'.format(new_detailed_step.detailedStepID)
                 file.save(
                     os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
                 new_detailed_step.image = file.filename
+                
+            try:
+                db.session.add(new_detailed_step)
+                db.session.commit()
+            except Exception as e:
+                print(e)
+                db.session.commit()
+
             
     if form.keywords.data is not '':  #keywords cannot be blank
         keywords = form.keywords.data.split(',')
