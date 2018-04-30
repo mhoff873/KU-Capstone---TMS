@@ -63,7 +63,7 @@ def postTaskCompleted():
     # print(d['TaskID'], d['AssignedUser'])
     results = Api.postTaskCompleted(d['TaskID'],d['AssignedUser'],d['TotalTime'],d['TotalDetailedStepsUsed'])
     return jsonify(results)
-                
+
 @app.route("/api/user/GetAllCompletedTasksByUser/<uname>", methods=['GET'])
 def getAllCompletedTasksByUser(uname):
     results = Api.getAllCompletedTasksByUser(uname)
@@ -107,7 +107,7 @@ def admin_dash():
 @login_required
 def surveyCreation(arguments=None):
     return Surveys.handle_surveyCreation(arguments)
-    
+
 # survey results
 @app.route("/survey_results/", methods=["GET", "POST"])
 @login_required
@@ -120,13 +120,13 @@ def survey_results():
 @login_required
 def displayResult(resultID=None):
     return Surveys.handle_displayResult(resultID)
-    
+
 # display survey to user
 # https://tmst.kutztown.edu:5002/userSurvey/test.com/654706
 @app.route("/userSurvey/<username>/<taskID>", methods=["GET","POST"])
 def userSurvey(username=None,taskID=None):
     return Surveys.handle_userSurvey(username,taskID)
-    
+
 # survey management
 @app.route("/surveys/", methods=["GET", "POST"])
 @app.route('/surveys/<arguments>/<formID>', methods=["GET"])
@@ -144,7 +144,7 @@ def surveys(arguments=None,formID=None):
 @login_required
 def reports(arguments=None):
     return Reports.handle_reports(arguments)
-    
+
 @app.route('/pdf', methods=['GET'])
 @app.route('/pdf/<arguments>', methods=['GET'])
 @login_required
@@ -163,7 +163,7 @@ def graph(arguments=None):
 @login_required
 def email(arguments=None):
     return Reports.handle_email(arguments)
-        
+
 # link to the logout page to log an account out
 @app.route('/logout', methods=['GET'])
 @login_required
@@ -195,15 +195,16 @@ def user_account(user_ID=None):
     if user_ID == None:
         print("no user ID passed to the page")
         return dashboard() # there was no userID passed to the user account page
+    print("UserID = %s\n\n"%user_ID)
     user = User.query.filter_by(userID=user_ID).first()
     eUser = EditSenior()
-   
+
     if eUser.validate_on_submit():
         UserMgmt.edit_user(eUser, user)
         return dashboard()
     UserMgmt.populateFieldsUser(user, eUser)
     return render_template("userAccount.html", EditUser=eUser, User=user)
-    
+
 # login page
 @app.route('/login', methods=['POST','GET'])
 def login():
@@ -258,7 +259,7 @@ def create_user():
         email = form.email.data
         UserMgmt.create_user(form)
         user = User.query.filter_by(email=email).first()
-        return user_account(user.userID)
+        return redirect(url_for('user_account', user_ID=user.userID))
     return render_template("createUser.html", form=form)
 
 
@@ -279,7 +280,7 @@ def library(arguments=None):
     # in if no supervisor was selected from dropdown
     selected_id = current_user.supervisorID
     img = {}
-    
+
     # Check if the form is validated, or whether it was submitted.
     if search_form.validate_on_submit():
         # Uses the search form data to look for tasks that match.
@@ -313,7 +314,7 @@ def library(arguments=None):
                 tasks = Library.sort_alphabetically(Library.get_tasks(supervisor_id))
         else:
             tasks = Library.sort_alphabetically(Library.get_tasks(current_user.supervisorID))
-        
+
         # determine the image to pull
     for t in tasks:
             #t.image = Api.getPathForTaskImage(t.taskID)
@@ -321,7 +322,7 @@ def library(arguments=None):
     return render_template("library.html", tasks=tasks, search=search_form, supervisors=allsupervisors, selectedID=selected_id, img=img)
 
 
-    
+
 #senior assignment
 @app.route("/senior_assignment/", methods=["GET", "POST"])
 @app.route("/senior_assignment/<arguments>", methods=["GET", "POST"])
@@ -403,7 +404,7 @@ def task_assignment():
                                             form.tasks.data)
         return render_template("task_assignment.html", form=form)
     return render_template("task_assignment.html", form=form)
-    
+
 # create task
 @app.route('/create_task/', methods=['GET', 'POST'])
 @login_required
@@ -505,5 +506,3 @@ def edit_task(task_id=None):
                 main_step.detailed_steps.entries.pop(j)
                 return render_template('edit_task.html', form=form)
     return render_template('edit_task.html', form=form, task_id=task_id)
-
-
